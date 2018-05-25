@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015, Nordic Semiconductor
+  ~ All rights reserved.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions are met:
+  ~
+  ~ * Redistributions of source code must retain the above copyright notice, this
+  ~   list of conditions and the following disclaimer.
+  ~
+  ~ * Redistributions in binary form must reproduce the above copyright notice,
+  ~   this list of conditions and the following disclaimer in the documentation
+  ~   and/or other materials provided with the distribution.
+  ~
+  ~ * Neither the name of copyright holder nor the names of its
+  ~   contributors may be used to endorse or promote products derived from
+  ~   this software without specific prior written permission.
+  ~
+  ~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  ~ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  ~ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  ~ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  ~ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  ~ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  ~ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  ~ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  ~ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  -->
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".BlinkyActivity"
+	tools:ignore="ContentDescription">
+
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/appbar_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:theme="@style/AppTheme.AppBarOverlay">
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="?attr/colorPrimary"
+			app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+	</android.support.design.widget.AppBarLayout>
+
+
+	<ScrollView
+		android:id="@+id/device_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@+id/appbar_layout"
+		android:visibility="visible">
+
+		<android.support.constraint.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:id="@+id/tv_rx_msg"
+				android:textSize="20sp"
+				tools:text="RX message"
+				android:layout_marginStart="5dp"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+			<EditText
+				android:id="@+id/send_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/tv_rx_msg"
+				android:layout_marginStart="5dp"
+				android:layout_marginTop="5dp"
+				android:visibility="visible"
+				android:hint="@string/et_hint_tx_msg"
+				android:ems="10"
+				android:inputType="textPersonName"
+				 />
+
+			<Button
+				android:id="@+id/btn_send"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:visibility="visible"
+				app:layout_constraintStart_toEndOf="@id/send_text"
+				app:layout_constraintTop_toBottomOf="@id/tv_rx_msg"
+				android:text="@string/tx_button"/>
+
+			<fragment
+				android:id="@+id/frag_butSet"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:name="no.nordicsemi.android.blinky.Butset"
+				app:layout_constraintTop_toBottomOf="@id/btn_send"
+				android:layout_marginTop="20dp"
+				/>
+
+
+			<fragment
+				android:id="@+id/frag_but"
+				android:name="no.nordicsemi.android.blinky.ButtonFrag"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentStart="true"
+				app:layout_constraintTop_toBottomOf="@id/frag_butSet" />
+
+			<fragment
+				android:id="@+id/frag_state"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:name="no.nordicsemi.android.blinky.StateFragment"
+				app:layout_constraintTop_toBottomOf="@id/frag_but"
+
+				/>
+
+
+
+		</android.support.constraint.ConstraintLayout>
+
+	</ScrollView>
+
+	<LinearLayout
+		android:id="@+id/progress_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:gravity="center_horizontal"
+		android:orientation="vertical"
+		android:visibility="gone"
+		android:padding="@dimen/activity_horizontal_margin">
+
+		<TextView
+			android:id="@+id/connection_state"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:textSize="16sp"
+			tools:text="@string/state_connecting"/>
+
+		<ProgressBar
+			android:id="@+id/progress_bar"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			android:layout_width="250dp"
+			android:layout_height="wrap_content"
+			android:indeterminate="true"/>
+	</LinearLayout>
+
+
+</RelativeLayout>

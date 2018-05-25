@@ -1,0 +1,102 @@
+<!--
+  ~ Copyright (c) 2015, Nordic Semiconductor
+  ~ All rights reserved.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions are met:
+  ~
+  ~ * Redistributions of source code must retain the above copyright notice, this
+  ~   list of conditions and the following disclaimer.
+  ~
+  ~ * Redistributions in binary form must reproduce the above copyright notice,
+  ~   this list of conditions and the following disclaimer in the documentation
+  ~   and/or other materials provided with the distribution.
+  ~
+  ~ * Neither the name of copyright holder nor the names of its
+  ~   contributors may be used to endorse or promote products derived from
+  ~   this software without specific prior written permission.
+  ~
+  ~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  ~ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  ~ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  ~ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  ~ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  ~ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  ~ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  ~ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  ~ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  -->
+
+<resources>
+    <string name="app_name">Весовой драйвер</string>
+    <string name="feature_name">scale-driver</string>
+
+    <string name="title">@string/app_name</string>
+
+    <string name="unknown_device">Неизвестное устройство</string>
+    <string name="state">Статус</string>
+
+    <string name="location_permission_title">LOCATION PERMISSION REQUIRED</string>
+    <string name="location_permission_info">From Android 6.0 Marshmallow onwards the application requires Location permission in order to scan for Bluetooth Low Energy devices.
+      \n\nThis is because Bluetooth LE beacons, for example iBeacons or Eddystone, may be used to determine the phone\'s and user\'s location. <b>nRF Blinky</b> will not use this information in any way.</string>
+    <string name="location_permission_action">Grant permission</string>
+    <string name="location_permission_settings">Настройки</string>
+
+    <string name="bluetooth_disabled_title">Bluetooth недоступен</string>
+    <string name="bluetooth_disabled_info">Bluetooth адаптер выключен. Нажмите на кнопку ниже для включения.</string>
+    <string name="bluetooth_disabled_action">Разрешить</string>
+
+    <string name="blinky_guide_title">Не отображается устройство?</string>
+    <string name="blinky_guide_info">Попробуйте перезапустить устройство</string>
+    <string name="blinky_guide_location_info">3. Location is turned off. Some Android phones require it enabled in order to scan for Bluetooth LE devices.
+		If you are sure your Blinky is advertising and it doesn\'t show up here, click the button below to enable Location.</string>
+    <string name="blinky_guide_location_action">Разрешить</string>
+
+    <string name="state_scanning">Подключение…</string>
+    <string name="state_connecting">Подключение…</string>
+    <string name="state_discovering_services">Подключение…</string>
+    <string name="state_initializing">Подключение…</string>
+    <string name="state_discovering_services_completed">%s готово</string>
+
+
+    <string name="plusKg">+ кг</string>
+    <string name="minusKg">- кг</string>
+    <string name="minusPercent">- %</string>
+    <string name="btnInc"><![CDATA[>]]></string>
+    <string name="btnDec"><![CDATA[<]]></string>
+    <string name="etName">название</string>
+    <string name="btnClose">Закрыть</string>
+    <string name="btnSave">Сохранить</string>
+    <string name="etCorStartValue">100</string>
+    <string name="cbCompText">кг</string>
+    <string name="btnDelete">Удалить</string>
+    <string name="settings">Настройки</string>
+    <string name="website">www.scale-driver.ru</string>
+    <string name="Reset">Сброс</string>
+    <string name="autocorrect">Авто</string>
+
+    <string-array name="butNum_entries">
+
+        <item>8</item>
+        <item>12</item>
+        <item>16</item>
+        <item>20</item>
+        <item>24</item>
+        <item>28</item>
+        <item>32</item>
+
+    </string-array>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="adc">АЦП: %1$d</string>
+    <string name="adc1">АЦП: %d</string>
+    <string name="noData">Нет данных</string>
+    <string name="state_disconnected">Соединение отключено</string>
+    <string name="state_not_supported">Устройство не поддерживается</string>
+    <string name="et_hint">111</string>
+    <string name="et_hint_tx_msg">tx message</string>
+    <string name="tx_button">Отправить</string>
+
+</resources>
