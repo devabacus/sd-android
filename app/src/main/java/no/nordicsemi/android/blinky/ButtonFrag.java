@@ -45,6 +45,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     Boolean setOpened = false;
 
 
+
     TextView tvState;
     Button btnRes;
     private ButtonsViewModel buttonsViewModel;
@@ -75,15 +76,22 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
 
 
         cbCorMode = v.findViewById(R.id.cb_cor_mode);
+
+        //при запуске получаем от контроллера режим работы и меняем положение флажка при необходимости.
+        stateViewModel.getAutoCorMode().observe(getActivity(), integer -> {
+            if(integer != null) {
+                if (integer == 1) cbCorMode.setChecked(true);
+                else if (integer == 0) cbCorMode.setChecked(false);
+            }
+        });
+
+
+
         cbCorMode.setOnClickListener(v1 -> {
             if(cbCorMode.isChecked()){
                 blinkyViewModel.sendTX(Cmd.COR_MODE_AUTO);
-                // это значение мониторится в StateFragment
-                stateViewModel.setmAutoCorMode(1);
             } else {
                 blinkyViewModel.sendTX(Cmd.COR_MODE_MANUAL);
-                stateViewModel.setmAutoCorMode(0);
-                // это значение мониторится в StateFragment
             }
         });
 //        blinkyViewModel.getUartData().observe(getActivity(), s -> Log.d(TAG, "onChanged: getData " + s));

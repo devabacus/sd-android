@@ -15,19 +15,19 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="20dp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Cor mode state"
+        tools:text="Auto mode state"
 
         />
 
 
     <TextView
-        android:id="@+id/tv_auto_mode"
+        android:id="@+id/tv_cor_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="20dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_cor_mode"
+        app:layout_constraintStart_toEndOf="@id/tv_cor_mode"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Auto mode state"
 
         />
@@ -37,7 +37,7 @@
         android:id="@+id/tv_adc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_auto_mode"
+        app:layout_constraintTop_toBottomOf="@id/tv_cor_state"
         app:layout_constraintStart_toStartOf="parent"
         android:textSize="20sp"
         tools:text="@string/adc1"

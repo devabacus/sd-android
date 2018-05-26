@@ -128,6 +128,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		mBlinkyManager.send(msg);
 		mTXdata.setValue(msg);
 
+
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	@Override
 	public void onDataReceived(final String state) {
 		mRXdata.postValue(state);
-		//Log.d(TAG, "RX: " + state);
+		Log.d(TAG, "RX: " + state);
 		//Logger.a(testLogSession, "received something");
 	}
 
@@ -187,7 +188,8 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	@Override
 	public void onDeviceReady(final BluetoothDevice device) {
 		mIsSupported.postValue(true);
-		mConnectionState.postValue(getApplication().getString(R.string.state_discovering_services_completed, device.getName()));
+		mConnectionState.postValue(getApplication().getString(R.string.state_discovering_services_completed));  //, device.getName()));
+
 		mOnDeviceReady.postValue(null);
 	}
 

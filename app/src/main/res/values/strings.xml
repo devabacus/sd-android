@@ -57,7 +57,7 @@
     <string name="state_connecting">Подключение…</string>
     <string name="state_discovering_services">Подключение…</string>
     <string name="state_initializing">Подключение…</string>
-    <string name="state_discovering_services_completed">%s готово</string>
+    <string name="state_discovering_services_completed">готово</string>
 
 
     <string name="plusKg">+ кг</string>

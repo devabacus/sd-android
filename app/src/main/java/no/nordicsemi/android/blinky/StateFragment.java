@@ -31,8 +31,7 @@ public class StateFragment extends Fragment {
 
     private static final String TAG = "StateFragment";
     private BlinkyViewModel blinkyViewModel;
-    private StateViewModel stateViewModel;
-    TextView tvAdc, tvAutoMode, tvCorMode;
+    TextView tvAdc, tvCorMode, tvCorState;
 
     String bleMsg[];
     int adcValue = 0;
@@ -48,23 +47,35 @@ public class StateFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
-        stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
+        StateViewModel stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
         View v = inflater.inflate(R.layout.fragment_state, container, false);
 
         tvAdc = v.findViewById(R.id.tv_adc);
-        tvAutoMode = v.findViewById(R.id.tv_auto_mode);
+        tvCorState = v.findViewById(R.id.tv_cor_state);
         tvCorMode = v.findViewById(R.id.tv_cor_mode);
+
 
         stateViewModel.getAutoCorMode().observe(getActivity(), i -> {
             if (i != null) {
-                if (i == 1) tvAutoMode.setVisibility(View.VISIBLE);
+                if (i == 1) {
+                    tvCorMode.setText("Авторежим:");
+                    tvCorState.setText("");
+                }
                 else if (i == 0) {
-                    tvAutoMode.setVisibility(View.GONE);
-                    tvAutoMode.setText("Авторежим: нет значения");
+                    tvCorMode.setText("Руч. режим:");
+                    tvCorState.setText("");
                 }
             }
 
         });
+
+        blinkyViewModel.getConnectionState().observe(getActivity(), s -> {
+            assert s != null;
+            if (s.equals("готово")) {
+                blinkyViewModel.sendTX(Cmd.INIT);
+            }
+        });
+
         blinkyViewModel.getUartData().observe(getActivity(), s -> {
             assert s != null;
             if (s.matches("^ad.*")) {
@@ -84,22 +95,24 @@ public class StateFragment extends Fragment {
                 switch (notif_num) {
                     // состояние корректировки при работе в авторежиме
                     case 1:
-                        if (notif_value == 1) tvAutoMode.setText("Авторежим: активно");
-                        else if (notif_value == 0) tvAutoMode.setText("Авторежим: сброс");
-                        else if (notif_value == 2) tvAutoMode.setText("Авторежим: ожидание");
-                        else if (notif_value == 3) tvAutoMode.setText("Авторежим: сброс значения");
-
+                        if(notif_value == 1 || notif_value == 2 || notif_value == 3) tvCorState.setText("активно");
+                        else if (notif_value == 0) tvCorState.setText("сброс");
                         break;
-                        //notify auto correct_mode_change
-                    case 3:
-                        if(notif_value == 1) tvCorMode.setText("Режим работы: авто");
-                        else if (notif_value == 2) tvCorMode.setText("Режим работы: ручной");
 
+                        // состояние корректировки при работе в ручном режиме
+                    case 2:
+                        if (notif_value == 0 || notif_value == 1) tvCorState.setText("ожидание");
+                        break;
+
+                    case 3:
+                        if(notif_value == 1) {
+                            stateViewModel.setmAutoCorMode(1);
+                        } else if (notif_value == 2){
+                            stateViewModel.setmAutoCorMode(0);
+                        }
                 }
 //                Log.d(TAG, "onCreateView: notif_num = " + notif_num);
 //                Log.d(TAG, "onCreateView: notif_value = " + notif_value);
-
-
             }
 
 
