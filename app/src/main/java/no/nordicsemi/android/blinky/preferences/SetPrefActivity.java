@@ -85,7 +85,7 @@ public class SetPrefActivity extends AppCompatActivity {
         @Override
         public void onResume() {
             super.onResume();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             sharedPreferences.registerOnSharedPreferenceChangeListener(this);
             Preference curPref = findPreference(KEY_LIST_NUM_BUTTONS);
             String numButts = sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8");
