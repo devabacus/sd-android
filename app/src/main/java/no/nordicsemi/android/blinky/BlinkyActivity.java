@@ -32,7 +32,10 @@ package no.nordicsemi.android.blinky;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -50,10 +53,15 @@ import no.nordicsemi.android.blinky.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.blinky.preferences.SetPrefActivity;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 
+import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_LIST_NUM_BUTTONS;
+import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
+
 
 @SuppressWarnings("ConstantConditions")
 public class BlinkyActivity extends AppCompatActivity {
 	public static final String EXTRA_DEVICE = "no.nordicsemi.android.blinky.EXTRA_DEVICE";
+
+
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -74,6 +82,8 @@ public class BlinkyActivity extends AppCompatActivity {
 		// Configure the view model
 		final BlinkyViewModel viewModel = ViewModelProviders.of(this).get(BlinkyViewModel.class);
 		viewModel.connect(device);
+
+
 
 		// Set up views
 		final LinearLayout progressContainer = findViewById(R.id.progress_container);
@@ -114,6 +124,13 @@ public class BlinkyActivity extends AppCompatActivity {
 
 
 		viewModel.getUartData().observe(this, tvRxMsg::setText);
+	}
+
+
+	@Override
+	protected void onResume() {
+
+		super.onResume();
 	}
 
 	@Override

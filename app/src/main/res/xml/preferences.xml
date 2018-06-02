@@ -23,4 +23,10 @@
         android:defaultValue="true"
         />
 
+    <SwitchPreference
+        android:key="show_contrsettings"
+        android:title="Настройка контроллера"
+        android:defaultValue="false"
+        />
+
 </PreferenceScreen>

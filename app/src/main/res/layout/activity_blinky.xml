@@ -132,6 +132,14 @@
 
 				/>
 
+			<fragment
+				android:id="@+id/frag_scale_set"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:name="no.nordicsemi.android.blinky.contr_settings.ScaleSetFragment"
+				app:layout_constraintTop_toBottomOf="@id/frag_state"
+
+				/>
 
 
 		</android.support.constraint.ConstraintLayout>

@@ -9,10 +9,23 @@ import android.support.annotation.NonNull;
 public class StateViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Integer> mAutoCorMode = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mADCvalue = new MutableLiveData<>();
+
+
+    public LiveData<Integer> getADCvalue() {
+        return mADCvalue;
+    }
 
     public LiveData<Integer> getAutoCorMode() {
         return mAutoCorMode;
     }
+
+
+    public void setmADCvalue(final Integer adc_value) {
+        mADCvalue.setValue(adc_value);
+    }
+
+
     public void setmAutoCorMode(final Integer autoCorMode){
         mAutoCorMode.setValue(autoCorMode);
     }

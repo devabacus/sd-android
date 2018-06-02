@@ -229,8 +229,6 @@ public class Butset extends Fragment implements View.OnClickListener {
                 }
                 seekBar.setProgress(curCorButton.getCorValue());
 
-
-
             } else {
 
                 setLayout.setVisibility(View.GONE);

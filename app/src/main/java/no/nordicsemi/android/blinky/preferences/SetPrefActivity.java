@@ -67,7 +67,9 @@ public class SetPrefActivity extends AppCompatActivity {
         public static final String KEY_LIST_NUM_BUTTONS = "num_buttons";
         public static final String KEY_ADC_SHOW = "adc_show";
         public static final String KEY_REMOTE_BUT_UPDATE = "remote_but_update";
+        public static final String KEY_SHOW_CONT_SETTINGS_FRAG = "show_contrsettings";
 
+        Preference curPref;
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,7 +98,7 @@ public class SetPrefActivity extends AppCompatActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(KEY_LIST_NUM_BUTTONS)) {
-                Preference curPref = findPreference(key);
+                curPref = findPreference(key);
                 curPref.setSummary(sharedPreferences.getString(key, "8"));
             }
 

@@ -22,6 +22,7 @@ import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_ADC_SHOW;
+import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +49,7 @@ public class StateFragment extends Fragment {
 
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         StateViewModel stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
+
         View v = inflater.inflate(R.layout.fragment_state, container, false);
 
         tvAdc = v.findViewById(R.id.tv_adc);
@@ -83,6 +85,7 @@ public class StateFragment extends Fragment {
                 adcValueStr = adcValueStr.replaceAll("[^0-9]", "");
                 if (adcValueStr.matches("[0-9]*")) {
                     adcValue = Integer.parseInt(adcValueStr);
+                    stateViewModel.setmADCvalue(adcValue);
                 }
                 //String resAdc = String.format(getResources().getString(R.string.adc), adcValue);
                 String resAdc = String.format(getString(R.string.adc1), adcValue);
@@ -128,9 +131,10 @@ public class StateFragment extends Fragment {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 //        prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
         adcShow = sharedPreferences.getBoolean(KEY_ADC_SHOW, false);
+        Boolean showContSet = sharedPreferences.getBoolean(KEY_SHOW_CONT_SETTINGS_FRAG, false);
 
         Log.d(TAG, "onResume: ");
-        if (adcShow) {
+        if (adcShow || showContSet) {
             tvAdc.setVisibility(View.VISIBLE);
             blinkyViewModel.sendTX(Cmd.ADC_SHOW_ON);
         } else {
