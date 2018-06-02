@@ -67,6 +67,8 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	// Flag to determine if the device has required services
 	private final SingleLiveEvent<Boolean> mIsSupported = new SingleLiveEvent<>();
 
+	private final MutableLiveData<Boolean> mIsTXsent = new MutableLiveData<>();
+
 	// Flag to determine if the device is ready
 	private final MutableLiveData<Void> mOnDeviceReady = new MutableLiveData<>();
 
@@ -86,6 +88,10 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
 	public LiveData<Boolean> isConnected() {
 		return mIsConnected;
+	}
+
+	public LiveData<Boolean> isTXsent() {
+		return mIsTXsent;
 	}
 
 	public LiveData<Boolean> isSupported() {
@@ -127,6 +133,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	public void sendTX(final String msg) {
 		mBlinkyManager.send(msg);
 		mTXdata.setValue(msg);
+		mIsTXsent.setValue(false);
 
 
 	}
@@ -148,8 +155,10 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
 	@Override
 	public void onDataSent(final String state) {
-		mTXdata.postValue(state);
+		//mTXdata.postValue(state);
+		mIsTXsent.postValue(true);
 		Log.d(TAG, "TX: " + state);
+
 		//Logger.a(testLogSession, "send something");
 
 	}

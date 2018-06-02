@@ -100,7 +100,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         buttonsViewModel.ismSetButton().observe(getActivity(), b->{
             if(b!=null){
                 setOpened = b;
-                Log.d(TAG, "onCreateView: setOpened = " + setOpened);
+               // Log.d(TAG, "onCreateView: setOpened = " + setOpened);
             }
         });
 
@@ -147,14 +147,13 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         btnRes = v.findViewById(R.id.btnRes);
         tvState = v.findViewById(R.id.tv_state);
         btnRes.setOnClickListener(v1 -> {
+            //Log.d(TAG, "onCreateView: COR_RESET");
             blinkyViewModel.sendTX(Cmd.COR_RESET);
 
             stateViewModel.setmAutoCorMode(2);
             tvState.setText("Сброс");
         });
-
         return v;
-
     }
 
     void makeMsg(CorButton corButton) {
@@ -164,7 +163,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         msg.append(corButton.getCorDir());
         msg.append(corButton.getCorValue());
         if(corButton.getCorDir().contains("p")){
-            msg.append("c").append(corButton.getCompValue());
+           msg.append("c").append(corButton.getCompValue());
         }
         msg.append("&");
     }
@@ -172,7 +171,6 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     @Override
@@ -187,11 +185,14 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     }
     @Override
     public boolean onLongClick(View v) {
+        // создаем объект из recyclerView по тэгу
         CorButton corButton = (CorButton) v.getTag();
+        // устанавливаем этот на переменную во viewmodel
         buttonsViewModel.setmCurCorButton(corButton);
+        // кричим что хотим видеть настройки, флаг в 1
         buttonsViewModel.setmSetButton(true);
-        Log.d(TAG, "onLongClick: setmSetButton = true");
+        //Log.d(TAG, "onLongClick: setmSetButton = true");
+
         return false;
     }
-
 }

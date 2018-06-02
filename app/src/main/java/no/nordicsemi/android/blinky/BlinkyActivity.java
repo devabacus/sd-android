@@ -80,6 +80,8 @@ public class BlinkyActivity extends AppCompatActivity {
 		final TextView connectionState = findViewById(R.id.connection_state);
 		final View content = findViewById(R.id.device_container);
 		final TextView tvRxMsg = findViewById(R.id.tv_rx_msg);
+		final TextView tvTxMsg = findViewById(R.id.tv_tx_msg);
+
 		final EditText etSend = findViewById(R.id.send_text);
 		final Button btnSend = findViewById(R.id.btn_send);
 
@@ -91,6 +93,7 @@ public class BlinkyActivity extends AppCompatActivity {
 			content.setVisibility(View.VISIBLE);
 		} );
 
+		viewModel.sendUartData().observe(this, tvTxMsg::setText);
 
 		btnSend.setOnClickListener(v -> viewModel.sendTX(etSend.getText().toString()));
 

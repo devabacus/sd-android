@@ -66,6 +66,7 @@ public class SetPrefActivity extends AppCompatActivity {
 
         public static final String KEY_LIST_NUM_BUTTONS = "num_buttons";
         public static final String KEY_ADC_SHOW = "adc_show";
+        public static final String KEY_REMOTE_BUT_UPDATE = "remote_but_update";
 
 
         @Override
@@ -90,9 +91,6 @@ public class SetPrefActivity extends AppCompatActivity {
             Preference curPref = findPreference(KEY_LIST_NUM_BUTTONS);
             String numButts = sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8");
             curPref.setSummary(numButts);
-
-
-
         }
 
         @Override

@@ -16,4 +16,11 @@
         android:title="Показывать АЦП"
         android:defaultValue="false"
         />
+
+    <SwitchPreference
+        android:key="remote_but_update"
+        android:title="Обновлять кнопки на пульте"
+        android:defaultValue="true"
+        />
+
 </PreferenceScreen>
