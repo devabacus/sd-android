@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,7 +98,8 @@ public class CompPercent extends Fragment implements View.OnClickListener {
                 if (rbMinus.isChecked()) compCorValue = -compCorValue;
                 buttonsViewModel.setmCompCorValue(compCorValue);
                 //blinkyViewModel.sendTX("$c" + compCorValue + "&");
-                if(curCorButton!=null && curCorButton.getCorDir().equals("p")){
+                Log.d(TAG, "onProgressChanged: cordir = " + curCorButton.getCorDir());
+                if(curCorButton!=null && isVisible()){
                     if(curCorButton.getCorValue()!=0){
 
                         String msg = "$" + "p" + curCorButton.getCorValue() + "c" + compCorValue + "&";

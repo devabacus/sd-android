@@ -42,6 +42,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     CheckBox cbCorMode;
     ButtonAdapter adapter;
     StringBuilder msg;
+
     Boolean setOpened = false;
 
 

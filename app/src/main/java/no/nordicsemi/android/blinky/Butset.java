@@ -66,6 +66,7 @@ public class Butset extends Fragment implements View.OnClickListener {
     SharedPreferences sharedPreferences;
     Boolean sentOneTime = false;
     ConstraintLayout setLayout;
+    Boolean newButton;
 
     public Butset() {
         // Required empty public constructor
@@ -171,8 +172,6 @@ public class Butset extends Fragment implements View.OnClickListener {
                 corValue = progress;
                 etCorValue.setText(String.valueOf(corValue));
 
-                //Log.d(TAG, "onProgressChanged: curCorButton.getCorDir() = " + curCorButton.getCorDir());
-                //TODO косячный dirCor выставляется процент почему то вместо кг
                 if(!firstOpenSet){
                     blinkyViewModel.sendTX("$" + dirCor + corValue + "&");
                 }
