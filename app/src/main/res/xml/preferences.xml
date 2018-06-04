@@ -29,4 +29,11 @@
         android:defaultValue="false"
         />
 
+    <SwitchPreference
+        android:key="show_debug_frag"
+        android:title="Отладка"
+        android:defaultValue="false"
+        />
+
+
 </PreferenceScreen>

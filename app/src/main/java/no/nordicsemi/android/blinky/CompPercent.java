@@ -98,10 +98,13 @@ public class CompPercent extends Fragment implements View.OnClickListener {
                 if (rbMinus.isChecked()) compCorValue = -compCorValue;
                 buttonsViewModel.setmCompCorValue(compCorValue);
                 //blinkyViewModel.sendTX("$c" + compCorValue + "&");
-                Log.d(TAG, "onProgressChanged: cordir = " + curCorButton.getCorDir());
-                if(curCorButton!=null && isVisible()){
-                    if(curCorButton.getCorValue()!=0){
+                if (curCorButton.getCorDir().equals("p")){
 
+                    if (curCorButton != null && isVisible())
+
+                    {
+                        String s = String.valueOf(curCorButton.getCorValue());
+                        Log.d(TAG, "onProgressChanged: curCorButton.getCorValue = " + s);
                         String msg = "$" + "p" + curCorButton.getCorValue() + "c" + compCorValue + "&";
                         blinkyViewModel.sendTX(msg);
                     } else {

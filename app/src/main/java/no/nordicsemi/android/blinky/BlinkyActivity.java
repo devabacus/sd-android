@@ -35,6 +35,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -55,110 +56,99 @@ import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_LIST_NUM_BUTTONS;
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
+import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_SHOW_DEBUG_FRAG;
 
 
 @SuppressWarnings("ConstantConditions")
 public class BlinkyActivity extends AppCompatActivity {
-	public static final String EXTRA_DEVICE = "no.nordicsemi.android.blinky.EXTRA_DEVICE";
+    public static final String EXTRA_DEVICE = "no.nordicsemi.android.blinky.EXTRA_DEVICE";
 
 
-
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_blinky);
-
-		final Intent intent = getIntent();
-		final ExtendedBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
-		final String deviceName = device.getName();
-		final String deviceAddress = device.getAddress();
-
-		final Toolbar toolbar = findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setTitle(deviceName);
-		getSupportActionBar().setSubtitle(deviceAddress);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		// Configure the view model
-		final BlinkyViewModel viewModel = ViewModelProviders.of(this).get(BlinkyViewModel.class);
-		viewModel.connect(device);
+    ConstraintLayout constrDebug;
 
 
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_blinky);
 
-		// Set up views
-		final LinearLayout progressContainer = findViewById(R.id.progress_container);
-		final TextView connectionState = findViewById(R.id.connection_state);
-		final View content = findViewById(R.id.device_container);
-		final TextView tvRxMsg = findViewById(R.id.tv_rx_msg);
-		final TextView tvTxMsg = findViewById(R.id.tv_tx_msg);
+        final Intent intent = getIntent();
+        final ExtendedBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
+        final String deviceName = device.getName();
+        final String deviceAddress = device.getAddress();
 
-		final EditText etSend = findViewById(R.id.send_text);
-		final Button btnSend = findViewById(R.id.btn_send);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(deviceName);
+        getSupportActionBar().setSubtitle(deviceAddress);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-		//led.setOnClickListener(view -> viewModel.toggleLED("stas"));
-
-		viewModel.isDeviceReady().observe(this, deviceRead->{
-			progressContainer.setVisibility(View.GONE);
-			content.setVisibility(View.VISIBLE);
-		} );
-
-		viewModel.sendUartData().observe(this, tvTxMsg::setText);
-
-		btnSend.setOnClickListener(v -> viewModel.sendTX(etSend.getText().toString()));
-
-		viewModel.getConnectionState().observe(this, connectionState::setText);
-		viewModel.isConnected().observe(this, connected -> {
-			if (!connected) {
-				Toast.makeText(this, R.string.state_disconnected, Toast.LENGTH_SHORT).show();
-				finish();
-			}
-		});
-
-		viewModel.isSupported().observe(this, supported -> {
-			if (!supported) {
-				Toast.makeText(this, R.string.state_not_supported, Toast.LENGTH_SHORT).show();
-			}
-		});
+        // Configure the view model
+        final BlinkyViewModel viewModel = ViewModelProviders.of(this).get(BlinkyViewModel.class);
+        viewModel.connect(device);
 
 
-
-		viewModel.getUartData().observe(this, tvRxMsg::setText);
-	}
-
-
-	@Override
-	protected void onResume() {
-
-		super.onResume();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_set, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+        // Set up views
+        final LinearLayout progressContainer = findViewById(R.id.progress_container);
+        final TextView connectionState = findViewById(R.id.connection_state);
+        final View content = findViewById(R.id.device_container);
+        constrDebug = findViewById(R.id.constr_debug);
 
 
+        //led.setOnClickListener(view -> viewModel.toggleLED("stas"));
 
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
+        viewModel.isDeviceReady().observe(this, deviceRead -> {
+            progressContainer.setVisibility(View.GONE);
+            content.setVisibility(View.VISIBLE);
+        });
+
+
+        viewModel.getConnectionState().observe(this, connectionState::setText);
+        viewModel.isConnected().observe(this, connected -> {
+            if (!connected) {
+                Toast.makeText(this, R.string.state_disconnected, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
+        viewModel.isSupported().observe(this, supported -> {
+            if (!supported) {
+                Toast.makeText(this, R.string.state_not_supported, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_set, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
                 onBackPressed();
-				return true;
-			case R.id.settings:
-				Intent intent = new Intent();
-				intent.setClass(BlinkyActivity.this, SetPrefActivity.class);
-				startActivityForResult(intent, 0);
-				break;
-		}
-		return false;
-	}
-
-
-
+                return true;
+            case R.id.settings:
+                Intent intent = new Intent();
+                intent.setClass(BlinkyActivity.this, SetPrefActivity.class);
+                startActivityForResult(intent, 0);
+                break;
+        }
+        return false;
+    }
 
 
 }

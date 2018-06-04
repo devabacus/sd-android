@@ -105,4 +105,5 @@
     <string name="cal_zero">Кал.нуля</string>
     <string name="cal_on">Кал.грузом</string>
     <string name="cal_weight">Опр.веса</string>
+    <string name="notConnected">Не подключено</string>
 </resources>

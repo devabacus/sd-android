@@ -1,0 +1,52 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/constr_debug"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="no.nordicsemi.android.blinky.preferences.DebugFrag">
+
+    <TextView
+        android:id="@+id/tv_rx_msg"
+        android:textSize="20sp"
+        tools:text="RX message"
+        android:layout_marginStart="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_tx_msg"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_rx_msg"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="5dp"
+
+        tools:text="TX message" />
+
+    <EditText
+        android:id="@+id/send_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_tx_msg"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:visibility="visible"
+        android:hint="@string/et_hint_tx_msg"
+        android:ems="10"
+        android:inputType="textPersonName"
+        />
+
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@id/send_text"
+        app:layout_constraintTop_toBottomOf="@id/tv_tx_msg"
+        android:text="@string/tx_button"/>
+
+
+</android.support.constraint.ConstraintLayout>

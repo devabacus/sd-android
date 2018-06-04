@@ -275,6 +275,8 @@ public class Butset extends Fragment implements View.OnClickListener {
                 firstOpenSet = false;
                 blinkyViewModel.sendTX(Cmd.COR_RESET);
                 seekBar.setProgress(0);
+                etCorValue.setText("");
+
                 break;
             case R.id.btnSave:
                 //кнопки на контроллере корявые поэтому конвертируем
@@ -291,6 +293,8 @@ public class Butset extends Fragment implements View.OnClickListener {
                 buttonsViewModel.setmSetButton(false);
                 //new Handler().postDelayed(this::resetCor, 500);
                 seekBar.setProgress(0);
+                etCorValue.setText("");
+
                 /////////// Сначала ждем подтверждение отправки/////////////////////
                 sentOneTime = false;
                 blinkyViewModel.isTXsent().observe(Objects.requireNonNull(getActivity()), aBoolean -> {
