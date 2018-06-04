@@ -102,7 +102,7 @@
     <string name="et_hint">111</string>
     <string name="et_hint_tx_msg">tx message</string>
     <string name="tx_button">Отправить</string>
-    <string name="cal_zero">Калибр. нуля</string>
-    <string name="cal_on">Калибр. грузом</string>
-
+    <string name="cal_zero">Кал.нуля</string>
+    <string name="cal_on">Кал.грузом</string>
+    <string name="cal_weight">Опр.веса</string>
 </resources>

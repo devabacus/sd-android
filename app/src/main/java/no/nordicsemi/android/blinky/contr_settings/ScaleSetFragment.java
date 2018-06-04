@@ -1,6 +1,7 @@
 package no.nordicsemi.android.blinky.contr_settings;
 
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -33,8 +34,8 @@ import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsF
  */
 public class ScaleSetFragment extends Fragment implements View.OnClickListener {
 
-    Button btnCalZero, btnCalOn;
-    TextView tvCalZero, tvCalOn;
+    Button btnCalZero, btnCalOn, btnCalWeight;
+    TextView tvCalInfo;
     BlinkyViewModel blinkyViewModel;
     ConstraintLayout contSettLayout;
     StateViewModel stateViewModel;
@@ -46,6 +47,7 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,15 +55,40 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment_scale_set, container, false);
         btnCalZero = v.findViewById(R.id.btn_cal_zero);
         btnCalOn = v.findViewById(R.id.btn_cal_on);
-        tvCalZero = v.findViewById(R.id.tv_cal_zero);
-        tvCalOn = v.findViewById(R.id.tv_cal_on);
+        btnCalWeight = v.findViewById(R.id.btn_cal_weight);
+        tvCalInfo = v.findViewById(R.id.tv_cal_info);
         contSettLayout = v.findViewById(R.id.cont_sett_layout);
 
 
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         StateViewModel stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
 
-        blinkyViewModel.sendTX("test from cal fragment");
+        blinkyViewModel.getUartData().observe(getActivity(), s -> {
+            assert s != null;
+            if(s.matches("s5..")){
+                tvCalInfo.setText("Калибровка..");
+            }
+            else if (s.matches("s5/.*")){
+                String adc_value_type = "";
+                switch (s.charAt(3)){
+                    case '1':
+                        adc_value_type = "Значение АЦП нуля: ";
+                        break;
+                    case '2':
+                        adc_value_type = "Значение АЦП дискр: ";
+                        break;
+                    case '3':
+                        adc_value_type = "Значение АЦП груза: ";
+                        break;
+                }
+                String cal_adc_value_str = s.substring(5);
+                cal_adc_value_str = cal_adc_value_str.replaceAll("[^0-9]", "");
+                //int adc_cal_value = Integer.parseInt(cal_adc_value_str);
+                 //cal_adc_value = Integer.parseInt(s.substring(5));
+                tvCalInfo.setText(adc_value_type + cal_adc_value_str);
+            }
+
+        });
 
         stateViewModel.getADCvalue().observe(getActivity(), adc->{
             assert adc != null;
@@ -71,6 +98,7 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
 
         btnCalZero.setOnClickListener(this);
         btnCalOn.setOnClickListener(this);
+        btnCalWeight.setOnClickListener(this);
 
         return v;
     }
@@ -94,14 +122,13 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cal_zero:
-                blinkyViewModel.sendTX("zero");
-                tvCalZero.setText(String.valueOf(adc_value));
+                blinkyViewModel.sendTX(Cmd.CAL_UNLOAD);
                 break;
             case R.id.btn_cal_on:
-                blinkyViewModel.sendTX("cal_on");
-                tvCalOn.setText(String.valueOf(adc_value));
+                blinkyViewModel.sendTX(Cmd.CAL_LOAD);
                 break;
-
+            case R.id.btn_cal_weight:
+                blinkyViewModel.sendTX(Cmd.CAL_WEIGHT);
         }
     }
 }

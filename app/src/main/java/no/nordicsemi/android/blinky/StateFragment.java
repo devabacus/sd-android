@@ -134,7 +134,7 @@ public class StateFragment extends Fragment {
         Boolean showContSet = sharedPreferences.getBoolean(KEY_SHOW_CONT_SETTINGS_FRAG, false);
 
         Log.d(TAG, "onResume: ");
-        if (adcShow || showContSet) {
+        if (adcShow) {
             tvAdc.setVisibility(View.VISIBLE);
             blinkyViewModel.sendTX(Cmd.ADC_SHOW_ON);
         } else {

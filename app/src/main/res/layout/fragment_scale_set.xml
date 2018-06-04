@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/tv_cal_zero"
+        android:id="@+id/tv_cal_info"
         android:layout_width="wrap_content"
         android:textSize="20sp"
         android:layout_height="wrap_content"
@@ -18,20 +18,11 @@
         />
 
 
-    <TextView
-        android:id="@+id/tv_cal_on"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="32232"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@id/btn_cal_on"/>
-
-
     <Button
         android:id="@+id/btn_cal_zero"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_cal_zero"
+        app:layout_constraintTop_toBottomOf="@id/tv_cal_info"
         android:text="@string/cal_zero"/>
 
     <Button
@@ -43,6 +34,14 @@
         app:layout_constraintTop_toTopOf="@id/btn_cal_zero"
         app:layout_constraintStart_toEndOf="@id/btn_cal_zero"/>
 
+    <Button
+        android:id="@+id/btn_cal_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cal_weight"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="@id/btn_cal_zero"
+        app:layout_constraintStart_toEndOf="@id/btn_cal_on"/>
 
 
 
