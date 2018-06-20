@@ -1,52 +1,72 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:id="@+id/constr_debug"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constr_debug"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="no.nordicsemi.android.blinky.preferences.DebugFrag">
 
     <TextView
-        android:id="@+id/tv_rx_msg"
-        android:textSize="20sp"
-        tools:text="RX message"
+        android:id="@+id/tv_RX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rx"
         android:layout_marginStart="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/tv_rx_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@id/tv_RX"
+        tools:text="RX message" />
+
+    <TextView
+        android:id="@+id/tv_TX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_rx_msg"
+        android:text="@string/tx"
+         />
 
     <TextView
         android:id="@+id/tv_tx_msg"
-        android:layout_width="match_parent"
-        android:layout_height="31dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/tv_rx_msg"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="5dp"
-
+        app:layout_constraintStart_toEndOf="@id/tv_TX"
+        app:layout_constraintTop_toBottomOf="@id/tv_rx_msg"
         tools:text="TX message" />
 
     <EditText
         android:id="@+id/send_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_tx_msg"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:visibility="visible"
-        android:hint="@string/et_hint_tx_msg"
         android:ems="10"
+        android:hint="@string/et_hint_tx_msg"
         android:inputType="textPersonName"
-        />
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_tx_msg" />
 
     <Button
         android:id="@+id/btn_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/tx_button"
         android:visibility="visible"
         app:layout_constraintStart_toEndOf="@id/send_text"
-        app:layout_constraintTop_toBottomOf="@id/tv_tx_msg"
-        android:text="@string/tx_button"/>
+        app:layout_constraintTop_toBottomOf="@id/tv_tx_msg" />
 
 
 </android.support.constraint.ConstraintLayout>

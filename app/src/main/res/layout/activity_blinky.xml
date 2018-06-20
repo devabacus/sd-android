@@ -71,15 +71,24 @@
                 android:name="no.nordicsemi.android.blinky.preferences.DebugFrag"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-
                 />
+
+			<fragment
+				android:id="@+id/frag_weight"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:name="no.nordicsemi.android.blinky.WeightPanel"
+				app:layout_constraintTop_toBottomOf="@id/frag_debug"
+				/>
+
 
 			<fragment
 				android:id="@+id/frag_butSet"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:name="no.nordicsemi.android.blinky.Butset"
-				app:layout_constraintTop_toBottomOf="@id/frag_debug"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/frag_weight"
 
 				/>
 

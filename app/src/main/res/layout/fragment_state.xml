@@ -31,6 +31,16 @@
         tools:text="Auto mode state"
 
         />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_contr_info"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/tv_cor_state"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--android:textSize="20sp"-->
+        <!--tools:text="Общая информация"-->
+        <!--android:layout_marginStart="10dp"-->
+        <!--/>-->
 
     <TextView
         android:id="@+id/tv_adc"

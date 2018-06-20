@@ -116,14 +116,9 @@ public class BlinkyActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.state_not_supported, Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
-
-
     @Override
     protected void onResume() {
-
         super.onResume();
     }
 

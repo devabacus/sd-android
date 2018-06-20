@@ -22,6 +22,7 @@ import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_ADC_SHOW;
+import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_NUM_COR_BUT9;
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
 
 /**
@@ -32,7 +33,7 @@ public class StateFragment extends Fragment {
 
     private static final String TAG = "StateFragment";
     private BlinkyViewModel blinkyViewModel;
-    TextView tvAdc, tvCorMode, tvCorState;
+    TextView tvAdc, tvCorMode, tvCorState; //tvContrInfo;
 
     String bleMsg[];
     int adcValue = 0;
@@ -55,6 +56,7 @@ public class StateFragment extends Fragment {
         tvAdc = v.findViewById(R.id.tv_adc);
         tvCorState = v.findViewById(R.id.tv_cor_state);
         tvCorMode = v.findViewById(R.id.tv_cor_mode);
+        //tvContrInfo = v.findViewById(R.id.tv_contr_info);
 
 
         stateViewModel.getAutoCorMode().observe(getActivity(), i -> {
@@ -68,7 +70,6 @@ public class StateFragment extends Fragment {
                     tvCorState.setText("");
                 }
             }
-
         });
 
         blinkyViewModel.getConnectionState().observe(getActivity(), s -> {
@@ -102,7 +103,7 @@ public class StateFragment extends Fragment {
                         else if (notif_value == 0) tvCorState.setText("сброс");
                         break;
 
-                        // состояние корректировки при работе в ручном режиме
+                        // состояние к`орректировки при работе в ручном режиме
                     case 2:
                         if (notif_value == 0 || notif_value == 1) tvCorState.setText("ожидание");
                         break;
@@ -113,6 +114,22 @@ public class StateFragment extends Fragment {
                         } else if (notif_value == 2){
                             stateViewModel.setmAutoCorMode(0);
                         }
+                        //Toast.makeText(getContext(), "Устройство готово", Toast.LENGTH_SHORT).show();
+                    case 6:
+                        if(notif_value == 3) {
+                            Toast.makeText(getContext(), "Режим: 3 кнопки активирован", Toast.LENGTH_LONG).show();
+                        } else if (notif_value == 9) {
+                            Toast.makeText(getContext(), "Режим 9 кнопок активирован", Toast.LENGTH_LONG).show();
+                        }
+
+                    case 7:
+                        if(notif_value == 0){
+                            Toast.makeText(getContext(), "Необходимо активировать работу с телефоном. Обратитесь к разработчикам", Toast.LENGTH_LONG).show();
+                        } else if (notif_value == 1) {
+                            Toast.makeText(getContext(), "Работа с телефона активирована", Toast.LENGTH_SHORT).show();
+                        }
+
+
                 }
 //                Log.d(TAG, "onCreateView: notif_num = " + notif_num);
 //                Log.d(TAG, "onCreateView: notif_value = " + notif_value);
@@ -132,8 +149,10 @@ public class StateFragment extends Fragment {
 //        prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
         adcShow = sharedPreferences.getBoolean(KEY_ADC_SHOW, false);
         Boolean showContSet = sharedPreferences.getBoolean(KEY_SHOW_CONT_SETTINGS_FRAG, false);
+//        Boolean numCorBut9 = sharedPreferences.getBoolean(KEY_NUM_COR_BUT9, false);
+//        if(numCorBut9)blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_ON);
+//        else blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_OFF);
 
-        Log.d(TAG, "onResume: ");
         if (adcShow) {
             tvAdc.setVisibility(View.VISIBLE);
             blinkyViewModel.sendTX(Cmd.ADC_SHOW_ON);

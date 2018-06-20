@@ -306,7 +306,6 @@ public class Butset extends Fragment implements View.OnClickListener {
                         sentOneTime = true;
                     }
                 });
-
                 ////////////////////////////////////////////////////////////////////////
                 break;
 
@@ -319,7 +318,6 @@ public class Butset extends Fragment implements View.OnClickListener {
                 corValue--;
                 seekBar.setProgress(corValue);
                 break;
-
         }
     }
 }

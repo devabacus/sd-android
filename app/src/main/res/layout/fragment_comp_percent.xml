@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:gravity="center"
-
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -53,7 +52,7 @@
 
 
             <Button
-                android:id="@+id/btnDec"
+                android:id="@+id/btn_dec_comp"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:text="@string/btnDec" />
@@ -71,7 +70,7 @@
                 tools:ignore="LabelFor" />
 
             <Button
-                android:id="@+id/btnInc"
+                android:id="@+id/btn_inc_comp"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:text="@string/btnInc" />

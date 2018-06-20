@@ -31,6 +31,9 @@ import java.util.Objects;
 
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_ADC_SHOW;
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_LIST_NUM_BUTTONS;
+import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_NUM_COR_BUT9;
+import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
+
 public class ButtonFrag extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
     long id = 11;
@@ -160,10 +163,11 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     void makeMsg(CorButton corButton) {
         msg = new StringBuilder();
         msg.append("$");
-        msg.append(corButton.getId()+1).append(",");
+        int remBut = Util.butNumConv((int)corButton.getId() + 1);
+        msg.append(remBut).append(",");
         msg.append(corButton.getCorDir());
         msg.append(corButton.getCorValue());
-        if(corButton.getCorDir().contains("p")){
+        if(corButton.getCorDir().contains("p") && corButton.getCorValue() > 0){
            msg.append("c").append(corButton.getCompValue());
         }
         msg.append("&");
@@ -172,6 +176,10 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     @Override
     public void onResume() {
         super.onResume();
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        Boolean numCorBut9 = sharedPreferences.getBoolean(KEY_NUM_COR_BUT9, false);
+//        if(numCorBut9)blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_ON);
+//        else blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_OFF);
     }
 
     @Override

@@ -54,7 +54,12 @@ public class DebugFrag extends Fragment {
 
         viewModel.sendUartData().observe(this, tvTxMsg::setText);
 
-        btnSend.setOnClickListener(view -> viewModel.sendTX(etSend.getText().toString()));
+        btnSend.setOnClickListener(view -> {
+                    tvTxMsg.setText("");
+                    viewModel.sendTX(etSend.getText().toString());
+
+                    tvRxMsg.setText("");
+        });
 
         viewModel.getUartData().observe(this, tvRxMsg::setText);
 

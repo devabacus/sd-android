@@ -33,7 +33,7 @@ public class CompPercent extends Fragment implements View.OnClickListener {
     BlinkyViewModel blinkyViewModel;
 
     EditText etCompValue;
-    Button btnDec, btnInc;
+    Button btnDecComp, btnIncComp;
     SeekBar seekBar;
     RadioButton rbMinus;
     int compCorValue = 0;
@@ -55,21 +55,21 @@ public class CompPercent extends Fragment implements View.OnClickListener {
 
         View v = inflater.inflate(R.layout.fragment_comp_percent, container, false);
         etCompValue = v.findViewById(R.id.etCompValue);
-        btnInc = v.findViewById(R.id.btnInc);
-        btnDec = v.findViewById(R.id.btnDec);
+        btnIncComp = v.findViewById(R.id.btn_inc_comp);
+        btnDecComp = v.findViewById(R.id.btn_dec_comp);
         seekBar = v.findViewById(R.id.seekBarComp);
         rbMinus = v.findViewById(R.id.rbMinusComp);
 
-        btnInc.setOnClickListener(this);
-        btnDec.setOnClickListener(this);
+        btnIncComp.setOnClickListener(this);
+        btnDecComp.setOnClickListener(this);
 
-        etCompValue.setOnFocusChangeListener((v1, hasFocus) -> {
-
-            compCorValue = Integer.valueOf(etCompValue.getText().toString());
-            buttonsViewModel.setmCompCorValue(compCorValue);
-            //blinkyViewModel.sendTX("$" + dirCor + corValue + "&");
-
-        });
+//        etCompValue.setOnFocusChangeListener((v1, hasFocus) -> {
+//
+//            compCorValue = Integer.valueOf(etCompValue.getText().toString());
+//            buttonsViewModel.setmCompCorValue(compCorValue);
+//            //blinkyViewModel.sendTX("$" + dirCor + corValue + "&");
+//
+//        });
 
         buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
             assert corButton != null;
@@ -93,25 +93,29 @@ public class CompPercent extends Fragment implements View.OnClickListener {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(progress > 0)
                 compCorValue = progress;
                 etCompValue.setText(String.valueOf(compCorValue));
-                if (rbMinus.isChecked()) compCorValue = -compCorValue;
+                //int compCorValueSent = compCorValue;
+                if (rbMinus.isChecked()){
+                   compCorValue = - compCorValue;
+                }
+                Log.d(TAG, "onProgressChanged: compCorValue = " + String.valueOf(compCorValue));
                 buttonsViewModel.setmCompCorValue(compCorValue);
                 //blinkyViewModel.sendTX("$c" + compCorValue + "&");
-                if (curCorButton.getCorDir().equals("p")){
+                //if (curCorButton.getCorDir().equals("p")){
 
                     if (curCorButton != null && isVisible())
 
                     {
+
                         String s = String.valueOf(curCorButton.getCorValue());
                         Log.d(TAG, "onProgressChanged: curCorButton.getCorValue = " + s);
                         String msg = "$" + "p" + curCorButton.getCorValue() + "c" + compCorValue + "&";
-                        blinkyViewModel.sendTX(msg);
+                        if(compCorValue != 0) blinkyViewModel.sendTX(msg);
                     } else {
                         blinkyViewModel.sendTX("$r&");
                     }
-
-                }
 
             }
 
@@ -132,17 +136,19 @@ public class CompPercent extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if(compCorValue < 0) compCorValue = -compCorValue;
         switch (v.getId()) {
-            case R.id.btnInc:
+            case R.id.btn_inc_comp:
                 compCorValue++;
                 seekBar.setProgress(compCorValue);
-
+                Log.d(TAG, "onClick: compCorValue = " + String.valueOf(compCorValue));
 
                 break;
 
-            case R.id.btnDec:
+            case R.id.btn_dec_comp:
                 compCorValue--;
                 seekBar.setProgress(compCorValue);
+                Log.d(TAG, "onClick: compCorValue = " + String.valueOf(compCorValue));
                 break;
         }
     }

@@ -7,15 +7,15 @@
         android:entryValues="@array/butNum_entries"
         android:key="num_buttons"
         android:summary="8"
-        android:title="Количество кнопок"
+        android:title="Количество кнопок в приложении"
 
         />
 
-    <SwitchPreference
-        android:key="adc_show"
-        android:title="Показывать АЦП"
-        android:defaultValue="false"
-        />
+    <!--<SwitchPreference-->
+        <!--android:key="num_cor_but9"-->
+        <!--android:title="Режим 9 кнопок на пульте"-->
+        <!--android:defaultValue="false"-->
+        <!--/>-->
 
     <SwitchPreference
         android:key="remote_but_update"
@@ -32,6 +32,16 @@
     <SwitchPreference
         android:key="show_debug_frag"
         android:title="Отладка"
+        android:defaultValue="false"
+        />
+    <SwitchPreference
+        android:key="adc_show"
+        android:title="Показывать АЦП"
+        android:defaultValue="false"
+        />
+    <SwitchPreference
+        android:key="weight_show"
+        android:title="Показывать вес"
         android:defaultValue="false"
         />
 
