@@ -114,6 +114,8 @@ public class StateFragment extends Fragment {
                         } else if (notif_value == 2){
                             stateViewModel.setmAutoCorMode(0);
                         }
+
+                        break;
                         //Toast.makeText(getContext(), "Устройство готово", Toast.LENGTH_SHORT).show();
                     case 6:
                         if(notif_value == 3) {
@@ -121,6 +123,7 @@ public class StateFragment extends Fragment {
                         } else if (notif_value == 9) {
                             Toast.makeText(getContext(), "Режим 9 кнопок активирован", Toast.LENGTH_LONG).show();
                         }
+                        break;
 
                     case 7:
                         if(notif_value == 0){
@@ -128,6 +131,7 @@ public class StateFragment extends Fragment {
                         } else if (notif_value == 1) {
                             Toast.makeText(getContext(), "Работа с телефона активирована", Toast.LENGTH_SHORT).show();
                         }
+                        break;
 
 
                 }
