@@ -76,6 +76,8 @@ public class StateFragment extends Fragment {
             assert s != null;
             if (s.equals("готово")) {
                 blinkyViewModel.sendTX(Cmd.INIT);
+                blinkyViewModel.sendTX(Cmd.ADC_SHOW_ON);
+                
             }
         });
 
@@ -150,12 +152,12 @@ public class StateFragment extends Fragment {
         super.onResume();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-//        prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
+//      prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
         adcShow = sharedPreferences.getBoolean(KEY_ADC_SHOW, false);
         Boolean showContSet = sharedPreferences.getBoolean(KEY_SHOW_CONT_SETTINGS_FRAG, false);
-//        Boolean numCorBut9 = sharedPreferences.getBoolean(KEY_NUM_COR_BUT9, false);
-//        if(numCorBut9)blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_ON);
-//        else blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_OFF);
+//      Boolean numCorBut9 = sharedPreferences.getBoolean(KEY_NUM_COR_BUT9, false);
+//      if(numCorBut9)blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_ON);
+//      else blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_OFF);
 
         if (adcShow) {
             tvAdc.setVisibility(View.VISIBLE);
