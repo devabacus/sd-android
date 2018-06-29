@@ -1,6 +1,5 @@
 package no.nordicsemi.android.blinky.archiveListOfItems;
 
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.arch.lifecycle.ViewModelProviders;
@@ -13,11 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
-import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 
 public class ArchiveItemsFragment extends Fragment implements View.OnLongClickListener, View.OnClickListener {
 
@@ -34,15 +31,20 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
 
         archiveViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ArchiveViewModel.class);
 
-        View v = inflater.inflate(R.layout.archive_list_items_frag, container, false);
+        View v = inflater.inflate(R.layout.fragment_archive_items1, container, false);
 
-        recViewArchive = v.findViewById(R.id.rec_view_archive);
-        adapter = new ArchiveAdapter(new ArrayList<>(), this, this);
-        recViewArchive.setAdapter(adapter);
-        recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        recViewArchive = v.findViewById(R.id.rec_view_arch);
+        archiveAdapter = new ArchiveAdapter(new ArrayList<>(), this, this);
+        recViewArchive.setAdapter(archiveAdapter);
+        recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
         archiveViewModel.getArchiveList().observe(getActivity(), archiveDataList -> archiveAdapter.addItems(archiveDataList));
-
+//        archiveViewModel.getArchiveList().observe(getActivity(), new Observer<List<ArchiveData>>() {
+//            @Override
+//            public void onChanged(@Nullable List<ArchiveData> archiveDataList) {
+//                Toast.makeText(getContext(), String.valueOf(archiveDataList.get(1).getMainWeight()), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
         return v;

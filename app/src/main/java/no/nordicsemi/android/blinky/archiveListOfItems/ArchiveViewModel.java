@@ -20,7 +20,7 @@ public class ArchiveViewModel extends AndroidViewModel {
 
     private ArchiveDatabase archiveDatabase;
 
-    public ArchiveViewModel(@NonNull Application application, LiveData<List<ArchiveData>> archiveList) {
+    public ArchiveViewModel(@NonNull Application application) {
         super(application);
 
         archiveDatabase = ArchiveDatabase.getArchiveDatabase(this.getApplication());
