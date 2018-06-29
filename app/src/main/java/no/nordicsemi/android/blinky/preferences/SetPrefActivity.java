@@ -71,6 +71,7 @@ public class SetPrefActivity extends AppCompatActivity {
         public static final String KEY_SHOW_CONT_SETTINGS_FRAG = "show_contrsettings";
         public static final String KEY_SHOW_DEBUG_FRAG = "show_debug_frag";
         public static final String KEY_NUM_COR_BUT9 = "num_cor_but9";
+        public static final String KEY_ARCHIVE_SAVE = "archive_save";
 
         Preference curPref;
 

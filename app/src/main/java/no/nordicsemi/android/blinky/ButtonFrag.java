@@ -1,12 +1,10 @@
 package no.nordicsemi.android.blinky;
-import android.arch.lifecycle.Observer;
+
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,21 +16,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import no.nordicsemi.android.blinky.database.AppDatabase;
 import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_ADC_SHOW;
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_LIST_NUM_BUTTONS;
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_NUM_COR_BUT9;
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
 
 public class ButtonFrag extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 

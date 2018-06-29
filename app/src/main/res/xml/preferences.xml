@@ -44,6 +44,11 @@
         android:title="Показывать вес"
         android:defaultValue="false"
         />
+    <SwitchPreference
+        android:key="archive_save"
+        android:title="Сохранять в архив"
+        android:defaultValue="false"
+        />
 
 
 </PreferenceScreen>

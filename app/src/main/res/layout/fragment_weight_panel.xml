@@ -3,15 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginEnd="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/weight_panel_id"
     tools:context=".WeightPanel">
 
    <TextView
-       android:text=""
+       android:text="@string/start_weight"
        android:id="@+id/tv_weight"
        android:textSize="30sp"
+       android:layout_marginStart="20dp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        />
+
+    <Button
+        android:id="@+id/btn_archive"
+        android:text="@string/Archive_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
 </android.support.constraint.ConstraintLayout>
