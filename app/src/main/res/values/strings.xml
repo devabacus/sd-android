@@ -111,4 +111,7 @@
     <string name="zero_weight">0.0</string>
     <string name="Archive_btn">Архив</string>
     <string name="start_weight">0.0</string>
+    <string name="close">Закрыть</string>
+    <string name="detail_weight">Детализация</string>
+    <string name="archive_title">Архив взвешиваний</string>
 </resources>

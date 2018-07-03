@@ -58,8 +58,6 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 	private byte[] mOutgoingBuffer;
 	private int mBufferOffset;
 
-
-
 	public BlinkyManager(final Context context) {
 		super(context);
 	}

@@ -71,8 +71,6 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         adapter = new ButtonAdapter(new ArrayList<>(), this, this);
         recButView.setAdapter(adapter);
         recButView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-
-
         cbCorMode = v.findViewById(R.id.cb_cor_mode);
 
         //при запуске получаем от контроллера режим работы и меняем положение флажка при необходимости.
@@ -82,9 +80,6 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
                 else if (integer == 0) cbCorMode.setChecked(false);
             }
         });
-
-
-
         cbCorMode.setOnClickListener(v1 -> {
             if(cbCorMode.isChecked()){
                 blinkyViewModel.sendTX(Cmd.COR_MODE_AUTO);
@@ -93,8 +88,6 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
             }
         });
 //        blinkyViewModel.getUartData().observe(getActivity(), s -> Log.d(TAG, "onChanged: getData " + s));
-
-
         buttonsViewModel.ismSetButton().observe(getActivity(), b->{
             if(b!=null){
                 setOpened = b;
@@ -179,6 +172,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     @Override
     public void onClick(View v) {
         CorButton corButton = (CorButton) v.getTag();
+        buttonsViewModel.setmCurCorButton(corButton);
         tvState.setText(corButton.getButNum());
         makeMsg(corButton);
         Log.d(TAG, "onClick: msg = " + msg.toString());

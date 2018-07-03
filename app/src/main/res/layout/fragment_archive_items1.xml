@@ -6,20 +6,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".archiveListOfItems.ArchiveItemsFragment">
 
-    <TextView
-        android:id="@+id/tvMujik"
-        android:textSize="20sp"
-        android:text="Привет Мужик"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <view class="android.support.v7.widget.RecyclerView"
         android:id="@+id/rec_view_arch"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.95"
-        app:layout_constraintTop_toBottomOf="@id/tvMujik"
         android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_height="match_parent">

@@ -38,7 +38,6 @@ public class ButtonsViewModel extends AndroidViewModel {
         mCompCorValue.setValue(compValue);
     }
 
-
     public LiveData<Boolean> ismSetButton(){
         return mSetButton;
     }

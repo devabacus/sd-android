@@ -21,13 +21,34 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <TextView
+        android:id="@+id/archive_title"
+        android:text="@string/archive_title"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/appbar_layout2"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <fragment
+        android:name="no.nordicsemi.android.blinky.archiveListOfItems.Archive_detail_item"
+        android:id="@+id/frag_detail_archive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/archive_title"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        />
+
+
     <fragment
         android:name="no.nordicsemi.android.blinky.archiveListOfItems.ArchiveItemsFragment"
         android:id="@+id/frag_archive"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar_layout2"
-        android:layout_marginTop="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/frag_detail_archive"
         app:layout_constraintStart_toStartOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -19,6 +19,7 @@ public class ArchiveViewModel extends AndroidViewModel {
     private LiveData<List<ArchiveData>> archiveList;
 
     private ArchiveDatabase archiveDatabase;
+    private final MutableLiveData<Boolean> mOpenDetailArchive = new MutableLiveData<>();
 
     public ArchiveViewModel(@NonNull Application application) {
         super(application);
@@ -28,9 +29,18 @@ public class ArchiveViewModel extends AndroidViewModel {
         //this.archiveList = archiveList;
     }
 
+    public LiveData<Boolean> mIsDetailOpen(){
+        return mOpenDetailArchive;
+    }
+
     public LiveData<List<ArchiveData>> getArchiveList() {
         return archiveList;
     }
+
+    public void setmOpenDetailArchive(final Boolean archiveDetailOpen){
+        mOpenDetailArchive.setValue(archiveDetailOpen);
+    }
+
 
     public void addArchiveItem(final ArchiveData archiveData){
         new AddAsyncTask(archiveDatabase).execute(archiveData);
@@ -39,6 +49,12 @@ public class ArchiveViewModel extends AndroidViewModel {
     public void deleteArchiveItem(ArchiveData archiveData) {
         new DeleteAsyncTask(archiveDatabase).execute(archiveData);
     }
+
+
+
+
+
+
 
     private static class AddAsyncTask extends AsyncTask<ArchiveData, Void, Void>{
         private ArchiveDatabase db;

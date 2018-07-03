@@ -36,7 +36,7 @@ public class StateFragment extends Fragment {
     TextView tvAdc, tvCorMode, tvCorState; //tvContrInfo;
 
     String bleMsg[];
-    int adcValue = 0;
+    public static int adcValue = 0;
     Boolean adcShow = false;
 
     public StateFragment() {

@@ -20,9 +20,11 @@ import java.util.Date;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.archiveListOfItems.ArchiveViewModel;
+import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 
+import static no.nordicsemi.android.blinky.StateFragment.adcValue;
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_ARCHIVE_SAVE;
 import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_WEIGHT_SHOW;
 
@@ -34,6 +36,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
 
 
     BlinkyViewModel blinkyViewModel;
+    ButtonsViewModel buttonsViewModel;
     ConstraintLayout weightLayout;
     TextView tvWeight;
     Button btnArhive, btnTest;
@@ -41,8 +44,10 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     int weightValueInt = 0;
     private ArchiveViewModel archiveViewModel;
     private ArchiveData archiveData;
-    int weight = 0;
+    float weight = 0;
     int tare = 0;
+    //CorButton curCorButton;
+    Boolean butSet = false;
 
 
     public WeightPanel() {
@@ -61,8 +66,24 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         weightLayout = v.findViewById(R.id.weight_panel_id);
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
+        buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
+
+        buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
+                butSet = aBoolean;
+        });
 
 
+
+        buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
+            if(!butSet){
+                //curCorButton = corButton;
+                if (corButton != null && !corButton.getButNum().isEmpty()) {
+                    tare = Integer.valueOf(corButton.getButNum());
+                }
+
+            }
+
+        });
 
         btnArhive.setOnClickListener(this);
         btnTest.setOnClickListener(this);
@@ -71,11 +92,13 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
             assert s != null;
             if(s.matches("^wt.*")) {
                 String weightValueStr = s.substring(s.indexOf('t') + 1);
-                weightValueStr = weightValueStr.replaceAll("[^0-9.]", "");
+                weightValueStr = weightValueStr.replaceAll("[^0-9.-]", "");
                 if (weightValueStr.contains(".")) {
+                    weightValueInt = 0; // для записи в архив
                     weightValueFloat = Float.parseFloat(weightValueStr);
                     tvWeight.setText(String.valueOf(weightValueFloat));
                 } else {
+                    weightValueFloat = 0; // для записи в архив
                     weightValueInt = Integer.parseInt(weightValueStr);
                     tvWeight.setText(String.valueOf(weightValueInt));
                 }
@@ -115,9 +138,15 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btn_test:
-                weight += 100;
-                tare += 55;
-                archiveViewModel.addArchiveItem(new ArchiveData(new Date(),weight, tare));
+                if (weightValueInt != 0) {
+                    weight = weightValueInt;
+                } else if (weightValueFloat != 0) {
+                    weight = weightValueFloat;
+                }
+                archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weight, adcValue, tare));
+                //   weight += 100;
+
+
                 break;
         }
 
