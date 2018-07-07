@@ -17,28 +17,45 @@ import no.nordicsemi.android.blinky.database_archive.ArchiveDatabase;
 public class ArchiveViewModel extends AndroidViewModel {
 
     private LiveData<List<ArchiveData>> archiveList;
+    private LiveData<List<ArchiveData>> archiveListLast;
+    private LiveData<List<ArchiveData>> archiveListbyNum;
 
     private ArchiveDatabase archiveDatabase;
     private final MutableLiveData<Boolean> mOpenDetailArchive = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mNumOfWeightPicked = new MutableLiveData<>();
 
     public ArchiveViewModel(@NonNull Application application) {
         super(application);
 
         archiveDatabase = ArchiveDatabase.getArchiveDatabase(this.getApplication());
         archiveList = archiveDatabase.archiveFromDao().getAllArchiveItems();
+        archiveListLast = archiveDatabase.archiveFromDao().getLastItem();
+        //archiveListbyNum = archiveDatabase.archiveFromDao().getItemByNumOfWeight(numOfWeightView);
+
         //this.archiveList = archiveList;
     }
 
     public LiveData<Boolean> mIsDetailOpen(){
         return mOpenDetailArchive;
     }
+    public LiveData<Integer> getNumOfWeightPicked(){return mNumOfWeightPicked;}
 
     public LiveData<List<ArchiveData>> getArchiveList() {
         return archiveList;
     }
+    public LiveData<List<ArchiveData>> getArchiveListLast() {return archiveListLast;}
+    public LiveData<List<ArchiveData>> getArchiveListbyNum(int numOfWeightPicked) {
+        archiveListbyNum = archiveDatabase.archiveFromDao().getItemByNumOfWeight(numOfWeightPicked);
+        return archiveListbyNum;
+    }
+
 
     public void setmOpenDetailArchive(final Boolean archiveDetailOpen){
         mOpenDetailArchive.setValue(archiveDetailOpen);
+    }
+
+    public void setmNumOfWeightPicked(final Integer numOfWeightPicked){
+        mNumOfWeightPicked.setValue(numOfWeightPicked);
     }
 
 

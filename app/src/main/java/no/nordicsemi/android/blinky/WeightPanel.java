@@ -5,12 +5,15 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,8 +26,12 @@ import no.nordicsemi.android.blinky.archiveListOfItems.ArchiveViewModel;
 import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.blinky.StateFragment.adcValue;
+import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_DISCRETE_MAX;
+import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_MIN_WEIGHT;
+import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_TIME_STAB;
 import static no.nordicsemi.android.blinky.preferences.PrefWeightFrag.KEY_DISCRETE_VALUE;
 import static no.nordicsemi.android.blinky.preferences.PrefWeightFrag.KEY_MAX_WEIGHT_VALUE;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_ARCHIVE_SAVE;
@@ -39,18 +46,32 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
 
     BlinkyViewModel blinkyViewModel;
     ButtonsViewModel buttonsViewModel;
+    StateViewModel stateViewModel;
     ConstraintLayout weightLayout;
     TextView tvWeight;
     Button btnArhive, btnTest;
     float weightValueFloat = 0;
+    float weightValueLast = 0;
     int weightValueInt = 0;
     private ArchiveViewModel archiveViewModel;
     private ArchiveData archiveData;
     float weight = 0;
     float adcWeight = 0;
-    int numOfWeight = 0;
+    public static int numOfWeight = 1;
     int tare = 0;
     float discrete = 0;
+    int maxDiscrete = 5;
+    int timeStab = 3;
+    int timeCounter = 0;
+    boolean timeCounting = false;
+    int weightTimeSec = 0;
+    float minWeightForSave = 1;
+    boolean incWeight = false;
+    boolean decWeight = false;
+    boolean archiveWeight = false;
+
+
+
     //CorButton curCorButton;
     Boolean butSet = false;
 
@@ -72,11 +93,44 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
+        stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
+
+
+        archiveViewModel.getArchiveListLast().observe(getActivity(),archiveDataList -> {
+            assert archiveDataList != null;
+            if(archiveDataList.size() > 0)
+            numOfWeight = archiveDataList.get(0).getNumOfWeight();
+        });
+
+//        stateViewModel.getWeightValue().observe(getActivity(), aFloat -> {
+//        });
+
+
 
         buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
                 butSet = aBoolean;
         });
 
+        Handler handler = new Handler();
+        int delay = 1000;
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (timeCounting){
+                    timeCounter++;
+                    if(timeCounter >= timeStab){
+                       // numOfWeight++;
+
+                        archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weightValueFloat, numOfWeight, adcWeight, adcValue, tare, archiveWeight));
+
+                        Toast.makeText(getContext(), "Стабильный вес", Toast.LENGTH_SHORT).show();
+                        timeCounting = false;
+                    }
+                }
+
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
 
 
         buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
@@ -98,15 +152,26 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
             if(s.matches("^wt.*")) {
                 String weightValueStr = s.substring(s.indexOf('t') + 1);
                 weightValueStr = weightValueStr.replaceAll("[^0-9.-]", "");
-                if (weightValueStr.contains(".")) {
-                    weightValueInt = 0; // для записи в архив
-                    weightValueFloat = Float.parseFloat(weightValueStr);
-                    tvWeight.setText(String.valueOf(weightValueFloat));
-                } else {
-                    weightValueFloat = 0; // для записи в архив
-                    weightValueInt = Integer.parseInt(weightValueStr);
-                    tvWeight.setText(String.valueOf(weightValueInt));
+                weightValueFloat = Float.parseFloat(weightValueStr);
+                if ((weightValueFloat != weightValueLast) && (weightValueFloat > minWeightForSave)) {
+                    weightValueLast = weightValueFloat;
+                    if (weightValueFloat > weightValueLast) {
+                        incWeight = true;
+                        decWeight = false;
+                    } else{
+                        incWeight = false;
+                        decWeight = true;
+
+                    }
+                    timeCounter = 0;
+                    timeCounting = true;
+                } else if (weightValueFloat < minWeightForSave && decWeight) {
+                    numOfWeight++;
+                    Toast.makeText(getContext(), "взвешивание: " + String.valueOf(numOfWeight), Toast.LENGTH_SHORT).show();
+                    decWeight = false;
                 }
+                //stateViewModel.setmWeightValue(weightValueFloat);
+                tvWeight.setText(String.valueOf(weightValueFloat));
             }
         });
         return v;
@@ -119,6 +184,9 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         Boolean show_weight = sharedPreferences.getBoolean(KEY_WEIGHT_SHOW, false);
         Boolean arhive = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE, false);
         discrete = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_VALUE, "0"));
+        maxDiscrete = Integer.parseInt(sharedPreferences.getString(KEY_DISCRETE_MAX, "5"));
+        timeStab = Integer.parseInt(sharedPreferences.getString(KEY_TIME_STAB, "3"));
+        minWeightForSave = Float.parseFloat(sharedPreferences.getString(KEY_MIN_WEIGHT, "1"));
         if(show_weight) {
             weightLayout.setVisibility(View.VISIBLE);
         } else {
@@ -144,16 +212,20 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btn_test:
-                if (weightValueInt != 0) {
-                    weight = weightValueInt;
-                } else if (weightValueFloat != 0) {
-                    weight = weightValueFloat;
-                }
-                archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weight, numOfWeight, adcWeight, adcValue, tare));
+                archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weight, numOfWeight, adcWeight, adcValue, tare, archiveWeight));
                 //   weight += 100;
                 break;
         }
 
     }
+
+
+
+
+//    public void timeCounter(void) {
+//
+//    }
+
+
 }
 

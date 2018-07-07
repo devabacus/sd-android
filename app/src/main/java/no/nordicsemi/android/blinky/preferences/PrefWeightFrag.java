@@ -65,10 +65,10 @@ public class PrefWeightFrag extends PreferenceFragment implements SharedPreferen
         Preference curPref = findPreference(key);
 
         if (key.equals(KEY_MAX_WEIGHT_VALUE)) {
-            curPref = maxWeightPref;
+            maxWeightPref.setSummary(sharedPreferences.getString(key, "0"));;
         } else if (key.equals(KEY_DISCRETE_VALUE)) {
-            curPref = discretePref;
+            discretePref.setSummary(sharedPreferences.getString(key, "0"));;
         }
-        curPref.setSummary(sharedPreferences.getString(key, "0"));
+
     }
 }

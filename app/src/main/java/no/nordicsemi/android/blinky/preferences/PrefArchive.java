@@ -20,11 +20,14 @@ import no.nordicsemi.android.blinky.R;
  */
 public class PrefArchive extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
 
+
     public static final String KEY_DISCRETE_MAX = "max_discrete";
+    public static final String KEY_MIN_WEIGHT = "min_weight";
     public static final String KEY_TIME_STAB = "time_stab";
 
     Preference discreteMaxPref;
     Preference timeStabPref;
+    Preference minWeightPref;
 
     public PrefArchive() {
         // Required empty public constructor
@@ -48,11 +51,14 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         discreteMaxPref = findPreference(KEY_DISCRETE_MAX);
         timeStabPref = findPreference(KEY_TIME_STAB);
+        minWeightPref = findPreference(KEY_MIN_WEIGHT);
         String maxWeight = sharedPreferences.getString(KEY_DISCRETE_MAX,"5");
         String discreteValue = sharedPreferences.getString(KEY_TIME_STAB,"3");
+        String minWeightValue = sharedPreferences.getString(KEY_MIN_WEIGHT,"1");
 
         discreteMaxPref.setSummary(maxWeight);
         timeStabPref.setSummary(discreteValue);
+        minWeightPref.setSummary(minWeightValue);
     }
 
 
@@ -64,6 +70,8 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
             curPref = discreteMaxPref;
         } else if (key.equals(KEY_TIME_STAB)) {
             curPref = timeStabPref;
+        } else if (key.equals(KEY_MIN_WEIGHT)) {
+            curPref = minWeightPref;
         }
         curPref.setSummary(sharedPreferences.getString(key, "0"));
     }

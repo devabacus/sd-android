@@ -19,15 +19,17 @@ public class ArchiveData {
     private float adcWeight;
     private int adcArchiveValue;
     private int tareValue;
+    private boolean archiveWeight;
 
 
-    public ArchiveData(Date timePoint, float mainWeight, int numOfWeight, float adcWeight, int adcArchiveValue, int tareValue) {
+    public ArchiveData(Date timePoint, float mainWeight, int numOfWeight, float adcWeight, int adcArchiveValue, int tareValue, boolean archiveWeight) {
         this.timePoint = timePoint;
         this.mainWeight = mainWeight;
         this.numOfWeight = numOfWeight;
         this.adcWeight = adcWeight;
         this.adcArchiveValue = adcArchiveValue;
         this.tareValue = tareValue;
+        this.archiveWeight = archiveWeight;
     }
 
     public Date getTimePoint() {
@@ -42,11 +44,11 @@ public class ArchiveData {
 
     public float getAdcWeight() { return adcWeight; }
 
-
-
     public int getTareValue() {
         return tareValue;
     }
 
     public int getAdcArchiveValue() {return adcArchiveValue;}
+
+    public boolean getArchiveWeight(){return archiveWeight;}
 }

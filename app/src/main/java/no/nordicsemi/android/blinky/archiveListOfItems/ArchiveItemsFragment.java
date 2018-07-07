@@ -23,7 +23,7 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     private ArchiveViewModel archiveViewModel;
     private ArchiveAdapter archiveAdapter;
     RecyclerView recViewArchive;
-    ArchiveAdapter adapter;
+    public static int numOfWeightPicked;
 
     @Nullable
     @Override
@@ -39,6 +39,7 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
         archiveViewModel.getArchiveList().observe(getActivity(), archiveDataList -> archiveAdapter.addItems(archiveDataList));
+        //archiveViewModel.getArchiveListbyNum(1).observe(getActivity(),archiveDataListByNum -> archiveAdapter.addItems(archiveDataListByNum));
 //        archiveViewModel.getArchiveList().observe(getActivity(), new Observer<List<ArchiveData>>() {
 //            @Override
 //            public void onChanged(@Nullable List<ArchiveData> archiveDataList) {
@@ -53,8 +54,11 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     public void onClick(View v) {
         //TODO детальный вывод взвешивания
         ArchiveData archiveData = (ArchiveData) v.getTag();
+        numOfWeightPicked = archiveData.getNumOfWeight();
         archiveViewModel.setmOpenDetailArchive(true);
-        //Toast.makeText(getContext(), String.valueOf(archiveData.getAdcArchiveValue()), Toast.LENGTH_SHORT).show();
+        //archiveViewModel.setmNumOfWeightPicked(archiveData.getNumOfWeight());
+
+        Toast.makeText(getContext(), String.valueOf(numOfWeightPicked), Toast.LENGTH_SHORT).show();
 
     }
 

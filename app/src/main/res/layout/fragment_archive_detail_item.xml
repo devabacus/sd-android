@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/archive_detail_layout"
     android:visibility="gone"
+    android:background="@color/colorPrimary"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="no.nordicsemi.android.blinky.archiveListOfItems.Archive_detail_item">
@@ -11,15 +13,30 @@
         android:id="@+id/tvDetail"
         android:text="@string/detail_weight"
         android:textSize="20sp"
+        android:textColor="@color/cardview_light_background"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <view class="android.support.v7.widget.RecyclerView"
+        android:id="@+id/rec_view_arch_detail"
+        android:layout_width="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tvDetail"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="match_parent">
+
+    </view>
+
+
+
     <Button
         android:id="@+id/btn_close_detail"
         android:text="@string/close"
-        app:layout_constraintStart_toEndOf="@id/tvDetail"
+        app:layout_constraintTop_toBottomOf="@id/rec_view_arch_detail"
+        app:layout_constraintStart_toStartOf="parent"
+
         android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
