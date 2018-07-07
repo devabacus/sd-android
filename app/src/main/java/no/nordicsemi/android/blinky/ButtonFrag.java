@@ -139,6 +139,8 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         btnRes.setOnClickListener(v1 -> {
             //Log.d(TAG, "onCreateView: COR_RESET");
             blinkyViewModel.sendTX(Cmd.COR_RESET);
+            CorButton corButton = new CorButton(0, "0", "", 0,0);
+            buttonsViewModel.setmCurCorButton(corButton);
 
             stateViewModel.setmAutoCorMode(2);
             tvState.setText("Сброс");

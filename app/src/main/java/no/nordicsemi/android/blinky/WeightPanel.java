@@ -50,15 +50,15 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     ConstraintLayout weightLayout;
     TextView tvWeight;
     Button btnArhive, btnTest;
-    float weightValueFloat = 0;
+
     float weightValueLast = 0;
     int weightValueInt = 0;
     private ArchiveViewModel archiveViewModel;
     private ArchiveData archiveData;
     float weight = 0;
-    float adcWeight = 0;
+
     public static int numOfWeight = 1;
-    int tare = 0;
+
     float discrete = 0;
     int maxDiscrete = 5;
     int timeStab = 3;
@@ -68,13 +68,24 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     float minWeightForSave = 1;
     boolean incWeight = false;
     boolean decWeight = false;
-    boolean archiveWeight = false;
+
+    float weightValueFloat = 0;
+    float adcWeight = 0;
+    int adcValue = 0;
+    int tare = 0;
+    int arch = 0;
+    int typeOfWeight = 0;
 
 
+    Date dateTime[];
+    float weightValueFloat_arr[];
+    int tare_arr[];
+    int adcValue_arr[];
+    float adcWeight_arr[];
+    int typeOfWeight_arr[];
 
     //CorButton curCorButton;
     Boolean butSet = false;
-
 
     public WeightPanel() {
         // Required empty public constructor
@@ -96,6 +107,15 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
 
 
+
+        dateTime = new Date[20];
+        weightValueFloat_arr = new float[20];
+        tare_arr = new int[20];
+        adcValue_arr = new int[20];
+        adcWeight_arr = new float[20];
+        typeOfWeight_arr = new int[20];
+
+
         archiveViewModel.getArchiveListLast().observe(getActivity(),archiveDataList -> {
             assert archiveDataList != null;
             if(archiveDataList.size() > 0)
@@ -104,8 +124,6 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
 
 //        stateViewModel.getWeightValue().observe(getActivity(), aFloat -> {
 //        });
-
-
 
         buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
                 butSet = aBoolean;
@@ -120,8 +138,26 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     timeCounter++;
                     if(timeCounter >= timeStab){
                        // numOfWeight++;
+                       // Toast.makeText(getContext(), String.valueOf(new Date()), Toast.LENGTH_SHORT).show();
 
-                        archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weightValueFloat, numOfWeight, adcWeight, adcValue, tare, archiveWeight));
+                        //dateTime[arch] = new Date();
+                        dateTime[arch] = new Date();
+                        weightValueFloat_arr[arch] = weightValueFloat;
+                        adcWeight_arr[arch] = adcWeight;
+                        adcValue_arr[arch] = adcValue;
+                        tare_arr[arch] = tare;
+                        typeOfWeight_arr[arch] = typeOfWeight;
+
+                        Log.d("test", dateTime[arch] + ", " +
+                                weightValueFloat_arr[arch] + ", " +
+                                adcWeight_arr[arch] + ", " +
+                                adcValue_arr[arch] + ", " +
+                                tare_arr[arch] + ", " +
+                                typeOfWeight_arr[arch] + "\n");
+                        arch++;
+//                                archiveViewModel.addArchiveItem(new ArchiveData(dateTime[arch],
+//                                weightValueFloat_arr[arch], numOfWeight, adcWeight_arr[arch],
+//                                adcValue_arr[arch], tare_arr[arch], archiveWeight[arch]));
 
                         Toast.makeText(getContext(), "Стабильный вес", Toast.LENGTH_SHORT).show();
                         timeCounting = false;
@@ -138,7 +174,10 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                 //curCorButton = corButton;
                 if (corButton != null && !corButton.getButNum().isEmpty()) {
                     tare = Integer.valueOf(corButton.getButNum());
+                } else {
+                    tare = 0;
                 }
+
 
             }
 
@@ -177,6 +216,8 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         return v;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -198,9 +239,6 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         } else {
             btnArhive.setVisibility(View.GONE);
         }
-
-
-
         super.onResume();
     }
 
@@ -212,7 +250,23 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btn_test:
-                archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weight, numOfWeight, adcWeight, adcValue, tare, archiveWeight));
+                //archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weight, numOfWeight, adcWeight, adcValue, tare, archiveWeight));
+//                dateTime = new Date[20];
+//                weightValueFloat_arr = new float[20];
+//                tare_arr = new int[20];
+//                adcValue_arr = new int[20];
+//                adcWeight_arr = new float[20];
+//                typeOfWeight_arr = new int[20];
+
+                for(arch = 0; arch < dateTime.length; arch++){
+                    Log.d("test", dateTime[arch] + ", " +
+                            weightValueFloat_arr[arch] + ", " +
+                            tare_arr[arch] + ", " +
+                            adcValue_arr[arch] + ", " +
+                            adcWeight_arr[arch] + ", " +
+                            typeOfWeight_arr[arch] + "\n");
+
+                }
                 //   weight += 100;
                 break;
         }

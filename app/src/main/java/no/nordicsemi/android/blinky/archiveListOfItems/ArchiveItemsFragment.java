@@ -58,8 +58,6 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         archiveViewModel.setmOpenDetailArchive(true);
         //archiveViewModel.setmNumOfWeightPicked(archiveData.getNumOfWeight());
 
-        Toast.makeText(getContext(), String.valueOf(numOfWeightPicked), Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
