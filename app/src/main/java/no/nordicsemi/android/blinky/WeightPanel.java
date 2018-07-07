@@ -60,7 +60,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     public static int numOfWeight = 1;
 
     float discrete = 0;
-    int maxDiscrete = 5;
+    float maxDeviation = 1;
     int timeStab = 3;
     int timeCounter = 0;
     boolean timeCounting = false;
@@ -68,10 +68,12 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     float minWeightForSave = 1;
     boolean incWeight = false;
     boolean decWeight = false;
+    boolean enoughChange = false;
 
     float weightValueFloat = 0;
+    float weightSaved = 0;
     float adcWeight = 0;
-    int adcValue = 0;
+    //int adcValue = 0;
     int tare = 0;
     int arch = 0;
     int typeOfWeight = 0;
@@ -136,7 +138,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
             public void run() {
                 if (timeCounting){
                     timeCounter++;
-                    if(timeCounter >= timeStab){
+                    if((timeCounter >= timeStab) && (weightValueFloat > minWeightForSave) && (Math.abs(weightSaved - weightValueFloat) > maxDeviation)){
                        // numOfWeight++;
                        // Toast.makeText(getContext(), String.valueOf(new Date()), Toast.LENGTH_SHORT).show();
 
@@ -147,6 +149,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                         adcValue_arr[arch] = adcValue;
                         tare_arr[arch] = tare;
                         typeOfWeight_arr[arch] = typeOfWeight;
+                        weightSaved = weightValueFloat;
 
                         Log.d("test", dateTime[arch] + ", " +
                                 weightValueFloat_arr[arch] + ", " +
@@ -155,6 +158,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                                 tare_arr[arch] + ", " +
                                 typeOfWeight_arr[arch] + "\n");
                         arch++;
+
 //                                archiveViewModel.addArchiveItem(new ArchiveData(dateTime[arch],
 //                                weightValueFloat_arr[arch], numOfWeight, adcWeight_arr[arch],
 //                                adcValue_arr[arch], tare_arr[arch], archiveWeight[arch]));
@@ -193,6 +197,9 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                 weightValueStr = weightValueStr.replaceAll("[^0-9.-]", "");
                 weightValueFloat = Float.parseFloat(weightValueStr);
                 if ((weightValueFloat != weightValueLast) && (weightValueFloat > minWeightForSave)) {
+                    if (Math.abs(weightValueFloat - weightValueLast) > maxDeviation) {
+                        timeCounter = 0;
+                    }
                     weightValueLast = weightValueFloat;
                     if (weightValueFloat > weightValueLast) {
                         incWeight = true;
@@ -200,9 +207,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     } else{
                         incWeight = false;
                         decWeight = true;
-
                     }
-                    timeCounter = 0;
                     timeCounting = true;
                 } else if (weightValueFloat < minWeightForSave && decWeight) {
                     numOfWeight++;
@@ -225,7 +230,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         Boolean show_weight = sharedPreferences.getBoolean(KEY_WEIGHT_SHOW, false);
         Boolean arhive = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE, false);
         discrete = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_VALUE, "0"));
-        maxDiscrete = Integer.parseInt(sharedPreferences.getString(KEY_DISCRETE_MAX, "5"));
+        maxDeviation = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_MAX, "1"));
         timeStab = Integer.parseInt(sharedPreferences.getString(KEY_TIME_STAB, "3"));
         minWeightForSave = Float.parseFloat(sharedPreferences.getString(KEY_MIN_WEIGHT, "1"));
         if(show_weight) {

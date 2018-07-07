@@ -189,7 +189,6 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         // кричим что хотим видеть настройки, флаг в 1
         buttonsViewModel.setmSetButton(true);
         //Log.d(TAG, "onLongClick: setmSetButton = true");
-
         return false;
     }
 }

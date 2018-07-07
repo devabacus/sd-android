@@ -3,7 +3,7 @@
 
     <EditTextPreference
         android:key="max_discrete"
-        android:title="Макс. изменение веса, дискрет">
+        android:title="Макс. изменение веса, кг">
     </EditTextPreference>
 
 

@@ -52,7 +52,7 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         discreteMaxPref = findPreference(KEY_DISCRETE_MAX);
         timeStabPref = findPreference(KEY_TIME_STAB);
         minWeightPref = findPreference(KEY_MIN_WEIGHT);
-        String maxWeight = sharedPreferences.getString(KEY_DISCRETE_MAX,"5");
+        String maxWeight = sharedPreferences.getString(KEY_DISCRETE_MAX,"1");
         String discreteValue = sharedPreferences.getString(KEY_TIME_STAB,"3");
         String minWeightValue = sharedPreferences.getString(KEY_MIN_WEIGHT,"1");
 
