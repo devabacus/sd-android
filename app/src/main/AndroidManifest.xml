@@ -70,9 +70,10 @@
         <activity
             android:name=".BlinkyActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".preferences.SetPrefActivity" />
+        <activity android:name=".preferences.SetPrefActivity"
+            android:theme="@style/Pref"/>
         <activity android:name=".contr_settings.ContSettingsActivity" />
-        <activity android:name=".Archive"></activity>
+        <activity android:name=".Archive" />
     </application>
 
 </manifest>

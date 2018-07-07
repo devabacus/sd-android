@@ -29,7 +29,7 @@ import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 
 import java.util.Objects;
 
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_REMOTE_BUT_UPDATE;
+import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_REMOTE_BUT_UPDATE;
 import no.nordicsemi.android.blinky.Util;
 
 /**

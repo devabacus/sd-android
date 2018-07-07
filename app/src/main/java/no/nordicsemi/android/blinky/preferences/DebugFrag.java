@@ -20,7 +20,7 @@ import java.util.Objects;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_SHOW_DEBUG_FRAG;
+import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_SHOW_DEBUG_FRAG;
 
 /**
  * A simple {@link Fragment} subclass.

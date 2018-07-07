@@ -25,8 +25,10 @@ import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 
 import static no.nordicsemi.android.blinky.StateFragment.adcValue;
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_ARCHIVE_SAVE;
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_WEIGHT_SHOW;
+import static no.nordicsemi.android.blinky.preferences.PrefWeightFrag.KEY_DISCRETE_VALUE;
+import static no.nordicsemi.android.blinky.preferences.PrefWeightFrag.KEY_MAX_WEIGHT_VALUE;
+import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_ARCHIVE_SAVE;
+import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_WEIGHT_SHOW;
 
 
 /**
@@ -45,7 +47,10 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     private ArchiveViewModel archiveViewModel;
     private ArchiveData archiveData;
     float weight = 0;
+    float adcWeight = 0;
+    int numOfWeight = 0;
     int tare = 0;
+    float discrete = 0;
     //CorButton curCorButton;
     Boolean butSet = false;
 
@@ -113,6 +118,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         Boolean show_weight = sharedPreferences.getBoolean(KEY_WEIGHT_SHOW, false);
         Boolean arhive = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE, false);
+        discrete = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_VALUE, "0"));
         if(show_weight) {
             weightLayout.setVisibility(View.VISIBLE);
         } else {
@@ -143,10 +149,8 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                 } else if (weightValueFloat != 0) {
                     weight = weightValueFloat;
                 }
-                archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weight, adcValue, tare));
+                archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weight, numOfWeight, adcWeight, adcValue, tare));
                 //   weight += 100;
-
-
                 break;
         }
 

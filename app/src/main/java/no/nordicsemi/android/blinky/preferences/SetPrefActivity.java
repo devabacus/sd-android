@@ -1,15 +1,20 @@
 package no.nordicsemi.android.blinky.preferences;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.ButtonsViewModel;
@@ -24,91 +30,65 @@ import no.nordicsemi.android.blinky.Cmd;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 
-
-public class SetPrefActivity extends AppCompatActivity {
+public class SetPrefActivity extends PreferenceActivity {
 
     private static final String TAG = "SetPrefActivity";
 
+    public void onBuildHeaders(List<PreferenceActivity.Header> target){
+        loadHeadersFromResource(R.xml.pref_head,target);
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_pref);
+    protected boolean isValidFragment(String fragmentName){
+        return SettingsFragment.class.getName().equals(fragmentName) ||
+                PrefWeightFrag.class.getName().equals(fragmentName)||
+                PrefArchive.class.getName().equals(fragmentName);
+    }
 
-        final Toolbar toolbar1 = findViewById(R.id.toolbar1);
-        setSupportActionBar(toolbar1);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+    //    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_set_pref);
+
+    //final Toolbar toolbar1 = findViewById(R.id.toolbar1);
+//    private void setupActionBar(){
+//        getLayoutInflater().inflate(R.layout.toolbar, (ViewGroup)findViewById(R.id.sett_frame1));
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
+//        ActionBar actionBar =
+//    }
 
 
-        Fragment fragment = new SettingsFragment();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        if (savedInstanceState == null) {
-            //created for the first time
-            fragmentTransaction.add(R.id.sett_frame, fragment, "settings_fragment");
-            fragmentTransaction.commit();
-        }
-//        else {
-//            //fragment = getFragmentManager().findFragmentByTag("settings_fragment");
+    //setSupportActionBar(toolbar1);
+    //getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+    //
+//        Fragment fragment = new SettingsFragment();
+//        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//        if (savedInstanceState == null) {
+//            //created for the first time
+//            fragmentTransaction.add(R.id.sett_frame, fragment, "settings_fragment");
+//            fragmentTransaction.commit();
 //        }
-    }
+////        else {
+////            //fragment = getFragmentManager().findFragmentByTag("settings_fragment");
+////        }
+//    }
+//
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                onBackPressed();
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-        public static final String KEY_LIST_NUM_BUTTONS = "num_buttons";
-        public static final String KEY_ADC_SHOW = "adc_show";
-        public static final String KEY_WEIGHT_SHOW = "weight_show";
-        public static final String KEY_REMOTE_BUT_UPDATE = "remote_but_update";
-        public static final String KEY_SHOW_CONT_SETTINGS_FRAG = "show_contrsettings";
-        public static final String KEY_SHOW_DEBUG_FRAG = "show_debug_frag";
-        public static final String KEY_NUM_COR_BUT9 = "num_cor_but9";
-        public static final String KEY_ARCHIVE_SAVE = "archive_save";
-
-        Preference curPref;
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return super.onCreateView(inflater, container, savedInstanceState);
-
-
-        }
-
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences);
-
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-            Preference curPref = findPreference(KEY_LIST_NUM_BUTTONS);
-            String numButts = sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8");
-            curPref.setSummary(numButts);
-        }
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(KEY_LIST_NUM_BUTTONS)) {
-                curPref = findPreference(key);
-                curPref.setSummary(sharedPreferences.getString(key, "8"));
-            }
-
-        }
-    }
 }
+
 
 
 

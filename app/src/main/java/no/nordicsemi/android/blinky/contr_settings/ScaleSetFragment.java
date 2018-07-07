@@ -25,8 +25,8 @@ import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_ADC_SHOW;
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
+import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_ADC_SHOW;
+import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
 
 
 /**

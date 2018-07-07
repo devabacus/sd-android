@@ -26,7 +26,8 @@ import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
-import static no.nordicsemi.android.blinky.preferences.SetPrefActivity.SettingsFragment.KEY_LIST_NUM_BUTTONS;
+import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_LIST_NUM_BUTTONS;
+import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_LIST_NUM_BUTTONS;
 
 public class ButtonFrag extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
@@ -41,8 +42,6 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     StringBuilder msg;
 
     Boolean setOpened = false;
-
-
 
     TextView tvState;
     Button btnRes;
@@ -178,7 +177,6 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         Log.d(TAG, "onClick: msg = " + msg.toString());
         //if(!setOpened)
         blinkyViewModel.sendTX(msg.toString());
-
     }
     @Override
     public boolean onLongClick(View v) {

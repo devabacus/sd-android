@@ -14,14 +14,18 @@ public class ArchiveData {
     public long id;
     @TypeConverters(DateConverter.class)
     private Date timePoint;
+    private int numOfWeight;
     private float mainWeight;
+    private float adcWeight;
     private int adcArchiveValue;
     private int tareValue;
 
 
-    public ArchiveData(Date timePoint, float mainWeight, int adcArchiveValue, int tareValue) {
+    public ArchiveData(Date timePoint, float mainWeight, int numOfWeight, float adcWeight, int adcArchiveValue, int tareValue) {
         this.timePoint = timePoint;
         this.mainWeight = mainWeight;
+        this.numOfWeight = numOfWeight;
+        this.adcWeight = adcWeight;
         this.adcArchiveValue = adcArchiveValue;
         this.tareValue = tareValue;
     }
@@ -30,9 +34,15 @@ public class ArchiveData {
         return timePoint;
     }
 
+    public int getNumOfWeight() { return numOfWeight; }
+
     public float getMainWeight() {
         return mainWeight;
     }
+
+    public float getAdcWeight() { return adcWeight; }
+
+
 
     public int getTareValue() {
         return tareValue;
