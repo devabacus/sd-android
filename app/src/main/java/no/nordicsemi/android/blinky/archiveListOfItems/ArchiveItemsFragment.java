@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     private ArchiveAdapter archiveAdapter;
     RecyclerView recViewArchive;
     public static int numOfWeightPicked;
+    public static final String TAG = "test";
 
     @Nullable
     @Override
@@ -38,7 +40,25 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
-        archiveViewModel.getArchiveList().observe(getActivity(), archiveDataList -> archiveAdapter.addItems(archiveDataList));
+        archiveViewModel.getArchiveList().observe(getActivity(), archiveDataList -> {
+            if (archiveDataList != null) {
+                archiveAdapter.addItems(archiveDataList);
+            } else {
+                Toast.makeText(getContext(), "нет записей", Toast.LENGTH_SHORT).show();
+            }
+
+
+//            for (int i = 0; i < archiveDataList.size(); i++) {
+//                Log.d("test", archiveDataList.get(i).getTimePoint() + ", " +
+//                        archiveDataList.get(i).getMainWeight() + ", " +
+//                        archiveDataList.get(i).getNumOfWeight() + ", " +
+//                        archiveDataList.get(i).getAdcWeight() + ", " +
+//                        archiveDataList.get(i).getAdcArchiveValue() + ", " +
+//                        archiveDataList.get(i).getTareValue() + ", " +
+//                        archiveDataList.get(i).getTypeOfWeight());
+//            }
+        });
+
         //archiveViewModel.getArchiveListbyNum(1).observe(getActivity(),archiveDataListByNum -> archiveAdapter.addItems(archiveDataListByNum));
 //        archiveViewModel.getArchiveList().observe(getActivity(), new Observer<List<ArchiveData>>() {
 //            @Override

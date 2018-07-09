@@ -31,7 +31,6 @@ public class ArchiveViewModel extends AndroidViewModel {
         archiveList = archiveDatabase.archiveFromDao().getAllArchiveItems();
         archiveListLast = archiveDatabase.archiveFromDao().getLastItem();
         //archiveListbyNum = archiveDatabase.archiveFromDao().getItemByNumOfWeight(numOfWeightView);
-
         //this.archiveList = archiveList;
     }
 
@@ -39,7 +38,6 @@ public class ArchiveViewModel extends AndroidViewModel {
         return mOpenDetailArchive;
     }
     public LiveData<Integer> getNumOfWeightPicked(){return mNumOfWeightPicked;}
-
     public LiveData<List<ArchiveData>> getArchiveList() {
         return archiveList;
     }
