@@ -51,6 +51,8 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     TextView tvWeight;
     Button btnArhive, btnTest;
 
+    public static final String TAG = "test";
+
     float weightValueLast = 0;
     int weightValueInt = 0;
     private ArchiveViewModel archiveViewModel;
@@ -72,10 +74,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
 
     float weightValueFloat = 0;
     float weightSaved = 0;
+    float weightMax = 0;
     float adcWeight = 0;
     //int adcValue = 0;
     int tare = 0;
-    int arch = 0;
+    int arch = 1;
     int typeOfWeight = 0;
 
 
@@ -93,12 +96,36 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
+    public boolean minChange() {
+        return Math.abs(weightValueFloat - weightValueLast) > maxDeviation;
+    }
+
+    public void archive_arr_fill(int i, float weight, int type) {
+        dateTime[i] = new Date();
+        weightValueFloat_arr[i] = weight;
+        adcWeight_arr[i] = adcWeight;
+        adcValue_arr[i] = adcValue;
+        tare_arr[i] = tare;
+        typeOfWeight_arr[i] = type;
+
+
+    }
+
+    public void archive_arr_show(int i) {
+        Log.d("test", dateTime[i] + ", " +
+                weightValueFloat_arr[i] + ", " +
+                adcWeight_arr[i] + ", " +
+                adcValue_arr[i] + ", " +
+                tare_arr[i] + ", " +
+                typeOfWeight_arr[i] + "\n");
+    }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_weight_panel, container, false);
+        View v = inflater.inflate(R.layout.fragment_weight_panel, container, false);
         tvWeight = v.findViewById(R.id.tv_weight);
         btnArhive = v.findViewById(R.id.btn_archive);
         btnTest = v.findViewById(R.id.btn_test);
@@ -109,7 +136,6 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
 
 
-
         dateTime = new Date[20];
         weightValueFloat_arr = new float[20];
         tare_arr = new int[20];
@@ -118,17 +144,15 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         typeOfWeight_arr = new int[20];
 
 
-        archiveViewModel.getArchiveListLast().observe(getActivity(),archiveDataList -> {
+        archiveViewModel.getArchiveListLast().observe(getActivity(), archiveDataList -> {
             assert archiveDataList != null;
-            if(archiveDataList.size() > 0)
-            numOfWeight = archiveDataList.get(0).getNumOfWeight();
+            if (archiveDataList.size() > 0)
+                numOfWeight = archiveDataList.get(0).getNumOfWeight();
         });
-
 //        stateViewModel.getWeightValue().observe(getActivity(), aFloat -> {
 //        });
-
         buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
-                butSet = aBoolean;
+            butSet = aBoolean;
         });
 
         Handler handler = new Handler();
@@ -136,27 +160,16 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (timeCounting){
+                if (timeCounting) {
                     timeCounter++;
-                    if((timeCounter >= timeStab) && (weightValueFloat > minWeightForSave) && (Math.abs(weightSaved - weightValueFloat) > maxDeviation)){
-                       // numOfWeight++;
-                       // Toast.makeText(getContext(), String.valueOf(new Date()), Toast.LENGTH_SHORT).show();
-
+                    if ((timeCounter >= timeStab) && (weightValueFloat > minWeightForSave) && (Math.abs(weightSaved - weightValueFloat) > maxDeviation)) {
+                        // numOfWeight++;
+                        // Toast.makeText(getContext(), String.valueOf(new Date()), Toast.LENGTH_SHORT).show();
                         //dateTime[arch] = new Date();
-                        dateTime[arch] = new Date();
-                        weightValueFloat_arr[arch] = weightValueFloat;
-                        adcWeight_arr[arch] = adcWeight;
-                        adcValue_arr[arch] = adcValue;
-                        tare_arr[arch] = tare;
-                        typeOfWeight_arr[arch] = typeOfWeight;
-                        weightSaved = weightValueFloat;
 
-                        Log.d("test", dateTime[arch] + ", " +
-                                weightValueFloat_arr[arch] + ", " +
-                                adcWeight_arr[arch] + ", " +
-                                adcValue_arr[arch] + ", " +
-                                tare_arr[arch] + ", " +
-                                typeOfWeight_arr[arch] + "\n");
+                        archive_arr_fill(arch, weightValueFloat, 0);
+                        archive_arr_show(arch);
+                        weightSaved = weightValueFloat;
                         arch++;
 
 //                                archiveViewModel.addArchiveItem(new ArchiveData(dateTime[arch],
@@ -174,7 +187,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
 
 
         buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
-            if(!butSet){
+            if (!butSet) {
                 //curCorButton = corButton;
                 if (corButton != null && !corButton.getButNum().isEmpty()) {
                     tare = Integer.valueOf(corButton.getButNum());
@@ -190,37 +203,50 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         btnArhive.setOnClickListener(this);
         btnTest.setOnClickListener(this);
 
-        blinkyViewModel.getUartData().observe(getActivity(), s->{
+        blinkyViewModel.getUartData().observe(getActivity(), s -> {
             assert s != null;
-            if(s.matches("^wt.*")) {
+            if (s.matches("^wt.*")) {
                 String weightValueStr = s.substring(s.indexOf('t') + 1);
                 weightValueStr = weightValueStr.replaceAll("[^0-9.-]", "");
                 weightValueFloat = Float.parseFloat(weightValueStr);
                 if ((weightValueFloat != weightValueLast) && (weightValueFloat > minWeightForSave)) {
-                    if (Math.abs(weightValueFloat - weightValueLast) > maxDeviation) {
+                    if (minChange()) {
                         timeCounter = 0;
                     }
-                    weightValueLast = weightValueFloat;
+
+                    if (weightValueFloat > weightMax) {
+                        weightMax = weightValueFloat;
+                        typeOfWeight = 2;
+                        archive_arr_fill(0, weightMax, 2);
+                    }
+
                     if (weightValueFloat > weightValueLast) {
+                        //Log.d("test", "weightMax = " + weightMax);
                         incWeight = true;
                         decWeight = false;
-                    } else{
+                    } else if (weightValueFloat < weightValueLast) {
+                        //Log.d(TAG, "weightValueFloat = " + weightValueFloat + ", weightValueLast = " + weightValueLast);
                         incWeight = false;
                         decWeight = true;
                     }
                     timeCounting = true;
                 } else if (weightValueFloat < minWeightForSave && decWeight) {
                     numOfWeight++;
-                    Toast.makeText(getContext(), "взвешивание: " + String.valueOf(numOfWeight), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "взвешивание: " + String.valueOf(numOfWeight), Toast.LENGTH_SHORT).show();
+                    archive_arr_show(0);
+                    arch = 1;
+                    weightMax = 0;
                     decWeight = false;
                 }
                 //stateViewModel.setmWeightValue(weightValueFloat);
                 tvWeight.setText(String.valueOf(weightValueFloat));
+
+                weightValueLast = weightValueFloat;
+
             }
         });
         return v;
     }
-
 
 
     @Override
@@ -233,7 +259,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         maxDeviation = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_MAX, "1"));
         timeStab = Integer.parseInt(sharedPreferences.getString(KEY_TIME_STAB, "3"));
         minWeightForSave = Float.parseFloat(sharedPreferences.getString(KEY_MIN_WEIGHT, "1"));
-        if(show_weight) {
+        if (show_weight) {
             weightLayout.setVisibility(View.VISIBLE);
         } else {
             weightLayout.setVisibility(View.GONE);
@@ -255,36 +281,13 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btn_test:
-                //archiveViewModel.addArchiveItem(new ArchiveData(new Date(), weight, numOfWeight, adcWeight, adcValue, tare, archiveWeight));
-//                dateTime = new Date[20];
-//                weightValueFloat_arr = new float[20];
-//                tare_arr = new int[20];
-//                adcValue_arr = new int[20];
-//                adcWeight_arr = new float[20];
-//                typeOfWeight_arr = new int[20];
-
-                for(arch = 0; arch < dateTime.length; arch++){
-                    Log.d("test", dateTime[arch] + ", " +
-                            weightValueFloat_arr[arch] + ", " +
-                            tare_arr[arch] + ", " +
-                            adcValue_arr[arch] + ", " +
-                            adcWeight_arr[arch] + ", " +
-                            typeOfWeight_arr[arch] + "\n");
-
+                for (int i = 0; i < dateTime.length; i++) {
+                    archive_arr_show(i);
                 }
-                //   weight += 100;
                 break;
         }
 
     }
-
-
-
-
-//    public void timeCounter(void) {
-//
-//    }
-
 
 }
 
