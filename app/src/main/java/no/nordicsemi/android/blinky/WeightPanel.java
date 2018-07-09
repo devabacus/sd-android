@@ -21,7 +21,10 @@ import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 
@@ -245,22 +248,36 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     }
 
                     //archive_arr_show(0);
-
+                    Date maxDate = dateTime[0];
                     Date dateTest[] = dateTime;
 
                     for(int i = 0; i < arch; i++) {
                         if (dateTest[i] != null) {
-                            Log.d(TAG, "dateTime: " + dateTest[i]);
+                            Log.d(TAG, "dateTime: " + dateTest[i] + ", " + "weightValueFloat: " + weightValueFloat_arr[i]);
                         }
                     }
                     Arrays.sort(dateTest,0, arch);
 
+
+                    int indexMax = Arrays.asList(dateTest).indexOf(maxDate);
+                    //Arrays.asList(weightValueFloat_arr).add(indexMax, );
+                    ArrayList weightFloatList = new ArrayList<>();
+                    Collections.addAll(weightFloatList, weightValueFloat_arr);
+                    Log.d(TAG, "ArrayListsize: " + weightFloatList.size());
+                    //weightFloatList.add(indexMax, weightValueFloat_arr[0]);
+
+
                     Log.d(TAG, "onCreateView: ***********************************");
                     for(int i = 0; i < dateTest.length; i++) {
                         if (dateTest[i] != null) {
-                            Log.d(TAG, "dateTime: " + dateTest[i]);
+                            Log.d(TAG, "dateTime: " + dateTest[i] + ", " + "weightValueFloat: " + weightFloatList.get(i));
                         }
                     }
+
+                    Log.d(TAG, "max index = " + indexMax + ", maxDate = " + maxDate);
+
+
+
                     arch = 1;
                     decWeight = false;
                     weightMax = 0;
