@@ -26,17 +26,15 @@ public interface ArchiveDao {
     @Query("select * from ArchiveData order by id DESC LIMIT 1")
     LiveData<List<ArchiveData>> getLastItem();
 
-
-
-
 //    @Query("select * from ArchiveData where numOfWeight = 2")
 //    LiveData<List<ArchiveData>> getItemByNumOfWeight();
 
     @Query("select * from ArchiveData where numOfWeight = :numOfWeight")
     LiveData<List<ArchiveData>> getItemByNumOfWeight(int numOfWeight);
 
+    @Query("select * from ArchiveData where typeOfWeight = :typeOfWeight")
+    LiveData<List<ArchiveData>> getItemByTypeOfWeight(int typeOfWeight);
+
     @Delete
     void deleteItem(ArchiveData archiveData);
-
-
 }

@@ -80,6 +80,10 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
 
     float weightValueFloat = 0;
     float weightSaved = 0;
+    float weightSavedMax = 0;
+
+    int archMax = 0;
+
     float adcWeight = 0;
     //int adcValue = 0;
     int tare = 0;
@@ -230,9 +234,15 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                         // Toast.makeText(getContext(), String.valueOf(new Date()), Toast.LENGTH_SHORT).show();
                         //dateTime[arch] = new Date();
 
+
                         archive_arr_fill(arch, 0);
                         archive_arr_show(arch);
                         weightSaved = weightValueFloat;
+                        if (weightSaved > weightSavedMax) {
+                            weightSavedMax = weightSaved;
+                            archMax = arch;
+                        }
+
                         arch++;
                         //Log.d(TAG, "run: стабильный вес. Таймер сбросили`");
                         timeCounting = false;
@@ -292,15 +302,23 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     timeCounting = true;
                 }
                 //save to archive. The weight is zero
-                else if (weightValueFloat < minWeightForSave && decWeight) {
+                else if (weightValueFloat < minWeightForSave && decWeight && (weightValueArrL.size() > 0)) {
                     numOfWeight++;
                     archive_arr_fill(arch, 2);
+                    //Toast.makeText(getContext(), "max stab weight = " + String.valueOf(weightValueArrL.get(archMax)), Toast.LENGTH_SHORT).show();
+                    //change type of weight for mark max stab item
+                    typeOfWeight_arrL.set(archMax, 1);
                     Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
                     for (int i = 0; i < arch+1; i++) {
                         archive_arr_show(i);
 //                        archiveViewModel.addArchiveItem(new ArchiveData(dateTime[i],
 //                                weightValueFloat_arr[i], numOfWeight, adcWeight_arr[i],
 //                                adcValue_arr[i], tare_arr[i], typeOfWeight_arr[i]));
+//
+                        archiveViewModel.addArchiveItem(new ArchiveData(dateTimeArrL.get(i),
+                                weightValueArrL.get(i), numOfWeight, adcWeight_arrL.get(i),
+                                adcValue_arrL.get(i), tare_arrL.get(i), typeOfWeight_arrL.get(i)));
+
                     }
                     Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
 
@@ -311,6 +329,9 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     tareMax = 0;
                     adcValueMax = 0;
                     adcWeightMax = 0;
+                    archMax = 0;
+                    weightSavedMax = 0;
+                    weightSaved = 0;
                 }
                 //stateViewModel.setmWeightValue(weightValueFloat);
                 tvWeight.setText(String.valueOf(weightValueFloat));

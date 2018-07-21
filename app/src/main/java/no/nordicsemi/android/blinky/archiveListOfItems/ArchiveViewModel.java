@@ -19,6 +19,8 @@ public class ArchiveViewModel extends AndroidViewModel {
     private LiveData<List<ArchiveData>> archiveList;
     private LiveData<List<ArchiveData>> archiveListLast;
     private LiveData<List<ArchiveData>> archiveListbyNum;
+    private LiveData<List<ArchiveData>> archiveListbyType;
+
 
     private ArchiveDatabase archiveDatabase;
     private final MutableLiveData<Boolean> mOpenDetailArchive = new MutableLiveData<>();
@@ -46,6 +48,14 @@ public class ArchiveViewModel extends AndroidViewModel {
         archiveListbyNum = archiveDatabase.archiveFromDao().getItemByNumOfWeight(numOfWeightPicked);
         return archiveListbyNum;
     }
+
+    public LiveData<List<ArchiveData>> getArchiveListbyType(int typeOfWeight) {
+        archiveListbyType = archiveDatabase.archiveFromDao().getItemByTypeOfWeight(typeOfWeight);
+        return archiveListbyType;
+    }
+
+
+
 
 
     public void setmOpenDetailArchive(final Boolean archiveDetailOpen){
