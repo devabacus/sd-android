@@ -1,6 +1,7 @@
 package no.nordicsemi.android.blinky.archiveListOfItems;
 
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
     Button btnCloseDetail;
     RecyclerView recViewArchiveDetail;
     private ArchiveAdapterDetail archiveAdapterDetail;
+    TextView tvDetail;
     //int numOfWeightPicked1 = 0;
 
 
@@ -43,12 +46,14 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_archive_detail_item, container, false);
         archiveDetailLayout = v.findViewById(R.id.archive_detail_layout);
+        tvDetail = v.findViewById(R.id.tv_detail);
 
         btnCloseDetail = v.findViewById(R.id.btn_close_detail);
         archiveViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ArchiveViewModel.class);
@@ -76,11 +81,14 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
                 archiveViewModel.getArchiveListbyNum(numOfWeightPicked).observe(getActivity(), archiveListByNum -> archiveAdapterDetail.addItems(archiveListByNum));
                 Log.d("detail", "numOfWeightPicked = " + numOfWeightPicked);
                 archiveDetailLayout.setVisibility(View.VISIBLE);
+                tvDetail.setText("Детализация взвеш. № " + numOfWeightPicked);
                 //archiveViewModel.getArchiveListbyNum(numOfWeightPicked).observe(getActivity(), archiveListByNum -> archiveAdapterDetail.addItems(archiveListByNum));
             } else {
                 archiveDetailLayout.setVisibility(View.GONE);
             }
         });
+
+
 
         return v;
     }
