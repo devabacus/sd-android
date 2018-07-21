@@ -84,18 +84,31 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     float adcWeight = 0;
     //int adcValue = 0;
     int tare = 0;
-    int arch = 1;
+    int arch = 0;
     int typeOfWeight = 0;
 
 
     Date dateTime[];
+    ArrayList<Date> dateTimeArrL;
+
+
     float weightValueFloat_arr[];
+    ArrayList<Float> weightValueArrL;
+
     //ArrayList<Float> weightFloatList;
     int tare_arr[];
+    ArrayList<Integer> tare_arrL;
+
     int adcValue_arr[];
+    ArrayList<Integer> adcValue_arrL;
+
     float adcWeight_arr[];
+    ArrayList<Float> adcWeight_arrL;
+
     int typeOfWeight_arr[];
-    ArrayList<Float> weightFloatArrList;
+    ArrayList<Integer> typeOfWeight_arrL;
+
+    //ArrayList<Float> weightFloatArrList;
 
 
     //CorButton curCorButton;
@@ -110,24 +123,37 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     }
 
     public void archive_arr_fill(int i, float weight, int type) {
-        dateTime[i] = new Date();
-        weightValueFloat_arr[i] = weight;
-        weightFloatArrList.add(i,weight);
-        adcWeight_arr[i] = adcWeight;
-        adcValue_arr[i] = adcValue;
-        tare_arr[i] = tare;
-        typeOfWeight_arr[i] = type;
+//        dateTime[i] = new Date();
+//        weightValueFloat_arr[i] = weight;
+//        adcWeight_arr[i] = adcWeight;
+//        adcValue_arr[i] = adcValue;
+//        tare_arr[i] = tare;
+//        typeOfWeight_arr[i] = type;
 
-
+        dateTimeArrL.add(i, new Date());
+        weightValueArrL.add(i, weight);
+        adcWeight_arrL.add(i, adcWeight);
+        adcValue_arrL.add(i, adcValue);
+        tare_arrL.add(i, tare);
+        typeOfWeight_arrL.add(i, type);
     }
 
     public void archive_arr_show(int i) {
-        Log.d("test", dateTime[i] + ", " +
-                weightValueFloat_arr[i] + ", " +
-                adcWeight_arr[i] + ", " +
-                adcValue_arr[i] + ", " +
-                tare_arr[i] + ", " +
-                typeOfWeight_arr[i] + "\n");
+//        Log.d("test", dateTime[i] + ", " +
+//                weightValueFloat_arr[i] + ", " +
+//                adcWeight_arr[i] + ", " +
+//                adcValue_arr[i] + ", " +
+//                tare_arr[i] + ", " +
+//                typeOfWeight_arr[i] + "\n");
+
+        //Log.d(TAG, "archive_arr_show: " + weightValueArrL.get(i) + ", ");
+
+        Log.d(TAG, "Array list" + dateTimeArrL.get(i) + ", " +
+                weightValueArrL.get(i) + ", " +
+                adcWeight_arrL.get(i) + ", " +
+                adcValue_arrL.get(i) + ", " +
+                tare_arrL.get(i) + ", " +
+                typeOfWeight_arrL.get(i) + "\n");
     }
 
     @Override
@@ -147,11 +173,18 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
 
         dateTime = new Date[20];
         weightValueFloat_arr = new float[20];
-        weightFloatArrList = new ArrayList<>();
+        //weightFloatArrList = new ArrayList<>();
         tare_arr = new int[20];
         adcValue_arr = new int[20];
         adcWeight_arr = new float[20];
         typeOfWeight_arr = new int[20];
+
+        dateTimeArrL = new ArrayList<>();
+        weightValueArrL = new ArrayList<>();
+        adcWeight_arrL = new ArrayList<>();
+        adcValue_arrL = new ArrayList<>();
+        tare_arrL = new ArrayList<>();
+        typeOfWeight_arrL = new ArrayList<>();
 
 //        for(int i = 0; i < dateTime.length; i++) {
 //            dateTime[i] = new Date(0);
@@ -226,7 +259,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     // update weight max value (it's located in first member of array)
                     if (weightValueFloat > weightMax) {
                         weightMax = weightValueFloat;
-                        archive_arr_fill(0, weightMax, 2);
+                       // archive_arr_fill(0, weightMax, 2);
                     }
 
                     if (weightValueFloat > weightValueLast) {
@@ -246,12 +279,10 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     numOfWeight++;
 
                     for (int i = 0; i < arch; i++) {
-                        //archive_arr_show(i);
-                        archiveViewModel.addArchiveItem(new ArchiveData(dateTime[i],
-                                weightValueFloat_arr[i], numOfWeight, adcWeight_arr[i],
-                                adcValue_arr[i], tare_arr[i], typeOfWeight_arr[i]));
-                        //archive_arr_show(i);
-
+                        archive_arr_show(i);
+//                        archiveViewModel.addArchiveItem(new ArchiveData(dateTime[i],
+//                                weightValueFloat_arr[i], numOfWeight, adcWeight_arr[i],
+//                                adcValue_arr[i], tare_arr[i], typeOfWeight_arr[i]));
                     }
 
 //                    for(int i = 0; i < weightFloatArrList.size(); i ++){
