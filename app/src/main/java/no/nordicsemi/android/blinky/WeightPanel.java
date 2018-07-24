@@ -95,6 +95,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     float adcWeightMax = 0;
     int tareMax = 0;
     int adcValueMax = 0;
+    Date dateTimeMax;
 
     Date dateTime[];
     ArrayList<Date> dateTimeArrL;
@@ -146,7 +147,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
             adcValue_arrL.add(i, adcValue);
             tare_arrL.add(i, tare);
         } else if (type == 2) {
-            
+            dateTimeArrL.add(arch, dateTimeMax);
             weightValueArrL.add(arch, weightMax);
             adcWeight_arrL.add(arch, adcWeightMax);
             adcValue_arrL.add(arch, adcValueMax);
@@ -196,6 +197,8 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         adcWeight_arr = new float[20];
         typeOfWeight_arr = new int[20];
 
+
+        dateTimeMax = new Date();
         dateTimeArrL = new ArrayList<>();
         weightValueArrL = new ArrayList<>();
         adcWeight_arrL = new ArrayList<>();
@@ -281,12 +284,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     }
                     // update weight max value (it's located in first member of array)
                     if (weightValueFloat > weightMax) {
+                        dateTimeMax = new Date();
                         weightMax = weightValueFloat;
                         tareMax = tare;
                         adcValueMax = adcValue;
                         adcWeightMax = adcWeight;
-
-
                     }
 
                     if (weightValueFloat > weightValueLast) {
@@ -307,7 +309,9 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     archive_arr_fill(arch, 2);
                     //Toast.makeText(getContext(), "max stab weight = " + String.valueOf(weightValueArrL.get(archMax)), Toast.LENGTH_SHORT).show();
                     //change type of weight for mark max stab item
-                    typeOfWeight_arrL.set(archMax, 1);
+                    if (archMax != 0) {
+                        typeOfWeight_arrL.set(archMax, 1);
+                    }
                     Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
                     for (int i = 0; i < arch+1; i++) {
                         archive_arr_show(i);

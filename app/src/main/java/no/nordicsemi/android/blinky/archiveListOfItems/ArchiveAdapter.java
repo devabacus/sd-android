@@ -56,7 +56,6 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
         holder.itemView.setTag(archiveData);
         holder.itemView.setOnClickListener(onClickListener);
         holder.itemView.setOnLongClickListener(onLongClickListener);
-
     }
 
     @Override

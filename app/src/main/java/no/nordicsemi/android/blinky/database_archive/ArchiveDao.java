@@ -32,7 +32,7 @@ public interface ArchiveDao {
     @Query("select * from ArchiveData where numOfWeight = :numOfWeight")
     LiveData<List<ArchiveData>> getItemByNumOfWeight(int numOfWeight);
 
-    @Query("select * from ArchiveData where typeOfWeight = :typeOfWeight")
+    @Query("select * from ArchiveData where typeOfWeight >= :typeOfWeight")
     LiveData<List<ArchiveData>> getItemByTypeOfWeight(int typeOfWeight);
 
     @Delete
