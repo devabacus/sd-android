@@ -35,12 +35,13 @@ import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.blinky.StateFragment.adcValue;
+import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_DEBUG;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_DISCRETE_MAX;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_MIN_WEIGHT;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_TIME_STAB;
 import static no.nordicsemi.android.blinky.preferences.PrefWeightFrag.KEY_DISCRETE_VALUE;
 import static no.nordicsemi.android.blinky.preferences.PrefWeightFrag.KEY_MAX_WEIGHT_VALUE;
-import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_ARCHIVE_SAVE;
+import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_ARCHIVE_SAVE;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_WEIGHT_SHOW;
 
 
@@ -53,7 +54,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     BlinkyViewModel blinkyViewModel;
     ButtonsViewModel buttonsViewModel;
     StateViewModel stateViewModel;
-    ConstraintLayout weightLayout;
+    ConstraintLayout weightLayout, debugArchiveLayout;
     TextView tvWeight;
     Button btnArhive, btnTest;
 
@@ -101,26 +102,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     ArrayList<Date> dateTimeArrL;
 
 
-    float weightValueFloat_arr[];
     ArrayList<Float> weightValueArrL;
-
-    //ArrayList<Float> weightFloatList;
-    int tare_arr[];
     ArrayList<Integer> tare_arrL;
-
-    int adcValue_arr[];
     ArrayList<Integer> adcValue_arrL;
-
-    float adcWeight_arr[];
     ArrayList<Float> adcWeight_arrL;
-
-    int typeOfWeight_arr[];
     ArrayList<Integer> typeOfWeight_arrL;
-
-    //ArrayList<Float> weightFloatArrList;
-
-
-    //CorButton curCorButton;
     Boolean butSet = false;
 
     public WeightPanel() {
@@ -132,12 +118,6 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     }
 
     public void archive_arr_fill(int i, int type) {
-//        dateTime[i] = new Date();
-//        weightValueFloat_arr[i] = weight;
-//        adcWeight_arr[i] = adcWeight;
-//        adcValue_arr[i] = adcValue;
-//        tare_arr[i] = tare;
-//        typeOfWeight_arr[i] = type;
         dateTimeArrL.add(i, new Date());
         typeOfWeight_arrL.add(i, type);
 
@@ -183,21 +163,13 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         btnArhive = v.findViewById(R.id.btn_archive);
         btnTest = v.findViewById(R.id.btn_test);
         weightLayout = v.findViewById(R.id.weight_panel_id);
+        debugArchiveLayout = v.findViewById(R.id.debug_archive_layout);
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
         stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
 
-
         dateTime = new Date[20];
-        weightValueFloat_arr = new float[20];
-        //weightFloatArrList = new ArrayList<>();
-        tare_arr = new int[20];
-        adcValue_arr = new int[20];
-        adcWeight_arr = new float[20];
-        typeOfWeight_arr = new int[20];
-
-
         dateTimeMax = new Date();
         dateTimeArrL = new ArrayList<>();
         weightValueArrL = new ArrayList<>();
@@ -206,18 +178,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         tare_arrL = new ArrayList<>();
         typeOfWeight_arrL = new ArrayList<>();
 
-//        for(int i = 0; i < dateTime.length; i++) {
-//            dateTime[i] = new Date(0);
-//        }
-
-
         archiveViewModel.getArchiveListLast().observe(getActivity(), archiveDataList -> {
             assert archiveDataList != null;
             if (archiveDataList.size() > 0)
                 numOfWeight = archiveDataList.get(0).getNumOfWeight();
         });
-//        stateViewModel.getWeightValue().observe(getActivity(), aFloat -> {
-//        });
         buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
             butSet = aBoolean;
         });
@@ -229,14 +194,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
             public void run() {
                 if (timeCounting) {
                     timeCounter++;
-                    //Log.d(TAG, "run: timecounter = " + timeCounter + ",weightValueFloat = " + weightValueFloat + ", minChange() = " + minChange() );
-                    //Log.d(TAG, "weightValueFloat - weightValueLast = " + (weightValueFloat - weightValueLast));
-                    //Log.d(TAG, "weightSaved = " + weightSaved);
                     if ((timeCounter >= timeStab) && (weightValueFloat > minWeightForSave) && minChange()) {
-                        // numOfWeight++;
-                        // Toast.makeText(getContext(), String.valueOf(new Date()), Toast.LENGTH_SHORT).show();
-                        //dateTime[arch] = new Date();
-
 
                         archive_arr_fill(arch, 0);
                         archive_arr_show(arch);
@@ -351,10 +309,22 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         Boolean show_weight = sharedPreferences.getBoolean(KEY_WEIGHT_SHOW, false);
         Boolean arhive = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE, false);
+        Boolean debug_archive = sharedPreferences.getBoolean(KEY_DEBUG, false);
+
         discrete = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_VALUE, "0"));
         maxDeviation = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_MAX, "1"));
         timeStab = Integer.parseInt(sharedPreferences.getString(KEY_TIME_STAB, "3"));
         minWeightForSave = Float.parseFloat(sharedPreferences.getString(KEY_MIN_WEIGHT, "1"));
+
+        if (debug_archive) {
+            //Toast.makeText(getContext(), "отладка вкл", Toast.LENGTH_SHORT).show();
+            debugArchiveLayout.setVisibility(View.VISIBLE);
+        } else {
+            //Toast.makeText(getContext(), "отладка выкл", Toast.LENGTH_SHORT).show();
+            debugArchiveLayout.setVisibility(View.GONE);
+
+        }
+
         if (show_weight) {
             weightLayout.setVisibility(View.VISIBLE);
         } else {

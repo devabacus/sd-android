@@ -24,6 +24,9 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     public static final String KEY_DISCRETE_MAX = "max_discrete";
     public static final String KEY_MIN_WEIGHT = "min_weight";
     public static final String KEY_TIME_STAB = "time_stab";
+    public static final String KEY_DEBUG = "debug_archive";
+    public static final String KEY_ARCHIVE_SAVE = "archive_save";
+
 
     Preference discreteMaxPref;
     Preference timeStabPref;
@@ -68,12 +71,15 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
 
         if (key.equals(KEY_DISCRETE_MAX)) {
             curPref = discreteMaxPref;
+            curPref.setSummary(sharedPreferences.getString(key, "0"));
         } else if (key.equals(KEY_TIME_STAB)) {
             curPref = timeStabPref;
+            curPref.setSummary(sharedPreferences.getString(key, "0"));
         } else if (key.equals(KEY_MIN_WEIGHT)) {
             curPref = minWeightPref;
+            curPref.setSummary(sharedPreferences.getString(key, "0"));
         }
-        curPref.setSummary(sharedPreferences.getString(key, "0"));
+
     }
 }
 

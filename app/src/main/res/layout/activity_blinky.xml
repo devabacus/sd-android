@@ -46,8 +46,8 @@
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"
 			android:layout_width="match_parent"
-			android:layout_height="?attr/actionBarSize"
-			android:background="?attr/colorPrimary"
+			android:layout_height="wrap_content"
+			android:background="@color/colorPrimary"
 			app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
 	</android.support.design.widget.AppBarLayout>
@@ -56,42 +56,41 @@
 	<ScrollView
 		android:id="@+id/device_container"
 		android:layout_width="match_parent"
+		android:layout_marginTop="60dp"
 		android:layout_height="match_parent"
-		android:layout_below="@+id/appbar_layout"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentStart="true"
 		android:visibility="visible">
 
 		<android.support.constraint.ConstraintLayout
+			android:id="@+id/conslayout"
 			android:layout_width="match_parent"
+
 			android:layout_height="wrap_content">
 
-            <fragment
-                android:id="@+id/frag_debug"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:name="no.nordicsemi.android.blinky.preferences.DebugFrag"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                />
+			<fragment
+				android:id="@+id/frag_debug"
+				android:name="no.nordicsemi.android.blinky.preferences.DebugFrag"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
 
 			<fragment
 				android:id="@+id/frag_weight"
+				android:name="no.nordicsemi.android.blinky.WeightPanel"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:name="no.nordicsemi.android.blinky.WeightPanel"
-				app:layout_constraintTop_toBottomOf="@id/frag_debug"
-				/>
+				app:layout_constraintTop_toBottomOf="@id/frag_debug" />
 
 
 			<fragment
 				android:id="@+id/frag_butSet"
+				android:name="no.nordicsemi.android.blinky.Butset"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:name="no.nordicsemi.android.blinky.Butset"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/frag_weight"
-
-				/>
-
+				app:layout_constraintTop_toBottomOf="@id/frag_weight"/>
 
 			<fragment
 				android:id="@+id/frag_but"
@@ -104,23 +103,20 @@
 
 			<fragment
 				android:id="@+id/frag_state"
+				android:name="no.nordicsemi.android.blinky.StateFragment"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:name="no.nordicsemi.android.blinky.StateFragment"
-				app:layout_constraintTop_toBottomOf="@id/frag_but"
-
-				/>
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/frag_but" />
 
 			<fragment
 				android:id="@+id/frag_scale_set"
+				android:name="no.nordicsemi.android.blinky.contr_settings.ScaleSetFragment"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:name="no.nordicsemi.android.blinky.contr_settings.ScaleSetFragment"
 				app:layout_constraintTop_toBottomOf="@id/frag_state"
-
-				/>
-
-
+				app:layout_constraintStart_toStartOf="parent"
+				tools:layout_editor_absoluteX="0dp" />
 
 		</android.support.constraint.ConstraintLayout>
 

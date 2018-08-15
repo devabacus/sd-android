@@ -33,9 +33,4 @@ public class Archive extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-
-
-
 }

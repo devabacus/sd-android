@@ -19,4 +19,15 @@
 
     </EditTextPreference>
 
+    <SwitchPreference
+        android:key="debug_archive"
+        android:title="Отладка"
+        android:defaultValue="false"
+        />
+    <SwitchPreference
+        android:key="archive_save"
+        android:title="Сохранять в архив"
+        android:defaultValue="false"
+        />
+
 </PreferenceScreen>

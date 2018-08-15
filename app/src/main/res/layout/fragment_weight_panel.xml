@@ -19,10 +19,21 @@
        android:layout_height="wrap_content"
        />
 
+    <!--<CheckBox-->
+        <!--android:id="@+id/cb_archive_debug"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Отладка"-->
+        <!--android:textSize="15sp"-->
+        <!--app:layout_constraintLeft_toRightOf="@id/tv_weight"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--tools:layout_editor_absoluteY="0dp" />-->
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test"
+        android:text="@string/addit_archive_but"
         android:id="@+id/btn_test"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btn_archive"
@@ -36,6 +47,24 @@
         android:layout_marginEnd="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/debug_archive_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="5dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_archive"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+        <TextView
+            android:gravity="center"
+
+            android:text="hello there will be debug info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.constraint.ConstraintLayout>
 
 
 </android.support.constraint.ConstraintLayout>
