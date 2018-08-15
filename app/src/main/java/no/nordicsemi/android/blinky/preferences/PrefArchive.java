@@ -27,11 +27,13 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     public static final String KEY_DEBUG = "debug_archive";
     public static final String KEY_ARCHIVE_SAVE = "archive_save";
     public static final String KEY_ARCHIVE_SAVE_ADC = "archive_save_adc";
+    public static final String KEY_ARCHIVE_DRIVER_WEIGHT_MAX = "archive_driver_weight_max";
 
 
     Preference discreteMaxPref;
     Preference timeStabPref;
     Preference minWeightPref;
+    Preference driverMaxPref;
 
     public PrefArchive() {
         // Required empty public constructor
@@ -56,13 +58,16 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         discreteMaxPref = findPreference(KEY_DISCRETE_MAX);
         timeStabPref = findPreference(KEY_TIME_STAB);
         minWeightPref = findPreference(KEY_MIN_WEIGHT);
+        driverMaxPref = findPreference(KEY_ARCHIVE_DRIVER_WEIGHT_MAX);
         String maxWeight = sharedPreferences.getString(KEY_DISCRETE_MAX,"1");
         String discreteValue = sharedPreferences.getString(KEY_TIME_STAB,"3");
         String minWeightValue = sharedPreferences.getString(KEY_MIN_WEIGHT,"1");
+        String driverMaxValue = sharedPreferences.getString(KEY_ARCHIVE_DRIVER_WEIGHT_MAX,"0");
 
         discreteMaxPref.setSummary(maxWeight);
         timeStabPref.setSummary(discreteValue);
         minWeightPref.setSummary(minWeightValue);
+        driverMaxPref.setSummary(driverMaxValue);
     }
 
 
@@ -78,6 +83,9 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
             curPref.setSummary(sharedPreferences.getString(key, "0"));
         } else if (key.equals(KEY_MIN_WEIGHT)) {
             curPref = minWeightPref;
+            curPref.setSummary(sharedPreferences.getString(key, "0"));
+        } else if (key.equals(KEY_ARCHIVE_DRIVER_WEIGHT_MAX)) {
+            curPref = driverMaxPref;
             curPref.setSummary(sharedPreferences.getString(key, "0"));
         }
 

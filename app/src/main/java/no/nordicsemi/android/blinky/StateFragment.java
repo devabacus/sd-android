@@ -163,6 +163,7 @@ public class StateFragment extends Fragment {
             tvAdc.setVisibility(View.VISIBLE);
             blinkyViewModel.sendTX(Cmd.ADC_SHOW_ON);
         } else {
+            adcValue = 0;
             tvAdc.setVisibility(View.GONE);
             blinkyViewModel.sendTX(Cmd.ADC_SHOW_OFF);
         }

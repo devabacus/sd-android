@@ -30,6 +30,12 @@
         android:defaultValue="false"
         />
 
+    <EditTextPreference
+        android:key="archive_driver_weight_max"
+        android:title="Макс вес водителя + пассажиров, кг">
+
+    </EditTextPreference>
+
     <!--<SwitchPreference-->
         <!--android:key="archive_save_adc"-->
         <!--android:title="Сохранять знач. АЦП"-->

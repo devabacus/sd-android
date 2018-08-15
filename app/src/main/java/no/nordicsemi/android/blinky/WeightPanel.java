@@ -37,6 +37,7 @@ import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.blinky.StateFragment.adcValue;
+import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_ARCHIVE_DRIVER_WEIGHT_MAX;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_ARCHIVE_SAVE_ADC;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_DEBUG;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_DISCRETE_MAX;
@@ -84,6 +85,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
     Boolean archive;
     Boolean debug_archive;
     Boolean archiveADC;
+    int archiveDriverMax;
     boolean enoughChange = false;
 
     float weightValueFloat = 0;
@@ -289,12 +291,13 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                 else if (weightValueFloat < minWeightForSave && decWeight && (weightValueArrL.size() > 0)) {
                     numOfWeight++;
                     cleanDebug();
-                    archive_arr_fill(arch, 2);
+
                     //Toast.makeText(getContext(), "max stab weight = " + String.valueOf(weightValueArrL.get(archMax)), Toast.LENGTH_SHORT).show();
                     //change type of weight for mark max stab item
-                    if (archMax != 0) {
+                    if (weightSavedMax != 0) {
                         typeOfWeight_arrL.set(archMax, 1);
                     }
+                    archive_arr_fill(arch, 2);
                     Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
                     for (int i = 0; i < arch+1; i++) {
 
@@ -342,10 +345,13 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
         debug_archive = sharedPreferences.getBoolean(KEY_DEBUG, false);
         archiveADC = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE_ADC, false);
 
+        archiveDriverMax = Integer.parseInt(sharedPreferences.getString(KEY_ARCHIVE_DRIVER_WEIGHT_MAX, "0"));
         discrete = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_VALUE, "0"));
         maxDeviation = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_MAX, "1"));
         timeStab = Integer.parseInt(sharedPreferences.getString(KEY_TIME_STAB, "3"));
         minWeightForSave = Float.parseFloat(sharedPreferences.getString(KEY_MIN_WEIGHT, "1"));
+
+        Toast.makeText(getContext(), "макс вес водителя: " + String.valueOf(archiveDriverMax), Toast.LENGTH_SHORT).show();
 
         if (debug_archive) {
             //Toast.makeText(getContext(), "отладка вкл", Toast.LENGTH_SHORT).show();
