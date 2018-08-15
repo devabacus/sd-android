@@ -20,12 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.archiveListOfItems.ArchiveViewModel;
@@ -35,6 +37,7 @@ import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.blinky.StateFragment.adcValue;
+import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_ARCHIVE_SAVE_ADC;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_DEBUG;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_DISCRETE_MAX;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_MIN_WEIGHT;
@@ -48,7 +51,7 @@ import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_WEIG
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeightPanel extends Fragment implements View.OnClickListener {
+public class WeightPanel extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
 
     BlinkyViewModel blinkyViewModel;
@@ -57,6 +60,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     ConstraintLayout weightLayout, debugArchiveLayout;
     TextView tvWeight;
     Button btnArhive, btnTest;
+    TextView tvDebugDate, tvDebugWeight, tvDebugAdc, tvDebugTare, tvDebugType;
 
     public static final String TAG = "test";
 
@@ -77,6 +81,9 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
     float minWeightForSave = 1;
     boolean incWeight = false;
     boolean decWeight = false;
+    Boolean archive;
+    Boolean debug_archive;
+    Boolean archiveADC;
     boolean enoughChange = false;
 
     float weightValueFloat = 0;
@@ -152,6 +159,15 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                 adcValue_arrL.get(i) + ", " +
                 tare_arrL.get(i) + ", " +
                 typeOfWeight_arrL.get(i) + "\n");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
+        format.format(new Date());
+        tvDebugDate.setText(tvDebugDate.getText() + "\n" + String.valueOf(format.format(dateTimeArrL.get(i))));
+        tvDebugWeight.setText(tvDebugWeight.getText() + "\n" + String.valueOf(weightValueArrL.get(i)));
+        if (adcValue_arrL.get(i) > 0) {
+            tvDebugAdc.setText(tvDebugAdc.getText() + "\n" + String.valueOf(adcValue_arrL.get(i)));
+        }
+        tvDebugTare.setText(tvDebugTare.getText() + "\n" + String.valueOf(tare_arrL.get(i)));
+        tvDebugType.setText(tvDebugType.getText() + "\n" + String.valueOf(typeOfWeight_arrL.get(i)));
     }
 
     @Override
@@ -164,6 +180,13 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         btnTest = v.findViewById(R.id.btn_test);
         weightLayout = v.findViewById(R.id.weight_panel_id);
         debugArchiveLayout = v.findViewById(R.id.debug_archive_layout);
+        tvDebugDate = v.findViewById(R.id.tv_debug_date);
+        tvDebugWeight = v.findViewById(R.id.tv_debug_weight);
+        tvDebugAdc = v.findViewById(R.id.tv_debug_adc);
+        tvDebugTare = v.findViewById(R.id.tv_debug_tare);
+        tvDebugType = v.findViewById(R.id.tv_debug_type);
+
+
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
@@ -229,6 +252,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
 
         btnArhive.setOnClickListener(this);
         btnTest.setOnClickListener(this);
+        btnTest.setOnLongClickListener(this);
 
         blinkyViewModel.getUartData().observe(getActivity(), s -> {
             assert s != null;
@@ -264,6 +288,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                 //save to archive. The weight is zero
                 else if (weightValueFloat < minWeightForSave && decWeight && (weightValueArrL.size() > 0)) {
                     numOfWeight++;
+                    cleanDebug();
                     archive_arr_fill(arch, 2);
                     //Toast.makeText(getContext(), "max stab weight = " + String.valueOf(weightValueArrL.get(archMax)), Toast.LENGTH_SHORT).show();
                     //change type of weight for mark max stab item
@@ -272,14 +297,19 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
                     }
                     Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
                     for (int i = 0; i < arch+1; i++) {
+
                         archive_arr_show(i);
 //                        archiveViewModel.addArchiveItem(new ArchiveData(dateTime[i],
 //                                weightValueFloat_arr[i], numOfWeight, adcWeight_arr[i],
 //                                adcValue_arr[i], tare_arr[i], typeOfWeight_arr[i]));
 //
-                        archiveViewModel.addArchiveItem(new ArchiveData(dateTimeArrL.get(i),
-                                weightValueArrL.get(i), numOfWeight, adcWeight_arrL.get(i),
-                                adcValue_arrL.get(i), tare_arrL.get(i), typeOfWeight_arrL.get(i)));
+                        if (archive) {
+                            archiveViewModel.addArchiveItem(new ArchiveData(dateTimeArrL.get(i),
+                                    weightValueArrL.get(i), numOfWeight, adcWeight_arrL.get(i),
+                                    adcValue_arrL.get(i), tare_arrL.get(i), typeOfWeight_arrL.get(i)));
+                            //Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
+                        }
+
 
                     }
                     Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
@@ -308,8 +338,9 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         Boolean show_weight = sharedPreferences.getBoolean(KEY_WEIGHT_SHOW, false);
-        Boolean arhive = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE, false);
-        Boolean debug_archive = sharedPreferences.getBoolean(KEY_DEBUG, false);
+        archive = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE, false);
+        debug_archive = sharedPreferences.getBoolean(KEY_DEBUG, false);
+        archiveADC = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE_ADC, false);
 
         discrete = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_VALUE, "0"));
         maxDeviation = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_MAX, "1"));
@@ -331,11 +362,6 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
             weightLayout.setVisibility(View.GONE);
         }
 
-        if (arhive) {
-            btnArhive.setVisibility(View.VISIBLE);
-        } else {
-            btnArhive.setVisibility(View.GONE);
-        }
         super.onResume();
     }
 
@@ -349,12 +375,27 @@ public class WeightPanel extends Fragment implements View.OnClickListener {
             case R.id.btn_test:
                 for (int i = 0; i < arch; i++) {
                     archive_arr_show(i);
-
                 }
                 break;
         }
-
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_test:
+                cleanDebug();
+                break;
+        }
+        return false;
+    }
+
+    void cleanDebug() {
+        tvDebugDate.setText("");
+        tvDebugWeight.setText("");
+        tvDebugTare.setText("");
+        tvDebugAdc.setText("");
+        tvDebugType.setText("");
+    }
 }
 

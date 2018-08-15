@@ -30,4 +30,10 @@
         android:defaultValue="false"
         />
 
+    <!--<SwitchPreference-->
+        <!--android:key="archive_save_adc"-->
+        <!--android:title="Сохранять знач. АЦП"-->
+        <!--android:defaultValue="false"-->
+        <!--/>-->
+
 </PreferenceScreen>

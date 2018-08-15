@@ -18,7 +18,6 @@
         android:layout_marginStart="10dp"
         tools:text="1."
 
-
         />
 
     <TextView

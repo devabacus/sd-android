@@ -26,6 +26,7 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     public static final String KEY_TIME_STAB = "time_stab";
     public static final String KEY_DEBUG = "debug_archive";
     public static final String KEY_ARCHIVE_SAVE = "archive_save";
+    public static final String KEY_ARCHIVE_SAVE_ADC = "archive_save_adc";
 
 
     Preference discreteMaxPref;
