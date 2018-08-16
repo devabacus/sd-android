@@ -44,14 +44,15 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         archiveAdapter = new ArchiveAdapter(new ArrayList<>(), this, this);
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
-//
-////        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType ->{
-////            if (archiveType != null) {
-////                Toast.makeText(getContext(), "есть такое дерьмо", Toast.LENGTH_SHORT).show();
-////            } else {
-////                Toast.makeText(getContext(), "жопа", Toast.LENGTH_SHORT).show();
-////            }
-////        });
+
+        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType ->{
+            if (archiveType != null) {
+           //     Toast.makeText(getContext(), "есть такое дерьмо", Toast.LENGTH_SHORT).show();
+            } else {
+             //   Toast.makeText(getContext(), "жопа", Toast.LENGTH_SHORT).show();
+            }
+        });
+        Log.d(TAG, "onCreateView: hello");
 
         archiveViewModel.getArchiveListbyType(1).observe(getActivity(), archiveListByType -> {
             if (archiveListByType != null) {
@@ -67,25 +68,22 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
             } else {
                 Toast.makeText(getContext(), "нет записей", Toast.LENGTH_SHORT).show();
             }
+            Log.d(TAG, "onCreateView: archiveListByType.size() = " + archiveListByType.size());
+            for (int i = 0; i < archiveListByType.size(); i++) {
 
-
-
-//
-//
-//            for (int i = 0; i < archiveListByType.size(); i++) {
-//                Log.d("test", archiveListByType.get(i).getTimePoint() + ", " +
-//                        archiveListByType.get(i).getMainWeight() + ", " +
-//                        archiveListByType.get(i).getNumOfWeight() + ", " +
-//                        archiveListByType.get(i).getAdcWeight() + ", " +
-//                        archiveListByType.get(i).getAdcArchiveValue() + ", " +
-//                        archiveListByType.get(i).getTareValue() + ", " +
-//                        archiveListByType.get(i).getTypeOfWeight());
-//            }
+                Log.d(TAG, archiveListByType.get(i).getTimePoint() + ", " +
+                        archiveListByType.get(i).getMainWeight() + ", " +
+                        archiveListByType.get(i).getNumOfWeight() + ", " +
+                        archiveListByType.get(i).getAdcWeight() + ", " +
+                        archiveListByType.get(i).getAdcArchiveValue() + ", " +
+                        archiveListByType.get(i).getTareValue() + ", " +
+                        archiveListByType.get(i).getTypeOfWeight());
+            }
         });
 
-        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveListByType ->{
-
-        });
+//        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveListByType ->{
+//
+//        });
 
 
         //archiveViewModel.getArchiveListbyNum(1).observe(getActivity(),archiveDataListByNum -> archiveAdapter.addItems(archiveDataListByNum));

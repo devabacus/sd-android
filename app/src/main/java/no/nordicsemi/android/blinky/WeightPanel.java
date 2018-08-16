@@ -126,11 +126,16 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
         return Math.abs(weightValueFloat - weightSaved) > maxDeviation;
     }
 
+    public float driveWeightFind () {
+        return (weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1));
+    }
+
     public void archive_arr_fill(int i, int type) {
-        dateTimeArrL.add(i, new Date());
+
         typeOfWeight_arrL.add(i, type);
 
         if(type == 0){
+            dateTimeArrL.add(i, new Date());
             weightValueArrL.add(i, weightValueFloat);
             adcWeight_arrL.add(i, adcWeight);
             adcValue_arrL.add(i, adcValue);
@@ -273,6 +278,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                         tareMax = tare;
                         adcValueMax = adcValue;
                         adcWeightMax = adcWeight;
+                        //Log.d(TAG, "onCreateView: weightMax = " + weightMax);
                     }
 
                     if (weightValueFloat > weightValueLast) {
@@ -283,11 +289,14 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                         //Log.d(TAG, "weightValueFloat = " + weightValueFloat + ", weightValueLast = " + weightValueLast);
                         incWeight = false;
                         decWeight = true;
+                        archive_arr_fill(arch, 2);
                     }
                     //Log.d(TAG, "onCreateView: вес отличается. Запустили таймер");
                     timeCounting = true;
+
                 }
                 //save to archive. The weight is zero
+
                 else if (weightValueFloat < minWeightForSave && decWeight && (weightValueArrL.size() > 0)) {
                     numOfWeight++;
                     cleanDebug();
@@ -297,7 +306,29 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                     if (weightSavedMax != 0) {
                         typeOfWeight_arrL.set(archMax, 1);
                     }
-                    archive_arr_fill(arch, 2);
+                    // проверяем ли предыдущее сохраненное сохр взвешивание для сохр веса без людей
+                    //Log.d(TAG, "onCreateView: weightValueArrL.get(archMax) - weightValueArrL.get(archMax - 1) = " + (weightValueArrL.get(archMax) - weightValueArrL.get(archMax - 1)) );
+
+                    //if (archMax != 0) {
+                    if (arch > 1) {
+                        Log.d(TAG, "onCreateView: weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1) = " + (weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1)));
+                        if (driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0) {
+                            typeOfWeight_arrL.set(archMax+1, 3);
+                            Toast.makeText(getContext(), "зафиксирован вес без водителя", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    Log.d(TAG, "weightMax = " + weightMax);
+                    Log.d(TAG, "weightSavedMax = " + weightSavedMax);
+                    //}
+                    //чтобы запись с максимальным весом и стабильным не дублировались в архиве если они одинаковые
+                    if (weightMax != weightSavedMax) {
+                        Log.d(TAG, "onCreateView: weightMax != weightSavedMax");
+                        archive_arr_fill(arch, 2);
+                    }
+                    else {
+                        arch--;
+                    }
                     Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
                     for (int i = 0; i < arch+1; i++) {
 
