@@ -351,8 +351,6 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
         timeStab = Integer.parseInt(sharedPreferences.getString(KEY_TIME_STAB, "3"));
         minWeightForSave = Float.parseFloat(sharedPreferences.getString(KEY_MIN_WEIGHT, "1"));
 
-        Toast.makeText(getContext(), "макс вес водителя: " + String.valueOf(archiveDriverMax), Toast.LENGTH_SHORT).show();
-
         if (debug_archive) {
             //Toast.makeText(getContext(), "отладка вкл", Toast.LENGTH_SHORT).show();
             debugArchiveLayout.setVisibility(View.VISIBLE);
