@@ -305,14 +305,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                     //change type of weight for mark max stab item
 
                     // проверяем ли предыдущее сохраненное сохр взвешивание для сохр веса без людей
-                    //Log.d(TAG, "onCreateView: weightValueArrL.get(archMax) - weightValueArrL.get(archMax - 1) = " + (weightValueArrL.get(archMax) - weightValueArrL.get(archMax - 1)) );
-
-                    //if (archMax != 0) {
                     if (arch > 1) {
                         Log.d(TAG, "onCreateView: weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1) = " + (weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1)));
                         if (driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0) {
                             typeOfWeight_arrL.set(archMax+1, 1);
-                            Toast.makeText(getContext(), "зафиксирован вес без водителя", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "зафиксирован вес без водителя", Toast.LENGTH_SHORT).show();
                         }
                     } else if (weightSavedMax != 0) {
                         typeOfWeight_arrL.set(archMax, 1);
@@ -321,8 +318,8 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                     Log.d(TAG, "weightMax = " + weightMax);
                     Log.d(TAG, "weightSavedMax = " + weightSavedMax);
                     //}
-                    //чтобы запись с максимальным весом и стабильным не дублировались в архиве если они одинаковые
-                    if (weightMax != weightSavedMax) {
+                    //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
+                    if (Math.abs(weightMax - weightSavedMax) > maxDeviation) {
                         Log.d(TAG, "onCreateView: weightMax != weightSavedMax");
                         archive_arr_fill(arch, 2);
                     }

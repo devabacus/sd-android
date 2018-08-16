@@ -3,12 +3,14 @@
 
     <EditTextPreference
         android:key="max_weight_value"
+        android:inputType="numberDecimal"
         android:title="Максимальный вес, кг">
     </EditTextPreference>
 
 
     <EditTextPreference
         android:key="discrete_value"
+        android:inputType="numberDecimal"
         android:title="Дискретность, кг">
 
     </EditTextPreference>

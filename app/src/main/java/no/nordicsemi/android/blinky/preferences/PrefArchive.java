@@ -50,6 +50,7 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -59,13 +60,13 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         timeStabPref = findPreference(KEY_TIME_STAB);
         minWeightPref = findPreference(KEY_MIN_WEIGHT);
         driverMaxPref = findPreference(KEY_ARCHIVE_DRIVER_WEIGHT_MAX);
-        String maxWeight = sharedPreferences.getString(KEY_DISCRETE_MAX,"1");
-        String discreteValue = sharedPreferences.getString(KEY_TIME_STAB,"3");
+        String maxDiscrete = sharedPreferences.getString(KEY_DISCRETE_MAX,"1");
+        String stableTime = sharedPreferences.getString(KEY_TIME_STAB,"3");
         String minWeightValue = sharedPreferences.getString(KEY_MIN_WEIGHT,"1");
         String driverMaxValue = sharedPreferences.getString(KEY_ARCHIVE_DRIVER_WEIGHT_MAX,"0");
 
-        discreteMaxPref.setSummary(maxWeight);
-        timeStabPref.setSummary(discreteValue);
+        discreteMaxPref.setSummary(maxDiscrete);
+        timeStabPref.setSummary(stableTime);
         minWeightPref.setSummary(minWeightValue);
         driverMaxPref.setSummary(driverMaxValue);
     }
