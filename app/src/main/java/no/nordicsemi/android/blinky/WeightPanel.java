@@ -303,9 +303,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
                     //Toast.makeText(getContext(), "max stab weight = " + String.valueOf(weightValueArrL.get(archMax)), Toast.LENGTH_SHORT).show();
                     //change type of weight for mark max stab item
-                    if (weightSavedMax != 0) {
-                        typeOfWeight_arrL.set(archMax, 1);
-                    }
+
                     // проверяем ли предыдущее сохраненное сохр взвешивание для сохр веса без людей
                     //Log.d(TAG, "onCreateView: weightValueArrL.get(archMax) - weightValueArrL.get(archMax - 1) = " + (weightValueArrL.get(archMax) - weightValueArrL.get(archMax - 1)) );
 
@@ -313,9 +311,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                     if (arch > 1) {
                         Log.d(TAG, "onCreateView: weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1) = " + (weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1)));
                         if (driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0) {
-                            typeOfWeight_arrL.set(archMax+1, 3);
+                            typeOfWeight_arrL.set(archMax+1, 1);
                             Toast.makeText(getContext(), "зафиксирован вес без водителя", Toast.LENGTH_SHORT).show();
                         }
+                    } else if (weightSavedMax != 0) {
+                        typeOfWeight_arrL.set(archMax, 1);
                     }
 
                     Log.d(TAG, "weightMax = " + weightMax);
