@@ -37,4 +37,13 @@ public interface ArchiveDao {
 
     @Delete
     void deleteItem(ArchiveData archiveData);
+
+    @Query("DELETE FROM ArchiveData")
+    void deleteAll();
+
+
+
+
+
+
 }

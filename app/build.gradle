@@ -9,7 +9,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 27
         versionCode 6
-        versionName "2.1.2"
+        versionName "5.4.1"
         resConfigs "en"
         vectorDrawables.useSupportLibrary = true
     }

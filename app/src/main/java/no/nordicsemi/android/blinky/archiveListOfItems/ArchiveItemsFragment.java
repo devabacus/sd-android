@@ -2,6 +2,7 @@ package no.nordicsemi.android.blinky.archiveListOfItems;
 
 import android.arch.persistence.room.Room;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,6 +34,10 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     ArchiveData archiveDataMax;
     int currentAcrhiveData = 0;
 
+    Button btnDeleteAll;
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -40,10 +46,14 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
 
         View v = inflater.inflate(R.layout.fragment_archive_items1, container, false);
 
+        btnDeleteAll = v.findViewById(R.id.btn_delete_all);
         recViewArchive = v.findViewById(R.id.rec_view_arch);
         archiveAdapter = new ArchiveAdapter(new ArrayList<>(), this, this);
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
+
+        
+        btnDeleteAll.setOnClickListener(v1 -> archiveViewModel.deleteAllArchiveItems());
 
         archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType ->{
             if (archiveType != null) {

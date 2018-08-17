@@ -93,7 +93,6 @@ public class ButtonsViewModel extends AndroidViewModel {
         }
     }
 
-
     private static class DeleteAsyncTask extends AsyncTask<CorButton, Void, Void>{
         private AppDatabase db;
 
@@ -108,6 +107,8 @@ public class ButtonsViewModel extends AndroidViewModel {
             return null;
         }
     }
+
+
 
 
 }

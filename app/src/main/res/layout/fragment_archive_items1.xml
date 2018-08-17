@@ -7,6 +7,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".archiveListOfItems.ArchiveItemsFragment">
 
+   <android.support.constraint.ConstraintLayout
+       android:id="@+id/archive_panel"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+       <Button
+           android:id="@+id/btn_delete_all"
+           android:text="@string/clearAll"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+
+   </android.support.constraint.ConstraintLayout>
+
     <view class="android.support.v7.widget.RecyclerView"
         android:id="@+id/rec_view_arch"
         android:layout_width="0dp"
@@ -15,7 +30,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/archive_panel"
         app:layout_constraintBottom_toBottomOf="parent"
         >
 

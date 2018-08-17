@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import no.nordicsemi.android.blinky.database.AppDatabase;
 import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 import no.nordicsemi.android.blinky.database_archive.ArchiveDatabase;
@@ -75,7 +76,9 @@ public class ArchiveViewModel extends AndroidViewModel {
         new DeleteAsyncTask(archiveDatabase).execute(archiveData);
     }
 
-
+    public void deleteAllArchiveItems() {
+        new DeleteAllAsyncTask(archiveDatabase).execute();
+    }
 
 
 
@@ -105,5 +108,20 @@ public class ArchiveViewModel extends AndroidViewModel {
             return null;
         }
     }
+
+
+    private static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void>{
+        private ArchiveDatabase db;
+
+        DeleteAllAsyncTask(ArchiveDatabase db) {
+            this.db = db;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            db.archiveFromDao().deleteAll();
+            return null;
+        }
+    }
+
 
 }

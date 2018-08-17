@@ -33,6 +33,7 @@
 
     <EditTextPreference
         android:key="archive_driver_weight_max"
+        android:defaultValue="1"
         android:inputType="numberDecimal"
         android:title="Макс вес водителя + пассажиров, кг">
 
