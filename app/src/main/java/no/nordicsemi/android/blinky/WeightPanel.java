@@ -83,7 +83,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
     boolean incWeight = false;
     boolean decWeight = false;
     Boolean archive;
-    Boolean debug_archive;
+    public static Boolean debug_archive;
     Boolean archiveADC;
     int archiveDriverMax;
     boolean enoughChange = false;
@@ -304,16 +304,15 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                     //Toast.makeText(getContext(), "max stab weight = " + String.valueOf(weightValueArrL.get(archMax)), Toast.LENGTH_SHORT).show();
                     //change type of weight for mark max stab item
 
+
                     // проверяем ли предыдущее сохраненное сохр взвешивание для сохр веса без людей
-                    if (arch > 1) {
-                        Log.d(TAG, "onCreateView: weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1) = " + (weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1)));
-                        if (driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0) {
-                            typeOfWeight_arrL.set(archMax+1, 1);
-                            //Toast.makeText(getContext(), "зафиксирован вес без водителя", Toast.LENGTH_SHORT).show();
-                        }
+                    if ((arch > 1) &&(driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0)) {
+                        typeOfWeight_arrL.set(archMax+1, 1);
                     } else if (weightSavedMax != 0) {
+                        Log.d(TAG, "weightSavedMax != 0");
                         typeOfWeight_arrL.set(archMax, 1);
                     }
+
 
                     Log.d(TAG, "weightMax = " + weightMax);
                     Log.d(TAG, "weightSavedMax = " + weightSavedMax);

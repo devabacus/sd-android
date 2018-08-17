@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.blinky.WeightPanel;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 import no.nordicsemi.android.blinky.database_archive.ArchiveDatabase;
 
@@ -54,6 +55,8 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
 
         
         btnDeleteAll.setOnClickListener(v1 -> archiveViewModel.deleteAllArchiveItems());
+
+
 
         archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType ->{
             if (archiveType != null) {
@@ -124,5 +127,15 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         archiveViewModel.deleteArchiveItem(archiveData);
         Toast.makeText(getContext(), "Запись удалена", Toast.LENGTH_SHORT).show();
         return true;
+    }
+
+    @Override
+    public void onResume() {
+        if (WeightPanel.debug_archive) {
+            btnDeleteAll.setVisibility(View.VISIBLE);
+        } else {
+            btnDeleteAll.setVisibility(View.GONE);
+        }
+        super.onResume();
     }
 }
