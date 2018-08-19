@@ -48,6 +48,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -59,11 +60,14 @@ import no.nordicsemi.android.blinky.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.blinky.utils.Utils;
 import no.nordicsemi.android.blinky.viewmodels.ScannerLiveData;
 import no.nordicsemi.android.blinky.viewmodels.ScannerViewModel;
+import no.nordicsemi.android.support.v18.scanner.ScanResult;
 
 public class ScannerActivity extends AppCompatActivity implements DevicesAdapter.OnItemClickListener {
 	private static final int REQUEST_ACCESS_COARSE_LOCATION = 1022; // random number
 
 	private ScannerViewModel mScannerViewModel;
+
+	Button btnSkipScan;
 
 	@BindView(R.id.state_scanning) View mScanningView;
 	@BindView(R.id.no_devices)View mEmptyView;
@@ -82,6 +86,13 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
 		final Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
+		btnSkipScan = findViewById(R.id.btn_skip_scan);
+
+
+		btnSkipScan.setOnClickListener(v -> {
+			final Intent controlBlinkIntent = new Intent(this, BlinkyActivity.class);
+			startActivity(controlBlinkIntent);
+        });
 
 		// Create view model containing utility methods for scanning
 		mScannerViewModel = ViewModelProviders.of(this).get(ScannerViewModel.class);

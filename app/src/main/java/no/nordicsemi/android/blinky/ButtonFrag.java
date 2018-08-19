@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     StringBuilder msg;
 
     Boolean setOpened = false;
-
+    String user1;
     TextView tvState;
     Button btnRes;
     private ButtonsViewModel buttonsViewModel;
@@ -64,7 +65,6 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
 
         Log.d(TAG, "onCreateView: ");
-
 
         recButView = v.findViewById(R.id.but_rec_view);
         adapter = new ButtonAdapter(new ArrayList<>(), this, this);

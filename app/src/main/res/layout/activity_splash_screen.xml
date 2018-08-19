@@ -52,12 +52,46 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		android:layout_marginTop="70dp"
+		android:layout_marginTop="48dp"
+		android:src="@drawable/sclaedriver"
 		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
 
-		android:src="@drawable/sclaedriver"/>
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<TextView
+		android:id="@+id/tv_auth"
+		android:text="@string/auth"
+		android:textSize="20sp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:layout_marginTop="10dp"
+		app:layout_constraintTop_toBottomOf="@id/scaledriver_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<EditText
+		android:id="@+id/et_auth"
+		android:layout_width="200dp"
+		android:inputType="textPassword"
+		android:layout_height="wrap_content"
+		android:hint="@string/password"
+		app:layout_constraintTop_toBottomOf="@id/tv_auth"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:layout_marginTop="10dp"
+		/>
+
+	<Button
+		android:id="@+id/btn_auth"
+		app:layout_constraintTop_toBottomOf="@id/et_auth"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:text="@string/entry"
+		android:layout_marginTop="10dp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
 
 	<TextView
 		android:id="@+id/website"

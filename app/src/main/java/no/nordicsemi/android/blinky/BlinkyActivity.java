@@ -56,26 +56,31 @@ public class BlinkyActivity extends AppCompatActivity {
 
     ConstraintLayout constrDebug;
 
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blinky);
 
-        final Intent intent = getIntent();
-        final ExtendedBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
-        final String deviceName = device.getName();
-        final String deviceAddress = device.getAddress();
-
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(deviceName);
-        getSupportActionBar().setSubtitle(deviceAddress);
+        final BlinkyViewModel viewModel = ViewModelProviders.of(this).get(BlinkyViewModel.class);
+
+        final Intent intent = getIntent();
+        final ExtendedBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
+
+        if ( device!= null) {
+
+            final String deviceName = device.getName();
+            final String deviceAddress = device.getAddress();
+            getSupportActionBar().setTitle(deviceName);
+            getSupportActionBar().setSubtitle(deviceAddress);
+            viewModel.connect(device);
+        }
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Configure the view model
-        final BlinkyViewModel viewModel = ViewModelProviders.of(this).get(BlinkyViewModel.class);
-        viewModel.connect(device);
 
 
         // Set up views
