@@ -43,7 +43,8 @@ public class SetPrefActivity extends PreferenceActivity {
     protected boolean isValidFragment(String fragmentName){
         return SettingsFragment.class.getName().equals(fragmentName) ||
                 PrefWeightFrag.class.getName().equals(fragmentName)||
-                PrefArchive.class.getName().equals(fragmentName);
+                PrefArchive.class.getName().equals(fragmentName) ||
+                PrefUserFrag.class.getName().equals(fragmentName);
     }
 
     //    @Override

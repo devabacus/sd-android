@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="input_with_pass"
+        android:title="Вход по паролю"
+        android:defaultValue="false"
+        />
+
+    <EditTextPreference
+        android:key="user_pass"
+        android:defaultValue="1"
+        android:inputType="textPassword"
+        android:title="Пароль пользователь"/>
+
+    <EditTextPreference
+        android:key="user1_pass"
+        android:defaultValue="2"
+        android:inputType="textPassword"
+        android:title="Пароль пользователь1"/>
+
+    <EditTextPreference
+        android:key="admin_pass"
+        android:defaultValue="3"
+        android:inputType="textPassword"
+        android:title="Пароль админ"/>
+
+    <EditTextPreference
+        android:key="admin1_pass"
+        android:defaultValue="4"
+        android:inputType="textPassword"
+        android:title="Пароль админ1"/>
+
+</PreferenceScreen>

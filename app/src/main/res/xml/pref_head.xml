@@ -11,5 +11,8 @@
     <header
         android:fragment="no.nordicsemi.android.blinky.preferences.PrefArchive"
         android:title="Настройки архива"/>
+    <header
+        android:fragment="no.nordicsemi.android.blinky.preferences.PrefUserFrag"
+        android:title="Настройки доступа"/>
 
 </preference-headers>

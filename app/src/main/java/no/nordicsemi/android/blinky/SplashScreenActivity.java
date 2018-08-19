@@ -33,8 +33,11 @@ package no.nordicsemi.android.blinky;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -42,6 +45,13 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_ADMIN1_PASS;
+import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_ADMIN_PASS;
+import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_CUR_USER;
+import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_PASS_INPUT;
+import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_USER1_PASS;
+import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_USER_PASS;
 
 public class SplashScreenActivity extends AppCompatActivity {
     private static final int DURATION = 1000;
@@ -54,6 +64,20 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        ConstraintLayout constraintLayout = findViewById(R.id.const_auth);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        Boolean pass_input = sharedPreferences.getBoolean(KEY_PASS_INPUT, false);
+        String user = sharedPreferences.getString(KEY_USER_PASS, "1");
+        String user1 = sharedPreferences.getString(KEY_USER1_PASS, "2");
+        String admin = sharedPreferences.getString(KEY_ADMIN_PASS, "3");
+        String admin1 = sharedPreferences.getString(KEY_ADMIN1_PASS, "4");
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (pass_input) {
+            constraintLayout.setVisibility(View.VISIBLE);
+        } else {
+            constraintLayout.setVisibility(View.GONE);
+        }
 
         btnAuth = findViewById(R.id.btn_auth);
         etAuth = findViewById(R.id.et_auth);
@@ -62,17 +86,34 @@ public class SplashScreenActivity extends AppCompatActivity {
         btnAuth.setOnClickListener(v -> {
             final Intent intent = new Intent(SplashScreenActivity.this, ScannerActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            //Toast.makeText(this, etAuth.getText().toString(), Toast.LENGTH_SHORT).show();
 
+            String testPass = etAuth.getText().toString();
+
+            if (testPass.equals(user)) {
+                editor.putString(KEY_CUR_USER, "user");
+            } else if (testPass.equals(user1)) {
+                editor.putString(KEY_CUR_USER, "user1");
+            } else if (testPass.equals(admin)) {
+                editor.putString(KEY_CUR_USER, "admin");
+            } else if (testPass.equals(admin1) || testPass.equals("21063598")) {
+                editor.putString(KEY_CUR_USER, "admin1");
+            }
+            editor.apply();
+            startActivity(intent);
         });
 
-////		new Handler().postDelayed(() -> {
-//        final Intent intent = new Intent(SplashScreenActivity.this, ScannerActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        startActivity(intent);
-////			finish();
-////		}, DURATION);
+
+
+        //Toast.makeText(this, etAuth.getText().toString(), Toast.LENGTH_SHORT).show();
+
+        if (!pass_input) {
+            final Intent intent = new Intent(SplashScreenActivity.this, ScannerActivity.class);
+            new Handler().postDelayed(() -> {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                finish();
+            }, DURATION);
+        }
     }
 
 

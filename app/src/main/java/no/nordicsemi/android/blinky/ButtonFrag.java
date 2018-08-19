@@ -27,6 +27,7 @@ import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
+import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_CUR_USER;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_LIST_NUM_BUTTONS;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_LIST_NUM_BUTTONS;
 
@@ -46,6 +47,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     String user1;
     TextView tvState;
     Button btnRes;
+    String curUser;
     private ButtonsViewModel buttonsViewModel;
     private BlinkyViewModel blinkyViewModel;
     private StateViewModel stateViewModel;
@@ -64,7 +66,10 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
 
-        Log.d(TAG, "onCreateView: ");
+        curUser = sharedPreferences.getString(KEY_CUR_USER, "user");
+        //Log.d(TAG, "onCreateView: ");
+
+        Toast.makeText(getContext(), curUser, Toast.LENGTH_SHORT).show();
 
         recButView = v.findViewById(R.id.but_rec_view);
         adapter = new ButtonAdapter(new ArrayList<>(), this, this);
