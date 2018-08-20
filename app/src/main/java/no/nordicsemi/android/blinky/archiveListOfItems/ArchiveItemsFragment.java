@@ -20,10 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import no.nordicsemi.android.blinky.ButtonFrag;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.WeightPanel;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 import no.nordicsemi.android.blinky.database_archive.ArchiveDatabase;
+
+import static no.nordicsemi.android.blinky.ButtonFrag.curUser;
 
 public class ArchiveItemsFragment extends Fragment implements View.OnLongClickListener, View.OnClickListener {
 
@@ -53,9 +56,9 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
-        
-        btnDeleteAll.setOnClickListener(v1 -> archiveViewModel.deleteAllArchiveItems());
 
+
+        btnDeleteAll.setOnClickListener(v1 -> archiveViewModel.deleteAllArchiveItems());
 
 
         archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType ->{
@@ -124,18 +127,25 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     public boolean onLongClick(View v)
     {
         ArchiveData archiveData = (ArchiveData) v.getTag();
-        archiveViewModel.deleteArchiveItem(archiveData);
-        Toast.makeText(getContext(), "Запись удалена", Toast.LENGTH_SHORT).show();
+        if (curUser.equals("admin") || curUser.equals("admin1")) {
+            archiveViewModel.deleteArchiveItem(archiveData);
+            Toast.makeText(getContext(), "Запись удалена", Toast.LENGTH_SHORT).show();
+        }
         return true;
     }
 
     @Override
     public void onResume() {
-        if (WeightPanel.debug_archive) {
+
+        if (curUser.equals("admin") || curUser.equals("admin1")) {
             btnDeleteAll.setVisibility(View.VISIBLE);
+            if (!WeightPanel.debug_archive) {
+                btnDeleteAll.setVisibility(View.GONE);
+            }
         } else {
             btnDeleteAll.setVisibility(View.GONE);
         }
+
         super.onResume();
     }
 }

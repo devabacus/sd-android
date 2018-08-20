@@ -217,7 +217,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
             butSet = aBoolean;
         });
 
-        Handler handler = new Handler();
+
+
+
+
+            Handler handler = new Handler();
         int delay = 1000;
         handler.postDelayed(new Runnable() {
             @Override
@@ -225,7 +229,9 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                 if (timeCounting) {
                     timeCounter++;
                     if ((timeCounter >= timeStab) && (weightValueFloat > minWeightForSave) && minChange()) {
-
+                        if (arch == 0) {
+                            cleanDebug();
+                        }
                         archive_arr_fill(arch, 0);
                         archive_arr_show(arch);
                         weightSaved = weightValueFloat;
@@ -366,6 +372,13 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
     @Override
     public void onResume() {
         super.onResume();
+
+        if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
+            tvWeight.setTextSize(30);
+        } else {
+            tvWeight.setTextSize(60);
+        }
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         Boolean show_weight = sharedPreferences.getBoolean(KEY_WEIGHT_SHOW, false);
         archive = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE, false);

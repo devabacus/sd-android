@@ -18,6 +18,8 @@ import java.util.Locale;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 
+import static no.nordicsemi.android.blinky.ButtonFrag.curUser;
+
 public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDetail.ArchiveViewHolder>{
 
     private List<ArchiveData> archiveDataList;
@@ -54,7 +56,10 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
             holder.tvWeight.setBackgroundColor(Color.RED);
         }
         holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
-        holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
+        if (curUser.equals("user1") || curUser.equals("admin1")) {
+            holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
+        }
+
         holder.itemView.setTag(archiveData);
     }
 

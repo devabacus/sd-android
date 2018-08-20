@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_SHOW
  * A simple {@link Fragment} subclass.
  */
 public class StateFragment extends Fragment {
+
 
 
     private static final String TAG = "StateFragment";
@@ -57,6 +59,16 @@ public class StateFragment extends Fragment {
         tvCorState = v.findViewById(R.id.tv_cor_state);
         tvCorMode = v.findViewById(R.id.tv_cor_mode);
         //tvContrInfo = v.findViewById(R.id.tv_contr_info);
+
+
+        if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
+            tvCorState.setVisibility(View.VISIBLE);
+            tvCorMode.setVisibility(View.VISIBLE);
+        } else {
+            tvCorState.setVisibility(View.GONE);
+            tvCorMode.setVisibility(View.GONE);
+        }
+
 
 
         stateViewModel.getAutoCorMode().observe(getActivity(), i -> {

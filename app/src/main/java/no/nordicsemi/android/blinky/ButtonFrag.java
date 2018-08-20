@@ -47,7 +47,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     String user1;
     TextView tvState;
     Button btnRes;
-    String curUser;
+    public static String curUser;
     private ButtonsViewModel buttonsViewModel;
     private BlinkyViewModel blinkyViewModel;
     private StateViewModel stateViewModel;
@@ -69,13 +69,24 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         curUser = sharedPreferences.getString(KEY_CUR_USER, "user");
         //Log.d(TAG, "onCreateView: ");
 
-        Toast.makeText(getContext(), curUser, Toast.LENGTH_SHORT).show();
 
         recButView = v.findViewById(R.id.but_rec_view);
         adapter = new ButtonAdapter(new ArrayList<>(), this, this);
         recButView.setAdapter(adapter);
-        recButView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         cbCorMode = v.findViewById(R.id.cb_cor_mode);
+        btnRes = v.findViewById(R.id.btnRes);
+        tvState = v.findViewById(R.id.tv_state);
+        if (curUser.equals("user1") || curUser.equals("admin1")) {
+            recButView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+            btnRes.setVisibility(View.VISIBLE);
+            cbCorMode.setVisibility(View.VISIBLE);
+            tvState.setVisibility(View.VISIBLE);
+
+        } else {
+            btnRes.setVisibility(View.GONE);
+            cbCorMode.setVisibility(View.GONE);
+            tvState.setVisibility(View.GONE);
+        }
 
         //при запуске получаем от контроллера режим работы и меняем положение флажка при необходимости.
         stateViewModel.getAutoCorMode().observe(getActivity(), integer -> {
@@ -95,7 +106,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         buttonsViewModel.ismSetButton().observe(getActivity(), b->{
             if(b!=null){
                 setOpened = b;
-               // Log.d(TAG, "onCreateView: setOpened = " + setOpened);
+                // Log.d(TAG, "onCreateView: setOpened = " + setOpened);
             }
         });
 
@@ -128,19 +139,18 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
                     for(int i = listSize; i > prefNumOfButs-1; i--){
                         id = i;
                         buttonsViewModel.getCorButtonById(id).observe(getActivity(), corButton -> {
-                            if(corButton != null)
-                            buttonsViewModel.deleteCorBut(corButton);
+                            if(corButton != null) {
+                                buttonsViewModel.deleteCorBut(corButton);
+                            }
                         });
                     }
                 }
             }
 
-           // Log.d("myLogs", "size of list = " + corButtonList.size());
+            // Log.d("myLogs", "size of list = " + corButtonList.size());
             adapter.additems(corButtonList);
 
         });
-        btnRes = v.findViewById(R.id.btnRes);
-        tvState = v.findViewById(R.id.tv_state);
         btnRes.setOnClickListener(v1 -> {
             //Log.d(TAG, "onCreateView: COR_RESET");
             blinkyViewModel.sendTX(Cmd.COR_RESET);
@@ -188,12 +198,15 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     @Override
     public boolean onLongClick(View v) {
         // создаем объект из recyclerView по тэгу
-        CorButton corButton = (CorButton) v.getTag();
         // устанавливаем этот на переменную во viewmodel
-        buttonsViewModel.setmCurCorButton(corButton);
-        // кричим что хотим видеть настройки, флаг в 1
-        buttonsViewModel.setmSetButton(true);
-        //Log.d(TAG, "onLongClick: setmSetButton = true");
+        if (curUser.equals("admin1")) {
+            CorButton corButton = (CorButton) v.getTag();
+            buttonsViewModel.setmCurCorButton(corButton);
+            // кричим что хотим видеть настройки, флаг в 1
+            buttonsViewModel.setmSetButton(true);
+            //Log.d(TAG, "onLongClick: setmSetButton = true");
+        }
+
         return false;
     }
 }

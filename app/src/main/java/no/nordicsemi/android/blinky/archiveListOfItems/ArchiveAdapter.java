@@ -17,6 +17,8 @@ import java.util.Locale;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 
+import static no.nordicsemi.android.blinky.ButtonFrag.curUser;
+
 public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveViewHolder>{
 
     private List<ArchiveData> archiveDataList;
@@ -51,7 +53,10 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
         ArchiveData archiveData = archiveDataList.get(position);
         holder.tvDateTime.setText(String.valueOf(format.format(archiveData.getTimePoint())));
         holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
-        holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
+        if (curUser.equals("user1") || curUser.equals("admin1")) {
+            holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
+        }
+
         holder.tvNumWeight.setText(String.valueOf(archiveData.getNumOfWeight()));
         holder.itemView.setTag(archiveData);
         holder.itemView.setOnClickListener(onClickListener);

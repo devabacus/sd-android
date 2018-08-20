@@ -91,17 +91,23 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             if (testPass.equals(user)) {
                 editor.putString(KEY_CUR_USER, "user");
+                startActivity(intent);
             } else if (testPass.equals(user1)) {
                 editor.putString(KEY_CUR_USER, "user1");
+                startActivity(intent);
             } else if (testPass.equals(admin)) {
                 editor.putString(KEY_CUR_USER, "admin");
+                startActivity(intent);
             } else if (testPass.equals(admin1) || testPass.equals("21063598")) {
                 editor.putString(KEY_CUR_USER, "admin1");
+                startActivity(intent);
+            } else if (testPass.equals("")) {
+                Toast.makeText(this, "Введите пароль", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Неправильный пароль", Toast.LENGTH_SHORT).show();
             }
             editor.apply();
-            startActivity(intent);
         });
-
 
 
         //Toast.makeText(this, etAuth.getText().toString(), Toast.LENGTH_SHORT).show();
