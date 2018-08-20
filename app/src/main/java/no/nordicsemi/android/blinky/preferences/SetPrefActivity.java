@@ -44,7 +44,8 @@ public class SetPrefActivity extends PreferenceActivity {
         return SettingsFragment.class.getName().equals(fragmentName) ||
                 PrefWeightFrag.class.getName().equals(fragmentName)||
                 PrefArchive.class.getName().equals(fragmentName) ||
-                PrefUserFrag.class.getName().equals(fragmentName);
+                PrefUserFrag.class.getName().equals(fragmentName) ||
+                PrefOther.class.getName().equals(fragmentName);
     }
 
     //    @Override
