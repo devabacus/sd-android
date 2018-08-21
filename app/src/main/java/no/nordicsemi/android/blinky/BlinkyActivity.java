@@ -30,6 +30,7 @@
 
 package no.nordicsemi.android.blinky;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -46,8 +47,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import no.nordicsemi.android.blinky.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.blinky.preferences.SetPrefActivity;
@@ -63,8 +70,12 @@ public class BlinkyActivity extends AppCompatActivity {
     ConstraintLayout constrDebug;
     HardButsViewModel hardButsViewModel;
     Integer volButNum = 0;
+    ScrollView scrollView;
+    TextView backgroundTime;
+    ConstraintLayout constBackground;
+    LinearLayout progressContainer;
 
-
+    @SuppressLint("CutPasteId")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +89,27 @@ public class BlinkyActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final ExtendedBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
 
+        scrollView = findViewById(R.id.device_container);
+        constBackground = findViewById(R.id.const_background);
+        backgroundTime = findViewById(R.id.tv_background_time);
+        progressContainer = findViewById(R.id.progress_container);
+
+        backgroundTime.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                scrollView.setVisibility(View.VISIBLE);
+                toolbar.setVisibility(View.VISIBLE);
+                constBackground.setVisibility(View.GONE);
+                return false;
+            }
+        });
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm", new Locale("ru"));
+        //format.format(new Date());
+
+        Date currentTime = Calendar.getInstance().getTime();
+
+
+        backgroundTime.setText(String.valueOf(format.format(currentTime)));
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         if (device != null) {
@@ -105,8 +137,9 @@ public class BlinkyActivity extends AppCompatActivity {
         //led.setOnClickListener(view -> viewModel.toggleLED("stas"));
 
         viewModel.isDeviceReady().observe(this, deviceRead -> {
-            progressContainer.setVisibility(View.GONE);
+            progressContainer.setVisibility(View.VISIBLE);
             content.setVisibility(View.VISIBLE);
+
         });
 
 
@@ -123,6 +156,16 @@ public class BlinkyActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.state_not_supported, Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        hardButsViewModel.getHardActive().observe(this, aBoolean -> {
+            //Toast.makeText(this, "надо бы включить заставку. Попросили же!", Toast.LENGTH_SHORT).show();
+            scrollView.setVisibility(View.GONE);
+            toolbar.setVisibility(View.GONE);
+            progressContainer.setVisibility(View.GONE);
+            constBackground.setVisibility(View.VISIBLE);
+        });
+
     }
 
     @Override

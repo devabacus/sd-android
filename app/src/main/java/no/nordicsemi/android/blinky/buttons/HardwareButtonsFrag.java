@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 
 import android.os.VibrationEffect;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.Objects;
@@ -43,6 +44,7 @@ public class HardwareButtonsFrag extends Fragment {
     CorButton curCorButton;
     Boolean timeIsFire = false;
     Boolean corSet = false;
+    Button btnBackGround;
 
     public HardwareButtonsFrag() {
         // Required empty public constructor
@@ -104,6 +106,12 @@ public class HardwareButtonsFrag extends Fragment {
 
         });
         View v = inflater.inflate(R.layout.fragment_hardware_buttons, container, false);
+
+        btnBackGround = v.findViewById(R.id.btn_hard_background);
+        btnBackGround.setOnClickListener(v1 -> {
+            hardButsViewModel.setmHardActive(true);
+        });
+
 
         vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 

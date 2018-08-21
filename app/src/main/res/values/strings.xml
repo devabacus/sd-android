@@ -193,4 +193,5 @@
     <string name="entry">Войти</string>
     <string name="password">пароль</string>
     <string name="skip_scan">пропустить</string>
+    <string name="background">заставка</string>
 </resources>
