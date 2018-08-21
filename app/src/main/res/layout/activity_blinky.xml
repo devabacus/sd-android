@@ -118,6 +118,14 @@
 				app:layout_constraintStart_toStartOf="parent"
 				tools:layout_editor_absoluteX="0dp" />
 
+			<fragment
+				android:id="@+id/frag_hard_button"
+				android:name="no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:layout_constraintTop_toBottomOf="@id/frag_scale_set"
+				app:layout_constraintStart_toStartOf="parent" />
+
 		</android.support.constraint.ConstraintLayout>
 
 	</ScrollView>

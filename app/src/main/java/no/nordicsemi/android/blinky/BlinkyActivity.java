@@ -31,11 +31,16 @@
 package no.nordicsemi.android.blinky;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,14 +52,18 @@ import android.widget.Toast;
 import no.nordicsemi.android.blinky.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.blinky.preferences.SetPrefActivity;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 
 
 @SuppressWarnings("ConstantConditions")
 public class BlinkyActivity extends AppCompatActivity {
     public static final String EXTRA_DEVICE = "no.nordicsemi.android.blinky.EXTRA_DEVICE";
 
-
+    Vibrator vibrator;
     ConstraintLayout constrDebug;
+    HardButsViewModel hardButsViewModel;
+    Integer volButNum = 0;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -64,11 +73,14 @@ public class BlinkyActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final BlinkyViewModel viewModel = ViewModelProviders.of(this).get(BlinkyViewModel.class);
+        hardButsViewModel = ViewModelProviders.of(this).get(HardButsViewModel.class);
 
         final Intent intent = getIntent();
         final ExtendedBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
 
-        if ( device!= null) {
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        if (device != null) {
 
             final String deviceName = device.getName();
             final String deviceAddress = device.getAddress();
@@ -112,6 +124,36 @@ public class BlinkyActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+           //event.startTracking();
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            //event.startTracking();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            volButNum++;
+            hardButsViewModel.setmNumber(volButNum);
+            mvibrate(100);
+
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            volButNum = 0;
+            hardButsViewModel.setmNumber(volButNum);
+            mvibrate(100);
+        }
+
+        //hardButsViewModel.setmNumber(test++);
+
+        return true;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -138,6 +180,14 @@ public class BlinkyActivity extends AppCompatActivity {
                 break;
         }
         return false;
+    }
+
+    void mvibrate(int ms) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(ms, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            vibrator.vibrate(ms);
+        }
     }
 
 

@@ -17,6 +17,7 @@ import no.nordicsemi.android.blinky.R;
 public class PrefOther extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String KEY_VOLUME_ACTIVE_DELAY = "volume_activate_delay";
+    public static final String KEY_VOLUME_BUTTON = "volume_button";
 
     Preference timeDelayVolume;
     String timeDelay;

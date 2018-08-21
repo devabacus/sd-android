@@ -25,8 +25,11 @@ import java.util.Objects;
 import no.nordicsemi.android.blinky.database.AppDatabase;
 import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
+import static no.nordicsemi.android.blinky.preferences.PrefOther.KEY_VOLUME_ACTIVE_DELAY;
+import static no.nordicsemi.android.blinky.preferences.PrefOther.KEY_VOLUME_BUTTON;
 import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_CUR_USER;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_LIST_NUM_BUTTONS;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_LIST_NUM_BUTTONS;
@@ -41,7 +44,9 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     RecyclerView recButView;
     CheckBox cbCorMode;
     ButtonAdapter adapter;
-    StringBuilder msg;
+
+    Boolean hardButton;
+    String timeHardButtonDelay;
 
     Boolean setOpened = false;
     String user1;
@@ -68,7 +73,6 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
 
         curUser = sharedPreferences.getString(KEY_CUR_USER, "user");
         //Log.d(TAG, "onCreateView: ");
-
 
         recButView = v.findViewById(R.id.but_rec_view);
         adapter = new ButtonAdapter(new ArrayList<>(), this, this);
@@ -163,8 +167,8 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         return v;
     }
 
-    void makeMsg(CorButton corButton) {
-        msg = new StringBuilder();
+    public static StringBuilder makeMsg(CorButton corButton) {
+        StringBuilder msg = new StringBuilder();
         msg.append("$");
         int remBut = Util.butNumConv((int)corButton.getId() + 1);
         msg.append(remBut).append(",");
@@ -174,12 +178,16 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
            msg.append("c").append(corButton.getCompValue());
         }
         msg.append("&");
+        return msg;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        hardButton = sharedPreferences.getBoolean(KEY_VOLUME_BUTTON, false);
+        timeHardButtonDelay = sharedPreferences.getString(KEY_VOLUME_ACTIVE_DELAY, "1");
+
 //        Boolean numCorBut9 = sharedPreferences.getBoolean(KEY_NUM_COR_BUT9, false);
 //        if(numCorBut9)blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_ON);
 //        else blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_OFF);
@@ -191,9 +199,9 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         buttonsViewModel.setmCurCorButton(corButton);
         tvState.setText(corButton.getButNum());
         makeMsg(corButton);
-        Log.d(TAG, "onClick: msg = " + msg.toString());
+        Log.d(TAG, "onClick: msg = " + makeMsg(corButton).toString());
         //if(!setOpened)
-        blinkyViewModel.sendTX(msg.toString());
+        blinkyViewModel.sendTX(makeMsg(corButton).toString());
     }
     @Override
     public boolean onLongClick(View v) {
