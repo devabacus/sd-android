@@ -12,6 +12,9 @@ public class HardButsViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> mNumber = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mHardActive = new MutableLiveData<>();
 
+
+
+
     public LiveData<Integer> getmNumber() {
         return mNumber;
     }
@@ -25,6 +28,8 @@ public class HardButsViewModel extends AndroidViewModel {
     public void setmHardActive(final Boolean hardActive) { mHardActive.setValue(hardActive); }
 
     public HardButsViewModel(@NonNull Application application) {
+
+
         super(application);
     }
 }

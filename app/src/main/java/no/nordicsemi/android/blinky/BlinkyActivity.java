@@ -34,18 +34,26 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -74,6 +82,10 @@ public class BlinkyActivity extends AppCompatActivity {
     TextView backgroundTime;
     ConstraintLayout constBackground;
     LinearLayout progressContainer;
+    private int request_code = 1;
+    ImageView imageView;
+    SimpleDateFormat format;
+
 
     @SuppressLint("CutPasteId")
     @Override
@@ -89,27 +101,34 @@ public class BlinkyActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final ExtendedBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
 
+        imageView = findViewById(R.id.img_view_hard);
+
         scrollView = findViewById(R.id.device_container);
         constBackground = findViewById(R.id.const_background);
         backgroundTime = findViewById(R.id.tv_background_time);
         progressContainer = findViewById(R.id.progress_container);
 
-        backgroundTime.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                scrollView.setVisibility(View.VISIBLE);
-                toolbar.setVisibility(View.VISIBLE);
-                constBackground.setVisibility(View.GONE);
-                return false;
-            }
+        backgroundTime.setOnLongClickListener(v -> {
+            scrollView.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.VISIBLE);
+            constBackground.setVisibility(View.GONE);
+            return false;
         });
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm", new Locale("ru"));
-        //format.format(new Date());
 
-        Date currentTime = Calendar.getInstance().getTime();
+        format = new SimpleDateFormat("dd/MM/YY\nHH:mm", new Locale("ru"));
 
 
-        backgroundTime.setText(String.valueOf(format.format(currentTime)));
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                format.format(new Date());
+                Date currentTime = Calendar.getInstance().getTime();
+                backgroundTime.setText(String.valueOf(format.format(currentTime)));
+                handler.postDelayed(this, 1000);
+            }
+        }, 1000);
+
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         if (device != null) {
@@ -137,7 +156,7 @@ public class BlinkyActivity extends AppCompatActivity {
         //led.setOnClickListener(view -> viewModel.toggleLED("stas"));
 
         viewModel.isDeviceReady().observe(this, deviceRead -> {
-            progressContainer.setVisibility(View.VISIBLE);
+            //progressContainer.setVisibility(View.VISIBLE);
             content.setVisibility(View.VISIBLE);
 
         });

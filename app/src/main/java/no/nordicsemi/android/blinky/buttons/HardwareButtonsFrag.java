@@ -4,6 +4,7 @@ package no.nordicsemi.android.blinky.buttons;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -45,6 +46,10 @@ public class HardwareButtonsFrag extends Fragment {
     Boolean timeIsFire = false;
     Boolean corSet = false;
     Button btnBackGround;
+    Boolean timeForCorrectStart = false;
+    CountDownTimer countDownTimer;
+    long mTimerLeftinMillis = 500;
+
 
     public HardwareButtonsFrag() {
         // Required empty public constructor
@@ -60,7 +65,7 @@ public class HardwareButtonsFrag extends Fragment {
             hardButsViewModel.setmNumber(0);
             corSet = false;
             }
-        }, 1);
+        }, 500);
     }
 
 
@@ -68,6 +73,27 @@ public class HardwareButtonsFrag extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
+    public void startTimerForCorrect() {
+
+        countDownTimer = new CountDownTimer(mTimerLeftinMillis, mTimerLeftinMillis) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                if (timeForCorrectStart) {
+                    blinkyViewModel.sendTX(makeMsg(curCorButton).toString());
+                    timeForCorrectStart = false;
+                    Log.d(TAG, "onFinish: time is fire");
+
+                }
+            }
+        }.start();
+    }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -79,23 +105,31 @@ public class HardwareButtonsFrag extends Fragment {
         hardButsViewModel = ViewModelProviders.of(getActivity()).get(HardButsViewModel.class);
         blinkyViewModel = ViewModelProviders.of(getActivity()).get(BlinkyViewModel.class);
 
-
+        startTimerForCorrect();
         hardButsViewModel.getmNumber().observe(getActivity(), num->{
             assert num != null;
 //            Log.d(TAG, "onCreateView: num = " + num );
+
+
 
             if (num > 0) {
                 num--;
                 Integer finalNum = num;
                 buttonsViewModel.getCorButtonById(num).observe(getActivity(), corButton -> {
+                    timeForCorrectStart = false;
+                    countDownTimer.cancel();
                     curCorButton = corButton;
                     assert corButton != null;
                     buttonsViewModel.setmCurCorButton(corButton);
-                    makeMsg(curCorButton);
+
                     Log.d(TAG, "onCreateView: num = " + finalNum);
                     Log.d(TAG, "onClick: msg = " + makeMsg(corButton).toString());
-                    blinkyViewModel.sendTX(makeMsg(corButton).toString());
+
+                    countDownTimer.start();
+                    timeForCorrectStart = true;
+
                     corSet = true;
+
                 });
             } else if(corSet) {
                 blinkyViewModel.sendTX(Cmd.COR_RESET);

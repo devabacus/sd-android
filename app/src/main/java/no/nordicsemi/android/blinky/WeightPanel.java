@@ -221,7 +221,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
 
 
-            Handler handler = new Handler();
+        Handler handler = new Handler();
         int delay = 1000;
         handler.postDelayed(new Runnable() {
             @Override

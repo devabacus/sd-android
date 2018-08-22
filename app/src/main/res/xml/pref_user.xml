@@ -4,7 +4,7 @@
     <SwitchPreference
         android:key="input_with_pass"
         android:title="Вход по паролю"
-        android:defaultValue="false"
+        android:defaultValue="true"
         />
 
     <EditTextPreference

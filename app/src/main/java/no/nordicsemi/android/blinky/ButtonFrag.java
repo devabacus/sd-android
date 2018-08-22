@@ -52,7 +52,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     String user1;
     TextView tvState;
     Button btnRes;
-    public static String curUser;
+    public static String curUser = "admin1";
     private ButtonsViewModel buttonsViewModel;
     private BlinkyViewModel blinkyViewModel;
     private StateViewModel stateViewModel;
@@ -71,7 +71,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
 
-        curUser = sharedPreferences.getString(KEY_CUR_USER, "user");
+        curUser = sharedPreferences.getString(KEY_CUR_USER, "admin1");
         //Log.d(TAG, "onCreateView: ");
 
         recButView = v.findViewById(R.id.but_rec_view);

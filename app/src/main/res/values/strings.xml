@@ -194,4 +194,5 @@
     <string name="password">пароль</string>
     <string name="skip_scan">пропустить</string>
     <string name="background">заставка</string>
+    <string name="change_back">сменить фон</string>
 </resources>
