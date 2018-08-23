@@ -27,6 +27,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public static final String KEY_SHOW_CONT_SETTINGS_FRAG = "show_contrsettings";
     public static final String KEY_SHOW_DEBUG_FRAG = "show_debug_frag";
     public static final String KEY_NUM_COR_BUT9 = "num_cor_but9";
+    public static final String KEY_WALLPAPER_SHOW = "wallpaper_show";
 
     Preference curPref;
 

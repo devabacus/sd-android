@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.Locale;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 
-import static no.nordicsemi.android.blinky.ButtonFrag.curUser;
+import static no.nordicsemi.android.blinky.buttons.ButtonFrag.curUser;
 
 public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDetail.ArchiveViewHolder>{
 

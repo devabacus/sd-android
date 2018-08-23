@@ -1,4 +1,4 @@
-package no.nordicsemi.android.blinky;
+package no.nordicsemi.android.blinky.archiveListOfItems;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,7 +34,4 @@ public class Archive extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }

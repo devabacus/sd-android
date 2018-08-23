@@ -69,12 +69,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BlinkyActivity"
+            android:name=".MainActivity"
             android:launchMode="singleTop" />
         <activity android:name=".preferences.SetPrefActivity"
             android:theme="@style/Pref"/>
         <activity android:name=".contr_settings.ContSettingsActivity" />
-        <activity android:name=".Archive" />
+        <activity android:name=".archiveListOfItems.Archive" />
     </application>
 
 </manifest>

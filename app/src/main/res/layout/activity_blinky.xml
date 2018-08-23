@@ -28,49 +28,14 @@
   ~ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   ~ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".BlinkyActivity"
+	tools:context=".MainActivity"
 	tools:ignore="ContentDescription">
-
-	<android.support.constraint.ConstraintLayout
-		android:id="@+id/const_background"
-
-		android:visibility="gone"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-		<ImageView
-			android:id="@+id/img_view_hard"
-			android:background="@drawable/background9"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent" />
-		<TextView
-			android:id="@+id/tv_background_time"
-
-			android:text="привет"
-			android:gravity="center"
-			android:textSize="40sp"
-			android:clickable="true"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:focusable="true" />
-
-		<!--<Button-->
-			<!--android:id="@+id/btn_change_back"-->
-			<!--android:text="@string/change_back"-->
-			<!--android:layout_width="wrap_content"-->
-			<!--android:layout_height="wrap_content" />-->
-
-	</android.support.constraint.ConstraintLayout>
-
 
 	<android.support.design.widget.AppBarLayout
 		android:id="@+id/appbar_layout"
@@ -121,7 +86,7 @@
 
 			<fragment
 				android:id="@+id/frag_butSet"
-				android:name="no.nordicsemi.android.blinky.Butset"
+				android:name="no.nordicsemi.android.blinky.buttons.Butset"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintStart_toStartOf="parent"
@@ -129,7 +94,7 @@
 
 			<fragment
 				android:id="@+id/frag_but"
-				android:name="no.nordicsemi.android.blinky.ButtonFrag"
+				android:name="no.nordicsemi.android.blinky.buttons.ButtonFrag"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_alignParentBottom="true"
@@ -153,17 +118,21 @@
 				app:layout_constraintStart_toStartOf="parent"
 				tools:layout_editor_absoluteX="0dp" />
 
-			<fragment
-				android:id="@+id/frag_hard_button"
-				android:name="no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				app:layout_constraintTop_toBottomOf="@id/frag_scale_set"
-				app:layout_constraintStart_toStartOf="parent" />
+
+
 
 		</android.support.constraint.ConstraintLayout>
 
 	</ScrollView>
+
+	<fragment
+		android:id="@+id/frag_hard_button"
+		android:name="no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_constraintTop_toBottomOf="@id/device_container"
+		app:layout_constraintStart_toStartOf="parent" />
+
 
 	<LinearLayout
 		android:id="@+id/progress_container"
@@ -195,4 +164,4 @@
 	</LinearLayout>
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

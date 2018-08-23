@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="volume_button"
+        android:title="Использовать аппаратные кнопки"
+        android:defaultValue="false"
+        />
+
+    <SwitchPreference
+        android:key="volume_pass_ask"
+        android:title="Запрашивать пароль"
+        android:defaultValue="false"
+        />
+
+    <SwitchPreference
+        android:key="volume_activated_show"
+        android:title="Показывать статус корректировки"
+        android:defaultValue="true"
+        />
+    <SwitchPreference
+        android:key="volume_increase_vibro"
+        android:title="Вибрация при увеличении"
+        android:defaultValue="true"
+        />
+
+    <SwitchPreference
+        android:key="volume_activated_vibro"
+        android:title="Вибрация при активировании"
+        android:defaultValue="true"
+        />
+
+    <SwitchPreference
+        android:key="volume_num_btns_show"
+        android:title="Показывать номер кнопки"
+        android:defaultValue="true"
+        />
+
+    <SwitchPreference
+        android:key="volume_btn_dec"
+        android:title="Уменьшение значения"
+        android:defaultValue="true"
+        />
+
+    <SwitchPreference
+        android:key="volume_btn_name_show"
+        android:title="Показывать значение кнопки"
+        android:defaultValue="true"
+        />
+
+    <EditTextPreference
+        android:key="volume_activate_delay"
+        android:inputType="numberDecimal"
+        android:title="Время задержки срабатывания"
+        android:defaultValue="1000"
+        />
+
+    <EditTextPreference
+        android:key="volume_long_press_inc"
+        android:inputType="numberDecimal"
+        android:title="Увеличение при длительном нажатии"
+        android:defaultValue="10"
+        />
+
+
+</PreferenceScreen>

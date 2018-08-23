@@ -1,14 +1,11 @@
-package no.nordicsemi.android.blinky;
+package no.nordicsemi.android.blinky.buttons;
 
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,6 +20,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
+import no.nordicsemi.android.blinky.Cmd;
+import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.blinky.Util;
+import no.nordicsemi.android.blinky.buttons.ButtonsViewModel;
 import no.nordicsemi.android.blinky.database.AppDatabase;
 import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
@@ -30,7 +31,6 @@ import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import java.util.Objects;
 
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_REMOTE_BUT_UPDATE;
-import no.nordicsemi.android.blinky.Util;
 
 /**
  * A simple {@link Fragment} subclass.

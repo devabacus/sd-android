@@ -1,34 +1,10 @@
 package no.nordicsemi.android.blinky.preferences;
 
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.List;
-import java.util.Objects;
 
-import no.nordicsemi.android.blinky.ButtonsViewModel;
-import no.nordicsemi.android.blinky.Cmd;
 import no.nordicsemi.android.blinky.R;
-import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 
 public class SetPrefActivity extends PreferenceActivity {
 
@@ -45,7 +21,7 @@ public class SetPrefActivity extends PreferenceActivity {
                 PrefWeightFrag.class.getName().equals(fragmentName)||
                 PrefArchive.class.getName().equals(fragmentName) ||
                 PrefUserFrag.class.getName().equals(fragmentName) ||
-                PrefOther.class.getName().equals(fragmentName);
+                PrefHardBtns.class.getName().equals(fragmentName);
     }
 
     //    @Override

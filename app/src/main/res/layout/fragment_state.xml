@@ -52,4 +52,15 @@
         tools:text="@string/adc1"
         android:layout_marginStart="10dp"
         />
+
+    <Button
+        android:id="@+id/btn_hard_background"
+
+        android:text="@string/background"
+        app:layout_constraintTop_toBottomOf="@id/tv_adc"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
 </android.support.constraint.ConstraintLayout>

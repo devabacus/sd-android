@@ -1,4 +1,4 @@
-package no.nordicsemi.android.blinky;
+package no.nordicsemi.android.blinky.buttons;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
@@ -16,22 +16,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import no.nordicsemi.android.blinky.Cmd;
+import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.blinky.Util;
 import no.nordicsemi.android.blinky.database.AppDatabase;
 import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
-import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
-import static no.nordicsemi.android.blinky.preferences.PrefOther.KEY_VOLUME_ACTIVE_DELAY;
-import static no.nordicsemi.android.blinky.preferences.PrefOther.KEY_VOLUME_BUTTON;
+import static no.nordicsemi.android.blinky.preferences.PrefHardBtns.KEY_VOLUME_ACTIVE_DELAY;
+import static no.nordicsemi.android.blinky.preferences.PrefHardBtns.KEY_VOLUME_BUTTON;
 import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_CUR_USER;
-import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_LIST_NUM_BUTTONS;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_LIST_NUM_BUTTONS;
 
 public class ButtonFrag extends Fragment implements View.OnClickListener, View.OnLongClickListener {

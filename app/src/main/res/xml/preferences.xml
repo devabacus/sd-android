@@ -45,6 +45,13 @@
         android:defaultValue="false"
         />
 
+    <SwitchPreference
+        android:key="wallpaper_show"
+        android:title="Заставка"
+        android:defaultValue="true"
+        />
+
+
 
 
 </PreferenceScreen>

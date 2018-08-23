@@ -48,7 +48,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -60,7 +59,6 @@ import no.nordicsemi.android.blinky.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.blinky.utils.Utils;
 import no.nordicsemi.android.blinky.viewmodels.ScannerLiveData;
 import no.nordicsemi.android.blinky.viewmodels.ScannerViewModel;
-import no.nordicsemi.android.support.v18.scanner.ScanResult;
 
 public class ScannerActivity extends AppCompatActivity implements DevicesAdapter.OnItemClickListener {
 	private static final int REQUEST_ACCESS_COARSE_LOCATION = 1022; // random number
@@ -90,7 +88,7 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
 
 
 		btnSkipScan.setOnClickListener(v -> {
-			final Intent controlBlinkIntent = new Intent(this, BlinkyActivity.class);
+			final Intent controlBlinkIntent = new Intent(this, MainActivity.class);
 			startActivity(controlBlinkIntent);
         });
 
@@ -117,8 +115,8 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
 
 	@Override
 	public void onItemClick(final ExtendedBluetoothDevice device) {
-		final Intent controlBlinkIntent = new Intent(this, BlinkyActivity.class);
-		controlBlinkIntent.putExtra(BlinkyActivity.EXTRA_DEVICE, device);
+		final Intent controlBlinkIntent = new Intent(this, MainActivity.class);
+		controlBlinkIntent.putExtra(MainActivity.EXTRA_DEVICE, device);
 		startActivity(controlBlinkIntent);
 	}
 

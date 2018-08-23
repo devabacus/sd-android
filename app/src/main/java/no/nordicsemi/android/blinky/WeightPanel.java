@@ -13,25 +13,20 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import no.nordicsemi.android.blinky.archiveListOfItems.Archive;
 import no.nordicsemi.android.blinky.archiveListOfItems.ArchiveViewModel;
-import no.nordicsemi.android.blinky.database.CorButton;
+import no.nordicsemi.android.blinky.buttons.ButtonFrag;
+import no.nordicsemi.android.blinky.buttons.ButtonsViewModel;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
@@ -44,7 +39,6 @@ import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_DISCRETE_
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_MIN_WEIGHT;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_TIME_STAB;
 import static no.nordicsemi.android.blinky.preferences.PrefWeightFrag.KEY_DISCRETE_VALUE;
-import static no.nordicsemi.android.blinky.preferences.PrefWeightFrag.KEY_MAX_WEIGHT_VALUE;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_ARCHIVE_SAVE;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_WEIGHT_SHOW;
 

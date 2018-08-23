@@ -1,4 +1,4 @@
-package no.nordicsemi.android.blinky;
+package no.nordicsemi.android.blinky.buttons;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;

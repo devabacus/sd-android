@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="gone"
-    tools:context=".Butset"
+    tools:context=".buttons.Butset"
     tools:visibility="visible">
 
     <LinearLayout
@@ -124,7 +124,7 @@
 
     <fragment
         android:id="@+id/frag_comp"
-        android:name="no.nordicsemi.android.blinky.CompPercent"
+        android:name="no.nordicsemi.android.blinky.buttons.CompPercent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />

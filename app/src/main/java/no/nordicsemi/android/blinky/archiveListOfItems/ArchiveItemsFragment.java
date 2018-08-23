@@ -1,8 +1,6 @@
 package no.nordicsemi.android.blinky.archiveListOfItems;
 
-import android.arch.persistence.room.Room;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -17,16 +15,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-import no.nordicsemi.android.blinky.ButtonFrag;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.WeightPanel;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
-import no.nordicsemi.android.blinky.database_archive.ArchiveDatabase;
 
-import static no.nordicsemi.android.blinky.ButtonFrag.curUser;
+import static no.nordicsemi.android.blinky.buttons.ButtonFrag.curUser;
 
 public class ArchiveItemsFragment extends Fragment implements View.OnLongClickListener, View.OnClickListener {
 

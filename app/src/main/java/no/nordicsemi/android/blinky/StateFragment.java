@@ -1,30 +1,31 @@
 package no.nordicsemi.android.blinky;
 
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Objects;
 
+import no.nordicsemi.android.blinky.buttons.ButtonFrag;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
+import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeActivatedVibro;
+import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeButton;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_ADC_SHOW;
-import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_NUM_COR_BUT9;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
+import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_WALLPAPER_SHOW;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,11 +36,16 @@ public class StateFragment extends Fragment {
 
     private static final String TAG = "StateFragment";
     private BlinkyViewModel blinkyViewModel;
+    HardButsViewModel hardButsViewModel;
+
     TextView tvAdc, tvCorMode, tvCorState; //tvContrInfo;
+    Button btnBackGround;
 
     String bleMsg[];
     public static int adcValue = 0;
     Boolean adcShow = false;
+    public static Boolean pref_wallpaper_show = true;
+
 
     public StateFragment() {
         // Required empty public constructor
@@ -52,8 +58,15 @@ public class StateFragment extends Fragment {
 
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         StateViewModel stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
+        hardButsViewModel = ViewModelProviders.of(getActivity()).get(HardButsViewModel.class);
 
         View v = inflater.inflate(R.layout.fragment_state, container, false);
+
+        btnBackGround = v.findViewById(R.id.btn_hard_background);
+        btnBackGround.setOnClickListener(v1 -> {
+            hardButsViewModel.setmHardActive(true);
+        });
+
 
         tvAdc = v.findViewById(R.id.tv_adc);
         tvCorState = v.findViewById(R.id.tv_cor_state);
@@ -113,8 +126,19 @@ public class StateFragment extends Fragment {
                 switch (notif_num) {
                     // состояние корректировки при работе в авторежиме
                     case 1:
-                        if(notif_value == 1 || notif_value == 2 || notif_value == 3) tvCorState.setText("активно");
-                        else if (notif_value == 0) tvCorState.setText("сброс");
+                        if(notif_value == 1 || notif_value == 2 || notif_value == 3){
+                            tvCorState.setText("активно");
+                            if (volumeActivatedVibro) {
+                                MainActivity.mvibrate(50);
+                            }
+                        }
+
+                        else if (notif_value == 0){
+                            if (volumeActivatedVibro) {
+                                MainActivity.mvibrate(50);
+                            }
+                            tvCorState.setText("сброс");}
+
                         break;
 
                         // состояние к`орректировки при работе в ручном режиме
@@ -167,9 +191,17 @@ public class StateFragment extends Fragment {
 //      prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
         adcShow = sharedPreferences.getBoolean(KEY_ADC_SHOW, false);
         Boolean showContSet = sharedPreferences.getBoolean(KEY_SHOW_CONT_SETTINGS_FRAG, false);
+        pref_wallpaper_show = sharedPreferences.getBoolean(KEY_WALLPAPER_SHOW, true);
+
 //      Boolean numCorBut9 = sharedPreferences.getBoolean(KEY_NUM_COR_BUT9, false);
 //      if(numCorBut9)blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_ON);
 //      else blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_OFF);
+        if (pref_wallpaper_show) {
+            btnBackGround.setVisibility(View.VISIBLE);
+        } else {
+            btnBackGround.setVisibility(View.GONE);
+        }
+
 
         if (adcShow) {
             tvAdc.setVisibility(View.VISIBLE);

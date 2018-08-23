@@ -34,24 +34,19 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,22 +64,25 @@ import no.nordicsemi.android.blinky.preferences.SetPrefActivity;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 
+import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeBtnDec;
+import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeLongPressInc;
+
 
 @SuppressWarnings("ConstantConditions")
-public class BlinkyActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_DEVICE = "no.nordicsemi.android.blinky.EXTRA_DEVICE";
-
-    Vibrator vibrator;
+    private static final String TAG = "test";
+    static Vibrator vibrator;
     ConstraintLayout constrDebug;
     HardButsViewModel hardButsViewModel;
     Integer volButNum = 0;
     ScrollView scrollView;
-    TextView backgroundTime;
     ConstraintLayout constBackground;
+    ConstraintLayout consLayout;
     LinearLayout progressContainer;
     private int request_code = 1;
     ImageView imageView;
-    SimpleDateFormat format;
+    Boolean longPress = false;
 
 
     @SuppressLint("CutPasteId")
@@ -104,30 +102,11 @@ public class BlinkyActivity extends AppCompatActivity {
         imageView = findViewById(R.id.img_view_hard);
 
         scrollView = findViewById(R.id.device_container);
-        constBackground = findViewById(R.id.const_background);
-        backgroundTime = findViewById(R.id.tv_background_time);
+        consLayout = findViewById(R.id.conslayout);
+
+
+        //constBackground = findViewById(R.id.const_background);
         progressContainer = findViewById(R.id.progress_container);
-
-        backgroundTime.setOnLongClickListener(v -> {
-            scrollView.setVisibility(View.VISIBLE);
-            toolbar.setVisibility(View.VISIBLE);
-            constBackground.setVisibility(View.GONE);
-            return false;
-        });
-
-        format = new SimpleDateFormat("dd/MM/YY\nHH:mm", new Locale("ru"));
-
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                format.format(new Date());
-                Date currentTime = Calendar.getInstance().getTime();
-                backgroundTime.setText(String.valueOf(format.format(currentTime)));
-                handler.postDelayed(this, 1000);
-            }
-        }, 1000);
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -178,11 +157,15 @@ public class BlinkyActivity extends AppCompatActivity {
 
 
         hardButsViewModel.getHardActive().observe(this, aBoolean -> {
-            //Toast.makeText(this, "надо бы включить заставку. Попросили же!", Toast.LENGTH_SHORT).show();
-            scrollView.setVisibility(View.GONE);
-            toolbar.setVisibility(View.GONE);
-            progressContainer.setVisibility(View.GONE);
-            constBackground.setVisibility(View.VISIBLE);
+            if (aBoolean) {
+                consLayout.setVisibility(View.GONE);
+                toolbar.setVisibility(View.GONE);
+                progressContainer.setVisibility(View.GONE);
+            } else {
+                consLayout.setVisibility(View.VISIBLE);
+                toolbar.setVisibility(View.VISIBLE);
+                progressContainer.setVisibility(View.VISIBLE);
+            }
         });
 
     }
@@ -190,30 +173,66 @@ public class BlinkyActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-           //event.startTracking();
+           event.startTracking();
         }
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            //event.startTracking();
+           event.startTracking();
         }
         return true;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            volButNum++;
-            hardButsViewModel.setmNumber(volButNum);
-            mvibrate(100);
+        if (!longPress) {
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                    volButNum++;
+                    Log.d(TAG, "onKeyUp: volume up");
+            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                if (!volumeBtnDec) {
+                    volButNum = 0;
+                    Log.d(TAG, "onKeyUp: volume down");
+                } else {
+                    volButNum--;
+                }
+            }
 
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            volButNum = 0;
-            hardButsViewModel.setmNumber(volButNum);
             mvibrate(100);
+            hardButsViewModel.setmNumber(volButNum);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            if (volumeLongPressInc != 0) {
+                mvibrate(200);
+                longPress = true;
+                volButNum+=volumeLongPressInc;
+                Log.d(TAG, "onKeyLongPress: long volume up");
+            }
         }
 
-        //hardButsViewModel.setmNumber(test++);
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            if (volumeBtnDec) {
+                longPress = true;
+                volButNum = 0;
+                Log.d(TAG, "onKeyLongPress: long volume down");
+                mvibrate(200);
+            }
+        }
+        hardButsViewModel.setmNumber(volButNum);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                longPress = false;
+            }
+        }, 500);
 
-        return true;
+        return super.onKeyLongPress(keyCode, event);
+
     }
 
     @Override
@@ -237,14 +256,14 @@ public class BlinkyActivity extends AppCompatActivity {
                 return true;
             case R.id.settings:
                 Intent intent = new Intent();
-                intent.setClass(BlinkyActivity.this, SetPrefActivity.class);
+                intent.setClass(MainActivity.this, SetPrefActivity.class);
                 startActivityForResult(intent, 0);
                 break;
         }
         return false;
     }
 
-    void mvibrate(int ms) {
+   public static void mvibrate(int ms) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(ms, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
