@@ -29,6 +29,7 @@ import no.nordicsemi.android.blinky.buttons.ButtonFrag;
 import no.nordicsemi.android.blinky.buttons.ButtonsViewModel;
 import no.nordicsemi.android.blinky.database_archive.ArchiveData;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.blinky.StateFragment.adcValue;
@@ -51,6 +52,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
     BlinkyViewModel blinkyViewModel;
     ButtonsViewModel buttonsViewModel;
+    HardButsViewModel hardButsViewModel;
     StateViewModel stateViewModel;
     ConstraintLayout weightLayout, debugArchiveLayout;
     TextView tvWeight;
@@ -192,6 +194,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
         stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
+        hardButsViewModel = ViewModelProviders.of(getActivity()).get(HardButsViewModel.class);
 
         dateTime = new Date[20];
         dateTimeMax = new Date();
@@ -211,7 +214,13 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
             butSet = aBoolean;
         });
 
-
+        hardButsViewModel.getHardActive().observe(getActivity(), aBoolean ->{
+            if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
+                tvWeight.setTextSize(30);
+            } else {
+                tvWeight.setTextSize(60);
+            }
+        });
 
 
 
@@ -367,11 +376,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
     public void onResume() {
         super.onResume();
 
-        if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
-            tvWeight.setTextSize(30);
-        } else {
-            tvWeight.setTextSize(60);
-        }
+
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         Boolean show_weight = sharedPreferences.getBoolean(KEY_WEIGHT_SHOW, false);
@@ -398,6 +403,12 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
             weightLayout.setVisibility(View.VISIBLE);
         } else {
             weightLayout.setVisibility(View.GONE);
+        }
+
+        if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
+            tvWeight.setTextSize(30);
+        } else {
+            tvWeight.setTextSize(60);
         }
 
         super.onResume();

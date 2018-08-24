@@ -19,8 +19,8 @@
         android:defaultValue="true"
         />
     <SwitchPreference
-        android:key="volume_increase_vibro"
-        android:title="Вибрация при увеличении"
+        android:key="volume_press_vibro"
+        android:title="Вибрация при нажатии"
         android:defaultValue="true"
         />
 
@@ -37,16 +37,16 @@
         />
 
     <SwitchPreference
+        android:key="volume_btn_name_show"
+        android:title="Показывать значение кнопки"
+        android:defaultValue="true"
+        />
+    <SwitchPreference
         android:key="volume_btn_dec"
         android:title="Уменьшение значения"
         android:defaultValue="true"
         />
 
-    <SwitchPreference
-        android:key="volume_btn_name_show"
-        android:title="Показывать значение кнопки"
-        android:defaultValue="true"
-        />
 
     <EditTextPreference
         android:key="volume_activate_delay"
@@ -60,6 +60,13 @@
         android:inputType="numberDecimal"
         android:title="Увеличение при длительном нажатии"
         android:defaultValue="10"
+        />
+
+    <EditTextPreference
+        android:key="volume_font_size"
+        android:inputType="number"
+        android:title="Шрифт доп.информации"
+        android:defaultValue="12"
         />
 
 

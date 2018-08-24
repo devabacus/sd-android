@@ -21,6 +21,7 @@ import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
+import static no.nordicsemi.android.blinky.buttons.ButtonFrag.curUser;
 import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeActivatedVibro;
 import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeButton;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_ADC_SHOW;
@@ -74,13 +75,7 @@ public class StateFragment extends Fragment {
         //tvContrInfo = v.findViewById(R.id.tv_contr_info);
 
 
-        if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
-            tvCorState.setVisibility(View.VISIBLE);
-            tvCorMode.setVisibility(View.VISIBLE);
-        } else {
-            tvCorState.setVisibility(View.GONE);
-            tvCorMode.setVisibility(View.GONE);
-        }
+
 
 
 
@@ -106,6 +101,23 @@ public class StateFragment extends Fragment {
             }
         });
 
+
+        hardButsViewModel.getHardActive().observe(getActivity(), aBoolean -> {
+
+            if (pref_wallpaper_show && (curUser.equals("user1") || curUser.equals("admin1")) ) {
+                btnBackGround.setVisibility(View.VISIBLE);
+            } else {
+                btnBackGround.setVisibility(View.GONE);
+            }
+            if (curUser.equals("user1") || curUser.equals("admin1")) {
+                tvCorState.setVisibility(View.VISIBLE);
+                tvCorMode.setVisibility(View.VISIBLE);
+            } else {
+                tvCorState.setVisibility(View.GONE);
+                tvCorMode.setVisibility(View.GONE);
+            }
+        });
+
         blinkyViewModel.getUartData().observe(getActivity(), s -> {
             assert s != null;
             if (s.matches("^ad.*")) {
@@ -128,22 +140,21 @@ public class StateFragment extends Fragment {
                     case 1:
                         if(notif_value == 1 || notif_value == 2 || notif_value == 3){
                             tvCorState.setText("активно");
-                            if (volumeActivatedVibro) {
-                                MainActivity.mvibrate(50);
-                            }
+                            stateViewModel.setmIsCorActive(true);
                         }
 
                         else if (notif_value == 0){
-                            if (volumeActivatedVibro) {
-                                MainActivity.mvibrate(50);
-                            }
+                            stateViewModel.setmIsCorActive(false);
                             tvCorState.setText("сброс");}
 
                         break;
 
                         // состояние к`орректировки при работе в ручном режиме
                     case 2:
-                        if (notif_value == 0 || notif_value == 1) tvCorState.setText("ожидание");
+                        if (notif_value == 0 || notif_value == 1){
+                            stateViewModel.setmIsCorActive(false);
+                            tvCorState.setText("ожидание");
+                        }
                         break;
 
                     case 3:
@@ -196,10 +207,18 @@ public class StateFragment extends Fragment {
 //      Boolean numCorBut9 = sharedPreferences.getBoolean(KEY_NUM_COR_BUT9, false);
 //      if(numCorBut9)blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_ON);
 //      else blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_OFF);
-        if (pref_wallpaper_show) {
+        if (pref_wallpaper_show && (curUser.equals("user1") || curUser.equals("admin1")) ) {
             btnBackGround.setVisibility(View.VISIBLE);
         } else {
             btnBackGround.setVisibility(View.GONE);
+        }
+
+        if (curUser.equals("user1") || curUser.equals("admin1")) {
+            tvCorState.setVisibility(View.VISIBLE);
+            tvCorMode.setVisibility(View.VISIBLE);
+        } else {
+            tvCorState.setVisibility(View.GONE);
+            tvCorMode.setVisibility(View.GONE);
         }
 
 

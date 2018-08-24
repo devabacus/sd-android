@@ -193,7 +193,7 @@
     <string name="entry">Войти</string>
     <string name="password">пароль</string>
     <string name="skip_scan">пропустить</string>
-    <string name="background">заставка</string>
+    <string name="background">свернуть</string>
     <string name="change_back">сменить фон</string>
     <string name="background1">Фоновое изображение</string>
 </resources>

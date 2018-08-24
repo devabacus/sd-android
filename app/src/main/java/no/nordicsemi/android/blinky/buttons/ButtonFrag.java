@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import no.nordicsemi.android.blinky.Util;
 import no.nordicsemi.android.blinky.database.AppDatabase;
 import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.blinky.preferences.PrefHardBtns.KEY_VOLUME_ACTIVE_DELAY;
@@ -56,9 +58,29 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     private ButtonsViewModel buttonsViewModel;
     private BlinkyViewModel blinkyViewModel;
     private StateViewModel stateViewModel;
+    private HardButsViewModel hardButsViewModel;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
     public static AppDatabase appDatabase;
     public ButtonFrag() {}
+
+    public void visibilityControl() {
+        if (curUser.equals("user1") || curUser.equals("admin1")) {
+
+            recButView.setVisibility(View.VISIBLE);
+            btnRes.setVisibility(View.VISIBLE);
+            cbCorMode.setVisibility(View.VISIBLE);
+            tvState.setVisibility(View.VISIBLE);
+
+        } else {
+            recButView.setVisibility(View.GONE);
+            btnRes.setVisibility(View.GONE);
+            cbCorMode.setVisibility(View.GONE);
+            tvState.setVisibility(View.GONE);
+
+        }
+        //Toast.makeText(getContext(), curUser, Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -67,30 +89,42 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         //blinkyViewModel.connect(device);
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
         stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
+        hardButsViewModel = ViewModelProviders.of(getActivity()).get(HardButsViewModel.class);
+
+
         View v = inflater.inflate(R.layout.fragment_button, container, false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
 
-        curUser = sharedPreferences.getString(KEY_CUR_USER, "admin1");
-        //Log.d(TAG, "onCreateView: ");
 
+        //Log.d(TAG, "onCreateView: ");
+        // recyclerView thing
         recButView = v.findViewById(R.id.but_rec_view);
         adapter = new ButtonAdapter(new ArrayList<>(), this, this);
+        recButView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         recButView.setAdapter(adapter);
+
+
+
         cbCorMode = v.findViewById(R.id.cb_cor_mode);
         btnRes = v.findViewById(R.id.btnRes);
         tvState = v.findViewById(R.id.tv_state);
-        if (curUser.equals("user1") || curUser.equals("admin1")) {
-            recButView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-            btnRes.setVisibility(View.VISIBLE);
-            cbCorMode.setVisibility(View.VISIBLE);
-            tvState.setVisibility(View.VISIBLE);
 
-        } else {
-            btnRes.setVisibility(View.GONE);
-            cbCorMode.setVisibility(View.GONE);
-            tvState.setVisibility(View.GONE);
-        }
+        curUser = sharedPreferences.getString(KEY_CUR_USER, "admin1");
+        visibilityControl();
+
+
+
+
+        hardButsViewModel.getHardActive().observe(getActivity(), aBoolean -> {
+            assert aBoolean != null;
+            //Toast.makeText(getContext(), "hard active changed", Toast.LENGTH_SHORT).show();
+               //curUser = sharedPreferences.getString(KEY_CUR_USER, "admin1");
+               visibilityControl();
+        });
+
+
+
 
         //при запуске получаем от контроллера режим работы и меняем положение флажка при необходимости.
         stateViewModel.getAutoCorMode().observe(getActivity(), integer -> {
@@ -187,10 +221,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         hardButton = sharedPreferences.getBoolean(KEY_VOLUME_BUTTON, false);
         timeHardButtonDelay = sharedPreferences.getString(KEY_VOLUME_ACTIVE_DELAY, "1");
-
-//        Boolean numCorBut9 = sharedPreferences.getBoolean(KEY_NUM_COR_BUT9, false);
-//        if(numCorBut9)blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_ON);
-//        else blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_OFF);
+        Log.d(TAG, "onResume: ");
     }
 
     @Override

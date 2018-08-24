@@ -12,6 +12,8 @@ public class StateViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> mAutoCorMode = new MutableLiveData<>();
     private final MutableLiveData<Integer> mADCvalue = new MutableLiveData<>();
     private final MutableLiveData<Float> mWeightValue = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isCorActive = new MutableLiveData<>();
+
 
 
     public LiveData<Integer> getADCvalue() {
@@ -24,6 +26,8 @@ public class StateViewModel extends AndroidViewModel {
         return mAutoCorMode;
     }
 
+    public LiveData<Boolean> getIsCorActive(){return isCorActive;}
+
 
     public void setmADCvalue(final Integer adc_value) {
         mADCvalue.setValue(adc_value);
@@ -34,6 +38,8 @@ public class StateViewModel extends AndroidViewModel {
     public void setmAutoCorMode(final Integer autoCorMode){
         mAutoCorMode.setValue(autoCorMode);
     }
+
+    public void setmIsCorActive (final Boolean corActive) {isCorActive.setValue(corActive);}
 
     public StateViewModel(@NonNull Application application) {
         super(application);

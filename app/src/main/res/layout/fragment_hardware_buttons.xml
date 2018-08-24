@@ -27,8 +27,44 @@
             android:layout_height="wrap_content"
             android:focusable="true" />
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/const_backg_auth"
+        app:layout_constraintTop_toBottomOf="@id/tv_background_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <EditText
+            android:id="@+id/et_backg_auth"
+            android:layout_width="200dp"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            />
+
+        <Button
+            android:id="@+id/btn_backg_auth"
+            app:layout_constraintTop_toBottomOf="@id/et_backg_auth"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/entry"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </android.support.constraint.ConstraintLayout>
+
+
         <TextView
             android:id="@+id/tv_butNum"
+            android:text="0"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -37,6 +73,7 @@
 
         <TextView
             android:id="@+id/tv_butName"
+            android:text="0"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_butNum"
             android:layout_width="wrap_content"

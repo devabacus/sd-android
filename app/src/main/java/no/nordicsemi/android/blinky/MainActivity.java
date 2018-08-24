@@ -66,6 +66,7 @@ import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 
 import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeBtnDec;
 import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeLongPressInc;
+import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumePressVibro;
 
 
 @SuppressWarnings("ConstantConditions")
@@ -155,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         hardButsViewModel.getHardActive().observe(this, aBoolean -> {
+            //Toast.makeText(this, "MainActivity update", Toast.LENGTH_SHORT).show();
             if (aBoolean) {
                 consLayout.setVisibility(View.GONE);
                 toolbar.setVisibility(View.GONE);
@@ -173,10 +174,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-           event.startTracking();
+            event.startTracking();
         }
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-           event.startTracking();
+            event.startTracking();
         }
         return true;
     }
@@ -185,8 +186,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (!longPress) {
             if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-                    volButNum++;
-                    Log.d(TAG, "onKeyUp: volume up");
+                volButNum++;
+                Log.d(TAG, "onKeyUp: volume up");
             } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
                 if (!volumeBtnDec) {
                     volButNum = 0;
@@ -196,7 +197,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            mvibrate(100);
+            if (volumePressVibro) {
+                mvibrate(100);
+            }
             hardButsViewModel.setmNumber(volButNum);
         }
         return true;
@@ -207,9 +210,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             if (volumeLongPressInc != 0) {
-                mvibrate(200);
+                if (volumePressVibro) {mvibrate(200);}
                 longPress = true;
-                volButNum+=volumeLongPressInc;
+                volButNum += volumeLongPressInc;
                 Log.d(TAG, "onKeyLongPress: long volume up");
             }
         }
@@ -219,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 longPress = true;
                 volButNum = 0;
                 Log.d(TAG, "onKeyLongPress: long volume down");
-                mvibrate(200);
+                if (volumePressVibro) {mvibrate(200);}
             }
         }
         hardButsViewModel.setmNumber(volButNum);
@@ -263,7 +266,8 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-   public static void mvibrate(int ms) {
+    public static void mvibrate(int ms) {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(ms, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
