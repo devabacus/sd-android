@@ -24,6 +24,7 @@ import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 import static no.nordicsemi.android.blinky.buttons.ButtonFrag.curUser;
 import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeActivatedVibro;
 import static no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag.volumeButton;
+import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_PASS_INPUT;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_ADC_SHOW;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG;
 import static no.nordicsemi.android.blinky.preferences.SettingsFragment.KEY_WALLPAPER_SHOW;
@@ -100,7 +101,6 @@ public class StateFragment extends Fragment {
                 
             }
         });
-
 
         hardButsViewModel.getHardActive().observe(getActivity(), aBoolean -> {
 
@@ -203,11 +203,12 @@ public class StateFragment extends Fragment {
         adcShow = sharedPreferences.getBoolean(KEY_ADC_SHOW, false);
         Boolean showContSet = sharedPreferences.getBoolean(KEY_SHOW_CONT_SETTINGS_FRAG, false);
         pref_wallpaper_show = sharedPreferences.getBoolean(KEY_WALLPAPER_SHOW, true);
+        Boolean pass_input = sharedPreferences.getBoolean(KEY_PASS_INPUT, false);
 
 //      Boolean numCorBut9 = sharedPreferences.getBoolean(KEY_NUM_COR_BUT9, false);
 //      if(numCorBut9)blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_ON);
 //      else blinkyViewModel.sendTX(Cmd.NUM_COR_BUT9_OFF);
-        if (pref_wallpaper_show && (curUser.equals("user1") || curUser.equals("admin1")) ) {
+        if (pref_wallpaper_show && (curUser.equals("user1") || curUser.equals("admin1") || !pass_input ) ) {
             btnBackGround.setVisibility(View.VISIBLE);
         } else {
             btnBackGround.setVisibility(View.GONE);
