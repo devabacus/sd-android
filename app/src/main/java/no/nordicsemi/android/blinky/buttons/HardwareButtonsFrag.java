@@ -2,6 +2,7 @@ package no.nordicsemi.android.blinky.buttons;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,6 +38,7 @@ import no.nordicsemi.android.blinky.MainActivity;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.ScannerActivity;
 import no.nordicsemi.android.blinky.SplashScreenActivity;
+import no.nordicsemi.android.blinky.StateFragment;
 import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
@@ -135,6 +137,10 @@ public class HardwareButtonsFrag extends Fragment {
             public void onFinish() {
                 if (timeForCorrectStart) {
                     blinkyViewModel.sendTX(makeMsg(curCorButton).toString());
+                    //StateFragment.txQueue.add(makeMsg(curCorButton).toString());
+                    StateFragment.txQueue.add("s13/1");
+                    //blinkyViewModel.sendTX("s13/1");
+
                     timeForCorrectStart = false;
                     Log.d(TAG, "onFinish: time is fire");
 
@@ -171,8 +177,7 @@ public class HardwareButtonsFrag extends Fragment {
         etBackgAuth = v.findViewById(R.id.et_backg_auth);
 
 
-
-
+//        String macAddress = android.provider.Settings.Secure.getString(Objects.requireNonNull(getContext()).getContentResolver(), "bluetooth_address");
         backgroundTime.setOnLongClickListener(v1 -> {
 //            scrollView.setVisibility(View.VISIBLE);
             hardButsViewModel.setmHardActive(false);
@@ -189,6 +194,7 @@ public class HardwareButtonsFrag extends Fragment {
                 format.format(new Date());
                 Date currentTime = Calendar.getInstance().getTime();
                 backgroundTime.setText(String.valueOf(format.format(currentTime)));
+                Calendar calendar = Calendar.getInstance();
                 handler.postDelayed(this, 1000);
             }
         }, 1000);
@@ -326,7 +332,6 @@ public class HardwareButtonsFrag extends Fragment {
 
 
         startTimerForCorrect();
-        Log.d(TAG, "onResume: mTimerLeftinMillis = "+ mTimerLeftinMillis);
         tvButName.setTextSize(volumeFontSize);
         tvButNum.setTextSize(volumeFontSize);
         if (volumeBtnNameShow) {

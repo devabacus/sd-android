@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.buttons.ButtonFrag;
+import no.nordicsemi.android.blinky.buttons.ButtonsViewModel;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
@@ -36,9 +39,12 @@ public class StateFragment extends Fragment {
 
 
 
-    private static final String TAG = "StateFragment";
+    private static final String TAG = "test";
     private BlinkyViewModel blinkyViewModel;
+    ButtonsViewModel buttonsViewModel;
     HardButsViewModel hardButsViewModel;
+
+    public static ArrayList<String> txQueue;
 
     TextView tvAdc, tvCorMode, tvCorState; //tvContrInfo;
     Button btnBackGround;
@@ -46,6 +52,7 @@ public class StateFragment extends Fragment {
     String bleMsg[];
     public static int adcValue = 0;
     Boolean adcShow = false;
+    Boolean btnSetButton = false;
     public static Boolean pref_wallpaper_show = true;
 
 
@@ -61,6 +68,7 @@ public class StateFragment extends Fragment {
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         StateViewModel stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
         hardButsViewModel = ViewModelProviders.of(getActivity()).get(HardButsViewModel.class);
+        buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
 
         View v = inflater.inflate(R.layout.fragment_state, container, false);
 
@@ -77,7 +85,36 @@ public class StateFragment extends Fragment {
 
 
 
+        buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
+                assert aBoolean != null;
+                btnSetButton = aBoolean;
+        });
 
+
+//        sentOneTime = false;
+//        blinkyViewModel.isTXsent().observe(Objects.requireNonNull(getActivity()), aBoolean -> {
+//            assert aBoolean != null;
+//            mTXsent = aBoolean;
+//
+//            if (aBoolean && !sentOneTime) {
+//                blinkyViewModel.sendTX(Cmd.COR_RESET);
+//                sentOneTime = true;
+//            }
+//        });
+
+//
+        txQueue = new ArrayList<>();
+
+        blinkyViewModel.isTXsent().observe(getActivity(), isTxSent -> {
+            assert isTxSent != null;
+            //есть чо отправить
+            Log.d(TAG, "onCreateView: isTxSent = " + isTxSent);
+            Log.d(TAG, "onCreateView: txQueue.size() = " + txQueue.size());
+            if (isTxSent && (txQueue.size() > 0)) {
+                blinkyViewModel.sendTX(txQueue.get(0));
+                txQueue.remove(0);
+            }
+        });
 
 
         stateViewModel.getAutoCorMode().observe(getActivity(), i -> {
@@ -140,7 +177,9 @@ public class StateFragment extends Fragment {
                     case 1:
                         if(notif_value == 1 || notif_value == 2 || notif_value == 3){
                             tvCorState.setText("активно");
-                            stateViewModel.setmIsCorActive(true);
+                            if (!btnSetButton) {
+                                stateViewModel.setmIsCorActive(true);
+                            }
                         }
 
                         else if (notif_value == 0){
