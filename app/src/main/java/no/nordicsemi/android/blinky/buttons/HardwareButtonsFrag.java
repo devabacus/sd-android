@@ -137,9 +137,7 @@ public class HardwareButtonsFrag extends Fragment {
             public void onFinish() {
                 if (timeForCorrectStart) {
                     blinkyViewModel.sendTX(makeMsg(curCorButton).toString());
-                    //StateFragment.txQueue.add(makeMsg(curCorButton).toString());
                     StateFragment.txQueue.add("s13/1");
-                    //blinkyViewModel.sendTX("s13/1");
 
                     timeForCorrectStart = false;
                     Log.d(TAG, "onFinish: time is fire");

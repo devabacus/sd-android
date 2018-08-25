@@ -23,9 +23,9 @@ public class PrefUserFrag extends PreferenceFragment implements SharedPreference
     public static final String KEY_CUR_USER = "cur_user";
 
     String curUser;
-    String curUser1;
-    String curAdmin;
-    String curAdmin1;
+//    String curUser1;
+//    String curAdmin;
+//    String curAdmin1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,9 +33,9 @@ public class PrefUserFrag extends PreferenceFragment implements SharedPreference
         addPreferencesFromResource(R.xml.pref_user);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         curUser = sharedPreferences.getString(KEY_CUR_USER, "user");
-        curUser1 = sharedPreferences.getString(KEY_CUR_USER, "user1");
-        curAdmin = sharedPreferences.getString(KEY_CUR_USER, "admin");
-        curAdmin1 = sharedPreferences.getString(KEY_CUR_USER, "admin1");
+//        curUser1 = sharedPreferences.getString(KEY_CUR_USER, "user1");
+//        curAdmin = sharedPreferences.getString(KEY_CUR_USER, "admin");
+//        curAdmin1 = sharedPreferences.getString(KEY_CUR_USER, "admin1");
     }
 
     @Override

@@ -341,8 +341,10 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 //                        archiveViewModel.addArchiveItem(new ArchiveData(dateTime[i],
 //                                weightValueFloat_arr[i], numOfWeight, adcWeight_arr[i],
 //                                adcValue_arr[i], tare_arr[i], typeOfWeight_arr[i]));
-//
+                        //send archive_counter
+
                         if (archive) {
+                            blinkyViewModel.sendTX("s13/2");
                             archiveViewModel.addArchiveItem(new ArchiveData(dateTimeArrL.get(i),
                                     weightValueArrL.get(i), numOfWeight, adcWeight_arrL.get(i),
                                     adcValue_arrL.get(i), tare_arrL.get(i), typeOfWeight_arrL.get(i)));
@@ -376,14 +378,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
     public void onResume() {
         super.onResume();
 
-
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         Boolean show_weight = sharedPreferences.getBoolean(KEY_WEIGHT_SHOW, false);
         archive = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE, false);
         debug_archive = sharedPreferences.getBoolean(KEY_DEBUG, false);
         archiveADC = sharedPreferences.getBoolean(KEY_ARCHIVE_SAVE_ADC, false);
-
         archiveDriverMax = Integer.parseInt(sharedPreferences.getString(KEY_ARCHIVE_DRIVER_WEIGHT_MAX, "0"));
         discrete = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_VALUE, "0"));
         maxDeviation = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_MAX, "1"));
