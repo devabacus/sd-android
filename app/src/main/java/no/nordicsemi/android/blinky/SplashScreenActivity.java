@@ -46,6 +46,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_OPTION_ARCHIVE;
 import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_ADMIN1_PASS;
 import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_ADMIN_PASS;
 import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_CUR_USER;
@@ -58,6 +59,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     Button btnAuth;
     EditText etAuth;
+    String option_archive;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -66,14 +68,16 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         ConstraintLayout constraintLayout = findViewById(R.id.const_auth);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+
         Boolean pass_input = sharedPreferences.getBoolean(KEY_PASS_INPUT, false);
+        option_archive = sharedPreferences.getString(KEY_OPTION_ARCHIVE, "1");
         String user = sharedPreferences.getString(KEY_USER_PASS, "1");
         String user1 = sharedPreferences.getString(KEY_USER1_PASS, "2");
         String admin = sharedPreferences.getString(KEY_ADMIN_PASS, "3");
         String admin1 = sharedPreferences.getString(KEY_ADMIN1_PASS, "4");
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (pass_input) {
+        if (pass_input && (!option_archive.equals("0"))) {
             constraintLayout.setVisibility(View.VISIBLE);
         } else {
             constraintLayout.setVisibility(View.GONE);
@@ -112,7 +116,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         //Toast.makeText(this, etAuth.getText().toString(), Toast.LENGTH_SHORT).show();
 
-        if (!pass_input) {
+        if (!pass_input || (option_archive.equals("0"))) {
             final Intent intent = new Intent(SplashScreenActivity.this, ScannerActivity.class);
             new Handler().postDelayed(() -> {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

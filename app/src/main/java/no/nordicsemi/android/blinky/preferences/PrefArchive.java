@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import no.nordicsemi.android.blinky.R;
 
+import static no.nordicsemi.android.blinky.preferences.PrefUserFrag.KEY_CUR_USER;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -28,12 +30,14 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     public static final String KEY_ARCHIVE_SAVE = "archive_save";
     public static final String KEY_ARCHIVE_SAVE_ADC = "archive_save_adc";
     public static final String KEY_ARCHIVE_DRIVER_WEIGHT_MAX = "archive_driver_weight_max";
+    public static final String KEY_OPTION_ARCHIVE = "option_archive";
 
 
     Preference discreteMaxPref;
     Preference timeStabPref;
     Preference minWeightPref;
     Preference driverMaxPref;
+    Preference archiveSavePref;
 
     public PrefArchive() {
         // Required empty public constructor
@@ -55,20 +59,32 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     public void onResume() {
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String curUser = sharedPreferences.getString(KEY_CUR_USER, "user");
+
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         discreteMaxPref = findPreference(KEY_DISCRETE_MAX);
         timeStabPref = findPreference(KEY_TIME_STAB);
         minWeightPref = findPreference(KEY_MIN_WEIGHT);
         driverMaxPref = findPreference(KEY_ARCHIVE_DRIVER_WEIGHT_MAX);
+        archiveSavePref = findPreference(KEY_ARCHIVE_SAVE);
         String maxDiscrete = sharedPreferences.getString(KEY_DISCRETE_MAX,"1");
         String stableTime = sharedPreferences.getString(KEY_TIME_STAB,"3");
         String minWeightValue = sharedPreferences.getString(KEY_MIN_WEIGHT,"1");
         String driverMaxValue = sharedPreferences.getString(KEY_ARCHIVE_DRIVER_WEIGHT_MAX,"0");
 
+
+        if (curUser.equals("admin") || curUser.equals("admin1")) {
+            archiveSavePref.setEnabled(true);
+        } else {
+            archiveSavePref.setEnabled(false);
+        }
+
         discreteMaxPref.setSummary(maxDiscrete);
         timeStabPref.setSummary(stableTime);
         minWeightPref.setSummary(minWeightValue);
         driverMaxPref.setSummary(driverMaxValue);
+
+
     }
 
 

@@ -33,6 +33,7 @@ import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.blinky.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.blinky.StateFragment.adcValue;
+import static no.nordicsemi.android.blinky.StateFragment.option_archive;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_ARCHIVE_DRIVER_WEIGHT_MAX;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_ARCHIVE_SAVE_ADC;
 import static no.nordicsemi.android.blinky.preferences.PrefArchive.KEY_DEBUG;
@@ -78,7 +79,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
     float minWeightForSave = 1;
     boolean incWeight = false;
     boolean decWeight = false;
-    Boolean archive;
+    public static Boolean archive;
     public static Boolean debug_archive;
     Boolean archiveADC;
     int archiveDriverMax;
@@ -92,7 +93,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
     float adcWeight = 0;
     //int adcValue = 0;
-    int tare = 0;
+    public static int tare = 0;
     int arch = 0;
     int typeOfWeight = 0;
 
@@ -345,13 +346,13 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
                         if (archive) {
                             blinkyViewModel.sendTX("s13/2");
-                            archiveViewModel.addArchiveItem(new ArchiveData(dateTimeArrL.get(i),
-                                    weightValueArrL.get(i), numOfWeight, adcWeight_arrL.get(i),
-                                    adcValue_arrL.get(i), tare_arrL.get(i), typeOfWeight_arrL.get(i)));
-                            //Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
+                            if (option_archive != 0) {
+                                archiveViewModel.addArchiveItem(new ArchiveData(dateTimeArrL.get(i),
+                                        weightValueArrL.get(i), numOfWeight, adcWeight_arrL.get(i),
+                                        adcValue_arrL.get(i), tare_arrL.get(i), typeOfWeight_arrL.get(i)));
+                                //Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
+                            }
                         }
-
-
                     }
                     Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
 

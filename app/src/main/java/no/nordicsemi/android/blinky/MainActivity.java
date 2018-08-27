@@ -60,6 +60,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import no.nordicsemi.android.blinky.adapter.ExtendedBluetoothDevice;
+import no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag;
 import no.nordicsemi.android.blinky.preferences.SetPrefActivity;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
@@ -184,23 +185,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (!longPress) {
-            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-                volButNum++;
-                Log.d(TAG, "onKeyUp: volume up");
-            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-                if (!volumeBtnDec) {
-                    volButNum = 0;
-                    Log.d(TAG, "onKeyUp: volume down");
-                } else {
-                    volButNum--;
+        if (HardwareButtonsFrag.volumeButton) {
+            if (!longPress) {
+                if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                    volButNum++;
+                    Log.d(TAG, "onKeyUp: volume up");
+                } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                    if (!volumeBtnDec) {
+                        volButNum = 0;
+                        Log.d(TAG, "onKeyUp: volume down");
+                    } else {
+                        volButNum--;
+                    }
                 }
-            }
 
-            if (volumePressVibro) {
-                mvibrate(100);
+                if (volumePressVibro) {
+                    mvibrate(100);
+                }
+                hardButsViewModel.setmNumber(volButNum);
             }
-            hardButsViewModel.setmNumber(volButNum);
         }
         return true;
     }
@@ -208,31 +211,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
 
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            if (volumeLongPressInc != 0) {
-                if (volumePressVibro) {mvibrate(200);}
-                longPress = true;
-                volButNum += volumeLongPressInc;
-                Log.d(TAG, "onKeyLongPress: long volume up");
+        if (HardwareButtonsFrag.volumeButton) {
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                if (volumeLongPressInc != 0) {
+                    if (volumePressVibro) {mvibrate(200);}
+                    longPress = true;
+                    volButNum += volumeLongPressInc;
+                    Log.d(TAG, "onKeyLongPress: long volume up");
+                }
             }
-        }
 
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            if (volumeBtnDec) {
-                longPress = true;
-                volButNum = 0;
-                Log.d(TAG, "onKeyLongPress: long volume down");
-                if (volumePressVibro) {mvibrate(200);}
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                if (volumeBtnDec) {
+                    longPress = true;
+                    volButNum = 0;
+                    Log.d(TAG, "onKeyLongPress: long volume down");
+                    if (volumePressVibro) {mvibrate(200);}
+                }
             }
+            hardButsViewModel.setmNumber(volButNum);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    longPress = false;
+                }
+            }, 500);
         }
-        hardButsViewModel.setmNumber(volButNum);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                longPress = false;
-            }
-        }, 500);
 
         return super.onKeyLongPress(keyCode, event);
 

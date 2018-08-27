@@ -153,8 +153,6 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		//Logger.a(testLogSession, "received something");
 	}
 
-
-
 	@Override
 	public void onDataSent(final String state) {
 		//mTXdata.postValue(state);
@@ -162,7 +160,6 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		Log.d("test", "TX: " + state);
 
 		//Logger.a(testLogSession, "send something");
-
 	}
 
 	@Override

@@ -39,6 +39,7 @@ import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.blinky.ScannerActivity;
 import no.nordicsemi.android.blinky.SplashScreenActivity;
 import no.nordicsemi.android.blinky.StateFragment;
+import no.nordicsemi.android.blinky.WeightPanel;
 import no.nordicsemi.android.blinky.database.CorButton;
 import no.nordicsemi.android.blinky.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.blinky.viewmodels.HardButsViewModel;
@@ -136,8 +137,11 @@ public class HardwareButtonsFrag extends Fragment {
             @Override
             public void onFinish() {
                 if (timeForCorrectStart) {
-                    blinkyViewModel.sendTX(makeMsg(curCorButton).toString());
-                    StateFragment.txQueue.add("s13/1");
+                    if (StateFragment.option_volume != 0) {
+                        blinkyViewModel.sendTX(makeMsg(curCorButton).toString());
+                        StateFragment.txQueue.add("s13/1");
+                    }
+
 
                     timeForCorrectStart = false;
                     Log.d(TAG, "onFinish: time is fire");
@@ -178,7 +182,9 @@ public class HardwareButtonsFrag extends Fragment {
 //        String macAddress = android.provider.Settings.Secure.getString(Objects.requireNonNull(getContext()).getContentResolver(), "bluetooth_address");
         backgroundTime.setOnLongClickListener(v1 -> {
 //            scrollView.setVisibility(View.VISIBLE);
-            hardButsViewModel.setmHardActive(false);
+            if (!volumePassAsk) {
+                hardButsViewModel.setmHardActive(false);
+            }
             return false;
         });
 
@@ -296,6 +302,7 @@ public class HardwareButtonsFrag extends Fragment {
             } else if(corSet) {
                 blinkyViewModel.sendTX(Cmd.COR_RESET);
                 starttimer();
+                WeightPanel.tare = 0;
                 tvButNum.setText("0-");
                 //hardButsViewModel.setmNumber(0);
             }
