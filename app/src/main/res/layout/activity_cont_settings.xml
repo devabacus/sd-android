@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="no.nordicsemi.android.blinky.contr_settings.ContSettingsActivity">
-
-
+    tools:context="no.nordicsemi.android.sdr.contr_settings.ContSettingsActivity">
 
 
 </android.support.constraint.ConstraintLayout>

@@ -34,7 +34,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".MainActivity"
+	tools:context="no.nordicsemi.android.sdr.MainActivity"
 	tools:ignore="ContentDescription">
 
 	<android.support.design.widget.AppBarLayout
@@ -70,7 +70,7 @@
 
 			<fragment
 				android:id="@+id/frag_debug"
-				android:name="no.nordicsemi.android.blinky.preferences.DebugFrag"
+				android:name="no.nordicsemi.android.sdr.preferences.DebugFrag"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,7 @@
 
 			<fragment
 				android:id="@+id/frag_weight"
-				android:name="no.nordicsemi.android.blinky.WeightPanel"
+				android:name="no.nordicsemi.android.sdr.WeightPanel"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toBottomOf="@id/frag_debug" />
@@ -86,7 +86,7 @@
 
 			<fragment
 				android:id="@+id/frag_butSet"
-				android:name="no.nordicsemi.android.blinky.buttons.Butset"
+				android:name="no.nordicsemi.android.sdr.buttons.Butset"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +94,7 @@
 
 			<fragment
 				android:id="@+id/frag_but"
-				android:name="no.nordicsemi.android.blinky.buttons.ButtonFrag"
+				android:name="no.nordicsemi.android.sdr.buttons.ButtonFrag"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_alignParentBottom="true"
@@ -103,7 +103,7 @@
 
 			<fragment
 				android:id="@+id/frag_state"
-				android:name="no.nordicsemi.android.blinky.StateFragment"
+				android:name="no.nordicsemi.android.sdr.StateFragment"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +111,7 @@
 
 			<fragment
 				android:id="@+id/frag_scale_set"
-				android:name="no.nordicsemi.android.blinky.contr_settings.ScaleSetFragment"
+				android:name="no.nordicsemi.android.sdr.contr_settings.ScaleSetFragment"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toBottomOf="@id/frag_state"
@@ -127,7 +127,7 @@
 
 	<fragment
 		android:id="@+id/frag_hard_button"
-		android:name="no.nordicsemi.android.blinky.buttons.HardwareButtonsFrag"
+		android:name="no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		app:layout_constraintTop_toBottomOf="@id/device_container"

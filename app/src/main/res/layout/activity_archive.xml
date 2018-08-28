@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".archiveListOfItems.Archive">
+    tools:context="no.nordicsemi.android.sdr.archiveListOfItems.Archive">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_layout2"
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content" />
 
     <fragment
-        android:name="no.nordicsemi.android.blinky.archiveListOfItems.Archive_detail_item"
+        android:name="no.nordicsemi.android.sdr.archiveListOfItems.Archive_detail_item"
         android:id="@+id/frag_detail_archive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
 
 
     <fragment
-        android:name="no.nordicsemi.android.blinky.archiveListOfItems.ArchiveItemsFragment"
+        android:name="no.nordicsemi.android.sdr.archiveListOfItems.ArchiveItemsFragment"
         android:id="@+id/frag_archive"
         android:layout_width="match_parent"
         android:layout_height="0dp"

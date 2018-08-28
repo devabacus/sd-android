@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/sett_frame1"
-    tools:context=".preferences.SetPrefActivity">
+    tools:context="no.nordicsemi.android.sdr.preferences.SetPrefActivity">
 
     <!--<android.support.design.widget.AppBarLayout-->
         <!--android:id="@+id/appbar_layout1"-->

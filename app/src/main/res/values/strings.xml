@@ -102,9 +102,9 @@
     <string name="et_hint">111</string>
     <string name="et_hint_tx_msg">tx message</string>
     <string name="tx_button">Отправить</string>
-    <string name="cal_zero">Кал.нуля</string>
-    <string name="cal_on">Кал.грузом</string>
-    <string name="cal_weight">Опр.веса</string>
+    <string name="cal_zero">Ноль</string>
+    <string name="cal_on">Порог</string>
+    <string name="cal_weight">Груз</string>
     <string name="notConnected">Не подключено</string>
     <string name="rx">RX:</string>
     <string name="tx">TX:</string>
@@ -196,4 +196,6 @@
     <string name="background">свернуть</string>
     <string name="change_back">сменить фон</string>
     <string name="background1">Фоновое изображение</string>
+    <string name="capacity">Макс. вес</string>
+    <string name="accuracy">Погрешность</string>
 </resources>

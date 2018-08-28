@@ -8,7 +8,7 @@
     android:layout_marginEnd="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/weight_panel_id"
-    tools:context=".WeightPanel">
+    tools:context="no.nordicsemi.android.sdr.WeightPanel">
 
    <TextView
        android:text="@string/start_weight"

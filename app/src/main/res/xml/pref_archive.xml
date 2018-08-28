@@ -31,6 +31,12 @@
         android:defaultValue="false"
         />
 
+    <SwitchPreference
+        android:key="adc_weight"
+        android:title="Сохранять вес с АЦП"
+        android:defaultValue="false"
+        />
+
     <EditTextPreference
         android:key="archive_driver_weight_max"
         android:defaultValue="1"

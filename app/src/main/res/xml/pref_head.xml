@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <header
-        android:fragment="no.nordicsemi.android.blinky.preferences.SettingsFragment"
+        android:fragment="no.nordicsemi.android.sdr.preferences.SettingsFragment"
         android:title="Общие настройки"/>
     <header
-        android:fragment="no.nordicsemi.android.blinky.preferences.PrefWeightFrag"
+        android:fragment="no.nordicsemi.android.sdr.preferences.PrefWeightFrag"
         android:title="Весовые настройки"/>
     <header
-        android:fragment="no.nordicsemi.android.blinky.preferences.PrefArchive"
+        android:fragment="no.nordicsemi.android.sdr.preferences.PrefArchive"
         android:title="Настройки архива"/>
     <header
-        android:fragment="no.nordicsemi.android.blinky.preferences.PrefUserFrag"
+        android:fragment="no.nordicsemi.android.sdr.preferences.PrefUserFrag"
         android:title="Настройки доступа"/>
     <header
-        android:fragment="no.nordicsemi.android.blinky.preferences.PrefHardBtns"
+        android:fragment="no.nordicsemi.android.sdr.preferences.PrefHardBtns"
         android:title="Аппаратные кнопки"/>
 </preference-headers>

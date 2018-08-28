@@ -49,7 +49,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".SplashScreenActivity"
+            android:name="no.nordicsemi.android.sdr.SplashScreenActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,7 +58,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ScannerActivity"
+            android:name="no.nordicsemi.android.sdr.ScannerActivity"
             android:icon="@drawable/ic_blinky_feature"
             android:label="@string/feature_name"
             android:launchMode="singleTop">
@@ -69,12 +69,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="no.nordicsemi.android.sdr.MainActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".preferences.SetPrefActivity"
+        <activity android:name="no.nordicsemi.android.sdr.preferences.SetPrefActivity"
             android:theme="@style/Pref"/>
-        <activity android:name=".contr_settings.ContSettingsActivity" />
-        <activity android:name=".archiveListOfItems.Archive" />
+        <activity android:name="no.nordicsemi.android.sdr.contr_settings.ContSettingsActivity" />
+        <activity android:name="no.nordicsemi.android.sdr.archiveListOfItems.Archive" />
     </application>
 
 </manifest>

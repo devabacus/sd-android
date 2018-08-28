@@ -4,7 +4,7 @@
     android:id="@+id/constr_debug"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="no.nordicsemi.android.blinky.preferences.DebugFrag">
+    tools:context="no.nordicsemi.android.sdr.preferences.DebugFrag">
 
     <TextView
         android:id="@+id/tv_RX"
