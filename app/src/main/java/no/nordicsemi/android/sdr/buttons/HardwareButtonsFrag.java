@@ -25,7 +25,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -166,16 +168,17 @@ public class HardwareButtonsFrag extends Fragment {
             return false;
         });
 
-        format = new SimpleDateFormat("dd/MM/YY\nHH:mm", new Locale("ru"));
+//        format = new SimpleDateFormat("dd/MM/YY\nHH:mm");
+        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
 
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                format.format(new Date());
+         //       format.format(new Date());
                 Date currentTime = Calendar.getInstance().getTime();
-                backgroundTime.setText(String.valueOf(format.format(currentTime)));
+                backgroundTime.setText(dateFormat.format(currentTime)); //format.format
                 Calendar calendar = Calendar.getInstance();
                 handler.postDelayed(this, 1000);
             }

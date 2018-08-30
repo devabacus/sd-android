@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import no.nordicsemi.android.sdr.Cmd;
 import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.sdr.StateFragment;
 import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 
@@ -119,7 +120,6 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
         showContSet = sharedPreferences.getBoolean(KEY_SHOW_CONT_SETTINGS_FRAG, false);
         maxWeight = Integer.parseInt(sharedPreferences.getString(KEY_MAX_WEIGHT_VALUE, "0"));
         discrete = Float.parseFloat(sharedPreferences.getString(KEY_DISCRETE_VALUE, "0"));
-
         etMaxWeight.setText(String.valueOf(maxWeight));
         etDiscrete.setText(String.valueOf(discrete));
 
@@ -137,7 +137,10 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cal_zero:
-                blinkyViewModel.sendTX(Cmd.CAL_UNLOAD);
+                blinkyViewModel.sendTX("s14/" + etMaxWeight.getText().toString());
+                StateFragment.txQueue.add("s15/" + etDiscrete.getText().toString());
+                StateFragment.txQueue.add("s16/" + etCalWeight.getText().toString());
+                StateFragment.txQueue.add(Cmd.CAL_UNLOAD);
 
                 break;
             case R.id.btn_cal_weight:
