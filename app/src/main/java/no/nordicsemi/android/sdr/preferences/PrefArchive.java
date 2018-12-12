@@ -30,7 +30,9 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     public static final String KEY_ARCHIVE_SAVE_ADC = "archive_save_adc";
     public static final String KEY_ARCHIVE_DRIVER_WEIGHT_MAX = "archive_driver_weight_max";
     public static final String KEY_OPTION_ARCHIVE = "option_archive";
+    public static final String KEY_WEIGHT_TONN = "weight_tonn";
     public static final String KEY_ADC_WEIGHT = "adc_weight";
+    public static final String KEY_CORR_ARCHIVE = "cor_archive_save";
 
 
     Preference discreteMaxPref;
@@ -38,6 +40,7 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     Preference minWeightPref;
     Preference driverMaxPref;
     Preference archiveSavePref;
+    Preference archiveCorSave;
 
     public PrefArchive() {
         // Required empty public constructor
@@ -67,6 +70,7 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         minWeightPref = findPreference(KEY_MIN_WEIGHT);
         driverMaxPref = findPreference(KEY_ARCHIVE_DRIVER_WEIGHT_MAX);
         archiveSavePref = findPreference(KEY_ARCHIVE_SAVE);
+        archiveCorSave = findPreference(KEY_CORR_ARCHIVE);
         String maxDiscrete = sharedPreferences.getString(KEY_DISCRETE_MAX,"1");
         String stableTime = sharedPreferences.getString(KEY_TIME_STAB,"3");
         String minWeightValue = sharedPreferences.getString(KEY_MIN_WEIGHT,"1");
@@ -75,8 +79,10 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
 
         if (curUser.equals("admin") || curUser.equals("admin1")) {
             archiveSavePref.setEnabled(true);
+            archiveCorSave.setEnabled(true);
         } else {
             archiveSavePref.setEnabled(false);
+            archiveCorSave.setEnabled(false);
         }
 
         discreteMaxPref.setSummary(maxDiscrete);

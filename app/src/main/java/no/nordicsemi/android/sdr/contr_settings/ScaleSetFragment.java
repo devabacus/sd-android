@@ -137,10 +137,13 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cal_zero:
-                blinkyViewModel.sendTX("s14/" + etMaxWeight.getText().toString());
+                //turn ADC off
+                blinkyViewModel.sendTX("s1/0");
+                StateFragment.txQueue.add("s14/" + etMaxWeight.getText().toString());
                 StateFragment.txQueue.add("s15/" + etDiscrete.getText().toString());
                 StateFragment.txQueue.add("s16/" + etCalWeight.getText().toString());
                 StateFragment.txQueue.add(Cmd.CAL_UNLOAD);
+
 
                 break;
             case R.id.btn_cal_weight:

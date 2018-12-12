@@ -36,6 +36,16 @@
         android:title="Сохранять вес с АЦП"
         android:defaultValue="false"
         />
+    <SwitchPreference
+        android:key="cor_archive_save"
+        android:title="Сохранять по нажатию"
+        android:defaultValue="false"
+        />
+    <SwitchPreference
+        android:key="weight_tonn"
+        android:title="Вес в тоннах"
+        android:defaultValue="false"
+        />
 
     <EditTextPreference
         android:key="archive_driver_weight_max"

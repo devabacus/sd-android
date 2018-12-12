@@ -93,7 +93,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
 
         View v = inflater.inflate(R.layout.fragment_button, container, false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
+        prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "4"));
 
 
         //Log.d(TAG, "onCreateView: ");

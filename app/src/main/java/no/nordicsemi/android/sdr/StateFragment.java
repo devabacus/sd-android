@@ -151,7 +151,15 @@ public class StateFragment extends Fragment {
                 //String resAdc = String.format(getResources().getString(R.string.adc), adcValue);
                 String resAdc = String.format(getString(R.string.adc1), adcValue);
                 tvAdc.setText(resAdc);
-            } else if (s.matches("n.*/.*")) {
+            } else if (s.matches("c1/0")){
+           //     Toast.makeText(getContext(), "Вам доступно только 2 кнопки.", Toast.LENGTH_SHORT).show();
+            } else if (s.matches("c2/0")){
+             //   Toast.makeText(getContext(), "Вам доступно только 8 кнопок.", Toast.LENGTH_SHORT).show();
+            }
+
+
+
+            else if (s.matches("n.*/.*")) {
                 int slashIndex = s.indexOf('/');
                 int notif_num = Integer.valueOf(s.substring(1, slashIndex));
                 int notif_value = Integer.valueOf(s.substring(slashIndex + 1).replaceAll("[^0-9]", ""));
@@ -159,6 +167,7 @@ public class StateFragment extends Fragment {
                 switch (notif_num) {
                     // состояние корректировки при работе в авторежиме
                     case 1:
+                        //если корректировка плюс, минус или процент соответственно
                         if (notif_value == 1 || notif_value == 2 || notif_value == 3) {
                             tvCorState.setText("активно");
                             if (!btnSetButton) {
@@ -259,6 +268,10 @@ public class StateFragment extends Fragment {
                         break;
                 }
             }
+
+
+
+
         });
 
         return v;

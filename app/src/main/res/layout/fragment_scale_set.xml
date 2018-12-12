@@ -38,6 +38,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/cal_weight"
+
         app:layout_constraintTop_toTopOf="@id/btn_cal_zero"
         app:layout_constraintStart_toEndOf="@id/btn_cal_zero"/>
 

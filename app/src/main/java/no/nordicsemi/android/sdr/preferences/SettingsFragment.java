@@ -49,7 +49,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         Preference curPref = findPreference(KEY_LIST_NUM_BUTTONS);
-        String numButts = sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8");
+        String numButts = sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "4");
         curPref.setSummary(numButts);
     }
 
@@ -57,7 +57,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(KEY_LIST_NUM_BUTTONS)) {
             curPref = findPreference(key);
-            curPref.setSummary(sharedPreferences.getString(key, "8"));
+            curPref.setSummary(sharedPreferences.getString(key, "4"));
         }
 
     }

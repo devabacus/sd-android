@@ -168,7 +168,7 @@ public class HardwareButtonsFrag extends Fragment {
             return false;
         });
 
-//        format = new SimpleDateFormat("dd/MM/YY\nHH:mm");
+
         DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
 
 

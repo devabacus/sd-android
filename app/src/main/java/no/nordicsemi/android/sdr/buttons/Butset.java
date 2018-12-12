@@ -93,7 +93,6 @@ public class Butset extends Fragment implements View.OnClickListener {
 
         buttonsViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ButtonsViewModel.class);
         blinkyViewModel = ViewModelProviders.of(getActivity()).get(BlinkyViewModel.class);
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         final View v = inflater.inflate(R.layout.fragment_butset, container, false);

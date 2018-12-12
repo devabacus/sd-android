@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "no.nordicsemi.android.nrfblinky"
         minSdkVersion 18
         targetSdkVersion 27
         versionCode 6
-        versionName "5.4.2"
+        versionName "5.4.6"
         resConfigs "en"
         vectorDrawables.useSupportLibrary = true
     }
