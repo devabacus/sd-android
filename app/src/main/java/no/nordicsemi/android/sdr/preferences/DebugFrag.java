@@ -41,12 +41,12 @@ public class DebugFrag extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_debug, container, false);
 
-        final TextView tvRxMsg = v.findViewById(R.id.tv_rx_msg);
-        final TextView tvTxMsg = v.findViewById(R.id.tv_tx_msg);
+        final TextView tvRxMsg = (TextView) v.findViewById(R.id.tv_rx_msg);
+        final TextView tvTxMsg = (TextView)v.findViewById(R.id.tv_tx_msg);
 
-        final EditText etSend = v.findViewById(R.id.send_text);
-        final Button btnSend = v.findViewById(R.id.btn_send);
-        constrDebug = v.findViewById(R.id.constr_debug);
+        final EditText etSend = (EditText)v.findViewById(R.id.send_text);
+        final Button btnSend = (Button)v.findViewById(R.id.btn_send);
+        constrDebug = (ConstraintLayout)v.findViewById(R.id.constr_debug);
 
         final BlinkyViewModel viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
 

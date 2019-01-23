@@ -53,11 +53,11 @@ public class CompPercent extends Fragment implements View.OnClickListener {
 
 
         View v = inflater.inflate(R.layout.fragment_comp_percent, container, false);
-        etCompValue = v.findViewById(R.id.etCompValue);
-        btnIncComp = v.findViewById(R.id.btn_inc_comp);
-        btnDecComp = v.findViewById(R.id.btn_dec_comp);
-        seekBar = v.findViewById(R.id.seekBarComp);
-        rbMinus = v.findViewById(R.id.rbMinusComp);
+        etCompValue = (EditText)v.findViewById(R.id.etCompValue);
+        btnIncComp = (Button)v.findViewById(R.id.btn_inc_comp);
+        btnDecComp = (Button)v.findViewById(R.id.btn_dec_comp);
+        seekBar = (SeekBar)v.findViewById(R.id.seekBarComp);
+        rbMinus = (RadioButton)v.findViewById(R.id.rbMinusComp);
 
         btnIncComp.setOnClickListener(this);
         btnDecComp.setOnClickListener(this);

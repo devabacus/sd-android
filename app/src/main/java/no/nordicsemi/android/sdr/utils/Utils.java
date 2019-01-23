@@ -132,6 +132,6 @@ public class Utils {
 	}
 
 	public static boolean isMarshmallowOrAbove() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
 	}
 }

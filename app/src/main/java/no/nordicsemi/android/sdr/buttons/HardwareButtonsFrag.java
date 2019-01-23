@@ -139,10 +139,10 @@ public class HardwareButtonsFrag extends Fragment {
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_hardware_buttons, container, false);
-        backgroundTime = v.findViewById(R.id.tv_background_time);
-        tvButNum = v.findViewById(R.id.tv_butNum);
-        tvButName = v.findViewById(R.id.tv_butName);
-        const_backg_auth = v.findViewById(R.id.const_backg_auth);
+        backgroundTime = (TextView)v.findViewById(R.id.tv_background_time);
+        tvButNum = (TextView) v.findViewById(R.id.tv_butNum);
+        tvButName = (TextView)v.findViewById(R.id.tv_butName);
+        const_backg_auth = (ConstraintLayout)v.findViewById(R.id.const_backg_auth);
 
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -155,8 +155,8 @@ public class HardwareButtonsFrag extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
 
-        btnBackgAuth = v.findViewById(R.id.btn_backg_auth);
-        etBackgAuth = v.findViewById(R.id.et_backg_auth);
+        btnBackgAuth = (Button)v.findViewById(R.id.btn_backg_auth);
+        etBackgAuth = (EditText)v.findViewById(R.id.et_backg_auth);
 
 
 //        String macAddress = android.provider.Settings.Secure.getString(Objects.requireNonNull(getContext()).getContentResolver(), "bluetooth_address");
@@ -184,7 +184,7 @@ public class HardwareButtonsFrag extends Fragment {
             }
         }, 1000);
 
-        constraintLayout = v.findViewById(R.id.const_background);
+        constraintLayout = (ConstraintLayout)v.findViewById(R.id.const_background);
 
         buttonsViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ButtonsViewModel.class);
         hardButsViewModel = ViewModelProviders.of(getActivity()).get(HardButsViewModel.class);
@@ -262,6 +262,7 @@ public class HardwareButtonsFrag extends Fragment {
         hardButsViewModel.getmNumber().observe(getActivity(), num->{
             assert num != null;
             if (num > 0) {
+                // походу костыль
                 num--;
                 Integer finalNum = num;
                 buttonsViewModel.getCorButtonById(num).observe(getActivity(), corButton -> {

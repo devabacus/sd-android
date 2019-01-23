@@ -67,7 +67,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButViewHol
 
         ButViewHolder(View itemView) {
             super(itemView);
-            mButText = itemView.findViewById(R.id.tv_but);
+            mButText = (TextView) itemView.findViewById(R.id.tv_but);
         }
     }
 

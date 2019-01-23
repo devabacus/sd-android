@@ -1,5 +1,6 @@
 package no.nordicsemi.android.sdr.archiveListOfItems;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +20,7 @@ public class Archive extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_archive);
 
-        final Toolbar toolbar2 = findViewById(R.id.toolbar2);
+        final Toolbar toolbar2 = (Toolbar)findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar2);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }

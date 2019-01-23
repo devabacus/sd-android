@@ -175,16 +175,16 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weight_panel, container, false);
-        tvWeight = v.findViewById(R.id.tv_weight);
-        btnArhive = v.findViewById(R.id.btn_archive);
-        btnTest = v.findViewById(R.id.btn_test);
-        weightLayout = v.findViewById(R.id.weight_panel_id);
-        debugArchiveLayout = v.findViewById(R.id.debug_archive_layout);
-        tvDebugDate = v.findViewById(R.id.tv_debug_date);
-        tvDebugWeight = v.findViewById(R.id.tv_debug_weight);
-        tvDebugAdc = v.findViewById(R.id.tv_debug_adc);
-        tvDebugTare = v.findViewById(R.id.tv_debug_tare);
-        tvDebugType = v.findViewById(R.id.tv_debug_type);
+        tvWeight = (TextView)v.findViewById(R.id.tv_weight);
+        btnArhive = (Button)v.findViewById(R.id.btn_archive);
+        btnTest = (Button)v.findViewById(R.id.btn_test);
+        weightLayout = (ConstraintLayout)v.findViewById(R.id.weight_panel_id);
+        debugArchiveLayout = (ConstraintLayout)v.findViewById(R.id.debug_archive_layout);
+        tvDebugDate = (TextView)v.findViewById(R.id.tv_debug_date);
+        tvDebugWeight = (TextView)v.findViewById(R.id.tv_debug_weight);
+        tvDebugAdc = (TextView)v.findViewById(R.id.tv_debug_adc);
+        tvDebugTare = (TextView)v.findViewById(R.id.tv_debug_tare);
+        tvDebugType = (TextView)v.findViewById(R.id.tv_debug_type);
 
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);

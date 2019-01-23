@@ -85,7 +85,7 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
 		final Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
-		btnSkipScan = findViewById(R.id.btn_skip_scan);
+		btnSkipScan = (Button)findViewById(R.id.btn_skip_scan);
 
 
 		btnSkipScan.setOnClickListener(v -> {

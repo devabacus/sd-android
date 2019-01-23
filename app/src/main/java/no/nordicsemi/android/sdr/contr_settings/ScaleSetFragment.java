@@ -58,15 +58,15 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_scale_set, container, false);
-        btnCalZero = v.findViewById(R.id.btn_cal_zero);
-        btnCalOn = v.findViewById(R.id.btn_cal_on);
-        btnCalWeight = v.findViewById(R.id.btn_cal_weight);
-        tvCalInfo = v.findViewById(R.id.tv_cal_info);
-        contSettLayout = v.findViewById(R.id.cont_sett_layout);
+        btnCalZero = (Button)v.findViewById(R.id.btn_cal_zero);
+        btnCalOn = (Button)v.findViewById(R.id.btn_cal_on);
+        btnCalWeight = (Button)v.findViewById(R.id.btn_cal_weight);
+        tvCalInfo = (TextView)v.findViewById(R.id.tv_cal_info);
+        contSettLayout = (ConstraintLayout)v.findViewById(R.id.cont_sett_layout);
 
-        etMaxWeight = v.findViewById(R.id.et_max_weight);
-        etDiscrete = v.findViewById(R.id.et_discr);
-        etCalWeight = v.findViewById(R.id.et_cal_weight);
+        etMaxWeight = (EditText)v.findViewById(R.id.et_max_weight);
+        etDiscrete = (EditText)v.findViewById(R.id.et_discr);
+        etCalWeight = (EditText)v.findViewById(R.id.et_cal_weight);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 

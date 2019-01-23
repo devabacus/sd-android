@@ -44,8 +44,8 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
 
         View v = inflater.inflate(R.layout.fragment_archive_items1, container, false);
 
-        btnDeleteAll = v.findViewById(R.id.btn_delete_all);
-        recViewArchive = v.findViewById(R.id.rec_view_arch);
+        btnDeleteAll = (Button)v.findViewById(R.id.btn_delete_all);
+        recViewArchive = (RecyclerView)v.findViewById(R.id.rec_view_arch);
         archiveAdapter = new ArchiveAdapter(new ArrayList<>(), this, this);
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));

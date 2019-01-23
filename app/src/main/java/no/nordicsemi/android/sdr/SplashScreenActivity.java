@@ -30,6 +30,7 @@
 
 package no.nordicsemi.android.sdr;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -64,7 +65,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        ConstraintLayout constraintLayout = findViewById(R.id.const_auth);
+        ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.const_auth);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
 
         Boolean pass_input = sharedPreferences.getBoolean(KEY_PASS_INPUT, false);
@@ -81,8 +82,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             constraintLayout.setVisibility(View.GONE);
         }
 
-        btnAuth = findViewById(R.id.btn_auth);
-        etAuth = findViewById(R.id.et_auth);
+        btnAuth = (Button)findViewById(R.id.btn_auth);
+        etAuth = (EditText)findViewById(R.id.et_auth);
 
 
         btnAuth.setOnClickListener(v -> {

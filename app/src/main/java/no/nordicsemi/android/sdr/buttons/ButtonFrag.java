@@ -98,16 +98,16 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
 
         //Log.d(TAG, "onCreateView: ");
         // recyclerView thing
-        recButView = v.findViewById(R.id.but_rec_view);
+        recButView = (RecyclerView)v.findViewById(R.id.but_rec_view);
         adapter = new ButtonAdapter(new ArrayList<>(), this, this);
         recButView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         recButView.setAdapter(adapter);
 
 
 
-        cbCorMode = v.findViewById(R.id.cb_cor_mode);
-        btnRes = v.findViewById(R.id.btnRes);
-        tvState = v.findViewById(R.id.tv_state);
+        cbCorMode = (CheckBox)v.findViewById(R.id.cb_cor_mode);
+        btnRes = (Button)v.findViewById(R.id.btnRes);
+        tvState = (TextView)v.findViewById(R.id.tv_state);
 
         curUser = sharedPreferences.getString(KEY_CUR_USER, "admin1");
         visibilityControl();

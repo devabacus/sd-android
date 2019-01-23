@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blinky);
 
-        final Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final BlinkyViewModel viewModel = ViewModelProviders.of(this).get(BlinkyViewModel.class);
         hardButsViewModel = ViewModelProviders.of(this).get(HardButsViewModel.class);
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final ExtendedBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
 
-        imageView = findViewById(R.id.img_view_hard);
+        imageView = (ImageView)findViewById(R.id.img_view_hard);
 
         scrollView = findViewById(R.id.device_container);
         consLayout = findViewById(R.id.conslayout);
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Set up views
-        final LinearLayout progressContainer = findViewById(R.id.progress_container);
+        final LinearLayout progressContainer = (LinearLayout)findViewById(R.id.progress_container);
         final TextView connectionState = findViewById(R.id.connection_state);
         final View content = findViewById(R.id.device_container);
         constrDebug = findViewById(R.id.constr_debug);
@@ -176,6 +176,9 @@ public class MainActivity extends AppCompatActivity {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             event.startTracking();
         }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            event.startTracking();
+        }
         return true;
     }
 
@@ -183,10 +186,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (HardwareButtonsFrag.volumeButton) {
             if (!longPress) {
-                if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_BACK) {
                     volButNum++;
                     Log.d(TAG, "onKeyUp: volume up");
                 } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                    //если кнопка вниз используется для сброса (не для уменьшения - включается в настройках)
                     if (!volumeBtnDec) {
                         volButNum = 0;
                         Log.d(TAG, "onKeyUp: volume down");
@@ -208,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
 
         if (HardwareButtonsFrag.volumeButton) {
-            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_BACK) {
                 if (volumeLongPressInc != 0) {
                     if (volumePressVibro) {mvibrate(200);}
                     longPress = true;
@@ -226,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             hardButsViewModel.setmNumber(volButNum);
+
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override

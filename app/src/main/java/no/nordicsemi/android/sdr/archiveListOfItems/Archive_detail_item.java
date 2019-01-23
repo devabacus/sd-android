@@ -47,12 +47,12 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_archive_detail_item, container, false);
-        archiveDetailLayout = v.findViewById(R.id.archive_detail_layout);
-        tvDetail = v.findViewById(R.id.tv_detail);
+        archiveDetailLayout = (ConstraintLayout)v.findViewById(R.id.archive_detail_layout);
+        tvDetail = (TextView)v.findViewById(R.id.tv_detail);
 
-        btnCloseDetail = v.findViewById(R.id.btn_close_detail);
+        btnCloseDetail = (Button)v.findViewById(R.id.btn_close_detail);
         archiveViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ArchiveViewModel.class);
-        recViewArchiveDetail = v.findViewById(R.id.rec_view_arch_detail);
+        recViewArchiveDetail = (RecyclerView)v.findViewById(R.id.rec_view_arch_detail);
         archiveAdapterDetail = new ArchiveAdapterDetail(new ArrayList<>());
         recViewArchiveDetail.setAdapter(archiveAdapterDetail);
         recViewArchiveDetail.setLayoutManager(new GridLayoutManager(getContext(), 1));

@@ -54,10 +54,6 @@ public class ExtendedBluetoothDevice implements Parcelable {
 		this.name = scanResult.getScanRecord().getDeviceName();
 		this.rssi = scanResult.getRssi();
 	}
-
-
-
-
 	public BluetoothDevice getDevice() {
 		return device;
 	}

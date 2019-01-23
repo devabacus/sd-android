@@ -74,10 +74,10 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
 
         ArchiveViewHolder(View itemView) {
             super(itemView);
-            tvDateTime = itemView.findViewById(R.id.tv_datetime);
-            tvWeight = itemView.findViewById(R.id.tv_weight);
-            tvTare = itemView.findViewById(R.id.tv_tare);
-            tvNumWeight = itemView.findViewById(R.id.tv_num_weight);
+            tvDateTime = (TextView)itemView.findViewById(R.id.tv_datetime);
+            tvWeight = (TextView)itemView.findViewById(R.id.tv_weight);
+            tvTare = (TextView)itemView.findViewById(R.id.tv_tare);
+            tvNumWeight = (TextView)itemView.findViewById(R.id.tv_num_weight);
         }
     }
 }

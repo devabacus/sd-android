@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -71,15 +73,15 @@ public class StateFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_state, container, false);
 
-        btnBackGround = v.findViewById(R.id.btn_hard_background);
+        btnBackGround = (Button)v.findViewById(R.id.btn_hard_background);
         btnBackGround.setOnClickListener(v1 -> {
             hardButsViewModel.setmHardActive(true);
         });
 
 
-        tvAdc = v.findViewById(R.id.tv_adc);
-        tvCorState = v.findViewById(R.id.tv_cor_state);
-        tvCorMode = v.findViewById(R.id.tv_cor_mode);
+        tvAdc = (TextView)v.findViewById(R.id.tv_adc);
+        tvCorState = (TextView)v.findViewById(R.id.tv_cor_state);
+        tvCorMode = (TextView)v.findViewById(R.id.tv_cor_mode);
         //tvContrInfo = v.findViewById(R.id.tv_contr_info);
 
 
@@ -152,9 +154,9 @@ public class StateFragment extends Fragment {
                 String resAdc = String.format(getString(R.string.adc1), adcValue);
                 tvAdc.setText(resAdc);
             } else if (s.matches("c1/0")){
-           //     Toast.makeText(getContext(), "Вам доступно только 2 кнопки.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Вам доступно только 2 кнопки.", Toast.LENGTH_SHORT).show();
             } else if (s.matches("c2/0")){
-             //   Toast.makeText(getContext(), "Вам доступно только 8 кнопок.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Вам доступно только 8 кнопок.", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -268,10 +270,6 @@ public class StateFragment extends Fragment {
                         break;
                 }
             }
-
-
-
-
         });
 
         return v;
