@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,12 +30,12 @@ import no.nordicsemi.android.sdr.buttons.ButtonFrag;
 import no.nordicsemi.android.sdr.buttons.ButtonsViewModel;
 import no.nordicsemi.android.sdr.database.CorButton;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
-import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
-import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
-import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 import no.nordicsemi.android.sdr.preferences.PrefArchive;
 import no.nordicsemi.android.sdr.preferences.PrefWeightFrag;
 import no.nordicsemi.android.sdr.preferences.SettingsFragment;
+import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
+import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 
 
 /**
@@ -69,7 +68,6 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
     int timeStab = 3;
     int timeCounter = 0;
     boolean timeCounting = false;
-    int weightTimeSec = 0;
     float minWeightForSave = 1;
     boolean incWeight = false;
     boolean decWeight = false;
@@ -119,7 +117,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
         return Math.abs(weightValueFloat - weightSaved) > maxDeviation;
     }
 
-    public float driveWeightFind () {
+    public float driveWeightFind() {
         return (weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1));
     }
 
@@ -127,7 +125,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
         typeOfWeight_arrL.add(i, type);
 
-        if(type == 0){
+        if (type == 0) {
             dateTimeArrL.add(i, new Date());
             weightValueArrL.add(i, weightValueFloat);
             adcWeight_arrL.add(i, adcWeight);
@@ -175,16 +173,16 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weight_panel, container, false);
-        tvWeight = (TextView)v.findViewById(R.id.tv_weight);
-        btnArhive = (Button)v.findViewById(R.id.btn_archive);
-        btnTest = (Button)v.findViewById(R.id.btn_test);
-        weightLayout = (ConstraintLayout)v.findViewById(R.id.weight_panel_id);
-        debugArchiveLayout = (ConstraintLayout)v.findViewById(R.id.debug_archive_layout);
-        tvDebugDate = (TextView)v.findViewById(R.id.tv_debug_date);
-        tvDebugWeight = (TextView)v.findViewById(R.id.tv_debug_weight);
-        tvDebugAdc = (TextView)v.findViewById(R.id.tv_debug_adc);
-        tvDebugTare = (TextView)v.findViewById(R.id.tv_debug_tare);
-        tvDebugType = (TextView)v.findViewById(R.id.tv_debug_type);
+        tvWeight = (TextView) v.findViewById(R.id.tv_weight);
+        btnArhive = (Button) v.findViewById(R.id.btn_archive);
+        btnTest = (Button) v.findViewById(R.id.btn_test);
+        weightLayout = (ConstraintLayout) v.findViewById(R.id.weight_panel_id);
+        debugArchiveLayout = (ConstraintLayout) v.findViewById(R.id.debug_archive_layout);
+        tvDebugDate = (TextView) v.findViewById(R.id.tv_debug_date);
+        tvDebugWeight = (TextView) v.findViewById(R.id.tv_debug_weight);
+        tvDebugAdc = (TextView) v.findViewById(R.id.tv_debug_adc);
+        tvDebugTare = (TextView) v.findViewById(R.id.tv_debug_tare);
+        tvDebugType = (TextView) v.findViewById(R.id.tv_debug_type);
 
         blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
@@ -210,7 +208,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
             butSet = aBoolean;
         });
 
-        hardButsViewModel.getHardActive().observe(getActivity(), aBoolean ->{
+        hardButsViewModel.getHardActive().observe(getActivity(), aBoolean -> {
             if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
                 tvWeight.setTextSize(30);
             } else {
@@ -250,35 +248,41 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
         buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
             assert corButton != null;
             if (!corButton.getButNum().isEmpty()) {
-                tare = Integer.valueOf(corButton.getButNum());
+                if (corButton.getButNum().contains("%")) {
+                    StringBuilder str = new StringBuilder(corButton.getButNum());
+                    str.deleteCharAt(str.length() - 1);
+                    tare = Integer.valueOf(str.toString());
+                } else {
+                    tare = Integer.valueOf(corButton.getButNum());
+                }
             }
         });
 
-        stateViewModel.getIsCorActive().observe(getActivity(), corActive->{
+        stateViewModel.getIsCorActive().observe(getActivity(), corActive -> {
             assert corActive != null;
             if (!butSet) {
-                    if (corArchiveSave) {
-                        archive_arr_fill(0, 2);
+                if (corArchiveSave) {
+                    archive_arr_fill(0, 2);
 
-                        // blinkyViewModel.sendTX("s13/2");
-                        archiveViewModel.addArchiveItem(new ArchiveData(new Date(),
-                                weightValueArrL.get(0), numOfWeight, adcWeight_arrL.get(0),
-                                adcValue_arrL.get(0), tare, 2));
-                        numOfWeight++;
-                       // Toast.makeText(getContext(), "Сохранили", Toast.LENGTH_SHORT).show();
+                    // blinkyViewModel.sendTX("s13/2");
+                    archiveViewModel.addArchiveItem(new ArchiveData(new Date(),
+                            weightValueArrL.get(0), numOfWeight, adcWeight_arrL.get(0),
+                            adcValue_arrL.get(0), tare, 2));
+                    numOfWeight++;
+                    // Toast.makeText(getContext(), "Сохранили", Toast.LENGTH_SHORT).show();
 
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                blinkyViewModel.sendTX("s13/2");
-                            }
-                        }, 1000);
-                        // Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    tare = 0;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            blinkyViewModel.sendTX("s13/2");
+                        }
+                    }, 1000);
+                    // Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
                 }
-           // }
+            } else {
+                tare = 0;
+            }
+            // }
         });
 
         // Сохранение в архив только корректировок
@@ -335,8 +339,8 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
 
                     // проверяем ли предыдущее сохраненное сохр взвешивание для сохр веса без людей
-                    if ((arch > 1) &&(driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0)) {
-                        typeOfWeight_arrL.set(archMax+1, 1);
+                    if ((arch > 1) && (driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0)) {
+                        typeOfWeight_arrL.set(archMax + 1, 1);
                     } else if (weightSavedMax != 0) {
                         Log.d(TAG, "weightSavedMax != 0");
                         typeOfWeight_arrL.set(archMax, 1);
@@ -349,12 +353,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                     if (Math.abs(weightMax - weightSavedMax) > maxDeviation) {
                         Log.d(TAG, "onCreateView: weightMax != weightSavedMax");
                         archive_arr_fill(arch, 2);
-                    }
-                    else {
+                    } else {
                         arch--;
                     }
                     Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
-                    for (int i = 0; i < arch+1; i++) {
+                    for (int i = 0; i < arch + 1; i++) {
                         archive_arr_show(i);
 
                         if (archive) {
@@ -388,6 +391,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
         });
         return v;
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -428,6 +432,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
         super.onResume();
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
