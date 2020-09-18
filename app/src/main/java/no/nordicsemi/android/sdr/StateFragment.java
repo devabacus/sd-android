@@ -60,7 +60,6 @@ public class StateFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,7 +71,6 @@ public class StateFragment extends Fragment {
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
 
         View v = inflater.inflate(R.layout.fragment_state, container, false);
-
         btnBackGround = (Button)v.findViewById(R.id.btn_hard_background);
         btnBackGround.setOnClickListener(v1 -> {
             hardButsViewModel.setmHardActive(true);

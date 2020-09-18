@@ -249,8 +249,11 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
         buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
             assert corButton != null;
+            Log.d(TAG, "onCreateView:" + corButton.getButNum());
             if (!corButton.getButNum().isEmpty()) {
-                tare = Integer.valueOf(corButton.getButNum());
+//                Log.d(TAG, "onCreateView:" + corButton.getButNum());
+                tare = Integer.parseInt(corButton.getButNum());
+                    //tare = corButton.getButNum();
             }
         });
 
