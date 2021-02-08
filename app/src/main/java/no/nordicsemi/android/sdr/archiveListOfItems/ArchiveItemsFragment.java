@@ -31,10 +31,7 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     public static final String TAG = "test";
     ArchiveData archiveDataMax;
     int currentAcrhiveData = 0;
-
     Button btnDeleteAll;
-
-
 
     @Nullable
     @Override

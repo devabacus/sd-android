@@ -13,13 +13,13 @@ public class ArchiveData {
     @PrimaryKey(autoGenerate = true)
     public long id;
     @TypeConverters(DateConverter.class)
-    private Date timePoint;
-    private int numOfWeight;
-    private float mainWeight;
-    private float adcWeight;
-    private int adcArchiveValue;
-    private int tareValue;
-    private int typeOfWeight;
+    private final Date timePoint;
+    private final int numOfWeight;
+    private final float mainWeight;
+    private final float adcWeight;
+    private final int adcArchiveValue;
+    private final int tareValue;
+    private final int typeOfWeight;
 
 
     public ArchiveData(Date timePoint, float mainWeight, int numOfWeight, float adcWeight, int adcArchiveValue, int tareValue, int typeOfWeight) {

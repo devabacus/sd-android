@@ -116,12 +116,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setSubtitle(deviceAddress);
             viewModel.connect(device);
         }
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         // Configure the view model
-
 
         // Set up views
         final LinearLayout progressContainer = (LinearLayout)findViewById(R.id.progress_container);

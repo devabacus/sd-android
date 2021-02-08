@@ -15,8 +15,8 @@ import no.nordicsemi.android.sdr.database_archive.ArchiveDatabase;
 
 public class ArchiveViewModel extends AndroidViewModel {
 
-    private LiveData<List<ArchiveData>> archiveList;
-    private LiveData<List<ArchiveData>> archiveListLast;
+    private final LiveData<List<ArchiveData>> archiveList;
+    private final LiveData<List<ArchiveData>> archiveListLast;
     private LiveData<List<ArchiveData>> archiveListbyNum;
     private LiveData<List<ArchiveData>> archiveListbyType;
 
@@ -27,7 +27,6 @@ public class ArchiveViewModel extends AndroidViewModel {
 
     public ArchiveViewModel(@NonNull Application application) {
         super(application);
-
         archiveDatabase = ArchiveDatabase.getArchiveDatabase(this.getApplication());
         archiveList = archiveDatabase.archiveFromDao().getAllArchiveItems();
         archiveListLast = archiveDatabase.archiveFromDao().getLastItem();
@@ -53,10 +52,6 @@ public class ArchiveViewModel extends AndroidViewModel {
         return archiveListbyType;
     }
 
-
-
-
-
     public void setmOpenDetailArchive(final Boolean archiveDetailOpen){
         mOpenDetailArchive.setValue(archiveDetailOpen);
     }
@@ -64,7 +59,6 @@ public class ArchiveViewModel extends AndroidViewModel {
     public void setmNumOfWeightPicked(final Integer numOfWeightPicked){
         mNumOfWeightPicked.setValue(numOfWeightPicked);
     }
-
 
     public void addArchiveItem(final ArchiveData archiveData){
         new AddAsyncTask(archiveDatabase).execute(archiveData);
@@ -77,9 +71,6 @@ public class ArchiveViewModel extends AndroidViewModel {
     public void deleteAllArchiveItems() {
         new DeleteAllAsyncTask(archiveDatabase).execute();
     }
-
-
-
 
 
     private static class AddAsyncTask extends AsyncTask<ArchiveData, Void, Void>{

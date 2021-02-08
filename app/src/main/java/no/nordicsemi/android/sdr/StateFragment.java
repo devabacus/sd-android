@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,7 @@ import static no.nordicsemi.android.sdr.preferences.PrefUserFrag.KEY_PASS_INPUT;
  */
 public class StateFragment extends Fragment {
 
-
-    private static final String TAG = "test";
+    private static final String TAG = "test1";
     private BlinkyViewModel blinkyViewModel;
     ButtonsViewModel buttonsViewModel;
     HardButsViewModel hardButsViewModel;
@@ -75,7 +75,6 @@ public class StateFragment extends Fragment {
         btnBackGround.setOnClickListener(v1 -> {
             hardButsViewModel.setmHardActive(true);
         });
-
 
         tvAdc = (TextView)v.findViewById(R.id.tv_adc);
         tvCorState = (TextView)v.findViewById(R.id.tv_cor_state);
@@ -115,7 +114,8 @@ public class StateFragment extends Fragment {
         });
 
         blinkyViewModel.getConnectionState().observe(getActivity(), s -> {
-            assert s != null;
+
+           // assert s != null;
             if (s.equals("готово")) {
                 blinkyViewModel.sendTX(Cmd.INIT);
                 blinkyViewModel.sendTX(Cmd.ADC_SHOW_ON_BLE);
@@ -140,8 +140,10 @@ public class StateFragment extends Fragment {
         });
 
         blinkyViewModel.getUartData().observe(getActivity(), s -> {
+            Log.d(TAG, "onCreateView: s = " + s);
             assert s != null;
             if (s.matches("^ad.*")) {
+                Log.d(TAG, "ad зашел");
                 String adcValueStr = s.substring(s.indexOf('d') + 1);
                 adcValueStr = adcValueStr.replaceAll("[^0-9]", "");
                 if (adcValueStr.matches("[0-9]*")) {
@@ -152,20 +154,23 @@ public class StateFragment extends Fragment {
                 String resAdc = String.format(getString(R.string.adc1), adcValue);
                 tvAdc.setText(resAdc);
             } else if (s.matches("c1/0")){
+                Log.d(TAG, "c1/0 зашел");
                 Toast.makeText(getContext(), "Вам доступно только 2 кнопки.", Toast.LENGTH_SHORT).show();
             } else if (s.matches("c2/0")){
+                Log.d(TAG, "c2/0 зашел");
                 Toast.makeText(getContext(), "Вам доступно только 8 кнопок.", Toast.LENGTH_SHORT).show();
             }
 
 
 
             else if (s.matches("n.*/.*")) {
+                //Log.d(TAG, "onCreateView: зашел");
                 int slashIndex = s.indexOf('/');
-                int notif_num = Integer.valueOf(s.substring(1, slashIndex));
-                int notif_value = Integer.valueOf(s.substring(slashIndex + 1).replaceAll("[^0-9]", ""));
+                int notif_num = Integer.parseInt(s.substring(1, slashIndex));
+                int notif_value = Integer.parseInt(s.substring(slashIndex + 1).replaceAll("[^0-9]", ""));
 
                 switch (notif_num) {
-                    // состояние корректировки при работе в авторежиме
+                    // состояние корректировки в ручном режиме
                     case 1:
                         //если корректировка плюс, минус или процент соответственно
                         if (notif_value == 1 || notif_value == 2 || notif_value == 3) {
@@ -176,11 +181,11 @@ public class StateFragment extends Fragment {
                         } else if (notif_value == 0) {
                             stateViewModel.setmIsCorActive(false);
                             tvCorState.setText("сброс");
+                           // Log.d(TAG, "onCreateView: сброс");
                         }
-
                         break;
 
-                    // состояние корректировки при работе в ручном режиме
+                    // состояние корректировки при работе в авто режиме
                     case 2:
                         if (notif_value == 0 || notif_value == 1) {
                             stateViewModel.setmIsCorActive(false);
@@ -217,7 +222,9 @@ public class StateFragment extends Fragment {
                 }
 //                Log.d(TAG, "onCreateView: notif_num = " + notif_num);
 //                Log.d(TAG, "onCreateView: notif_value = " + notif_value);
-            } else if (s.matches("o.*/.*")) {
+            }
+            else if (s.matches("o.*/.*")) {
+                Log.d(TAG, "0 зашел");
                 int slashIndex1 = s.indexOf('/');
                 int option_num = Integer.valueOf(s.substring(1, slashIndex1));
                 int option_value = Integer.valueOf(s.substring(slashIndex1 + 1).replaceAll("[^0-9]", ""));

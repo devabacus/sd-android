@@ -140,7 +140,6 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
             adcValue_arrL.add(arch, adcValueMax);
             tare_arrL.add(arch, tareMax);
         }
-
     }
 
     public void archive_arr_show(int i) {
@@ -153,12 +152,12 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
         //Log.d(TAG, "archive_arr_show: " + weightValueArrL.get(i) + ", ");
 
-        Log.d(TAG, "Array list" + dateTimeArrL.get(i) + ", " +
-                weightValueArrL.get(i) + ", " +
-                adcWeight_arrL.get(i) + ", " +
-                adcValue_arrL.get(i) + ", " +
-                tare_arrL.get(i) + ", " +
-                typeOfWeight_arrL.get(i) + "\n");
+//        Log.d(TAG, "Array list" + dateTimeArrL.get(i) + ", " +
+//                weightValueArrL.get(i) + ", " +
+//                adcWeight_arrL.get(i) + ", " +
+//                adcValue_arrL.get(i) + ", " +
+//                tare_arrL.get(i) + ", " +
+//                typeOfWeight_arrL.get(i) + "\n");
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
         format.format(new Date());
         tvDebugDate.setText(tvDebugDate.getText() + "\n" + String.valueOf(format.format(dateTimeArrL.get(i))));
@@ -341,22 +340,21 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                     if ((arch > 1) &&(driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0)) {
                         typeOfWeight_arrL.set(archMax+1, 1);
                     } else if (weightSavedMax != 0) {
-                        Log.d(TAG, "weightSavedMax != 0");
+//                        Log.d(TAG, "weightSavedMax != 0");
                         typeOfWeight_arrL.set(archMax, 1);
                     }
-
-                    Log.d(TAG, "weightMax = " + weightMax);
-                    Log.d(TAG, "weightSavedMax = " + weightSavedMax);
+//                    Log.d(TAG, "weightMax = " + weightMax);
+//                    Log.d(TAG, "weightSavedMax = " + weightSavedMax);
                     //}
                     //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
                     if (Math.abs(weightMax - weightSavedMax) > maxDeviation) {
-                        Log.d(TAG, "onCreateView: weightMax != weightSavedMax");
+//                        Log.d(TAG, "onCreateView: weightMax != weightSavedMax");
                         archive_arr_fill(arch, 2);
                     }
                     else {
                         arch--;
                     }
-                    Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
+//                    Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
                     for (int i = 0; i < arch+1; i++) {
                         archive_arr_show(i);
 
@@ -370,7 +368,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
                             }
                         }
                     }
-                    Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
+//                    Log.d(TAG, "***MAX******MAX******MAX******MAX******MAX******MAX******MAX******MAX***");
 
                     arch = 0;
                     decWeight = false;
@@ -388,6 +386,7 @@ public class WeightPanel extends Fragment implements View.OnClickListener, View.
 
                 weightValueLast = weightValueFloat;
             }
+
         });
         return v;
     }

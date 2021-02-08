@@ -37,6 +37,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.TextView;
 
 import no.nordicsemi.android.ble.utils.ILogger;
 import no.nordicsemi.android.blinky.R;
@@ -146,7 +147,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	public void onDataReceived(final String state) {
 		mRXdata.postValue(state);
 		Log.d(TAG, "RX: " + state);
-		//Logger.a(testLogSession, "received something");
+		//Log.d(TAG, "onDataReceived: Сброс");
 	}
 
 	@Override
