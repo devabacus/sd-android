@@ -5,7 +5,7 @@
 
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="no.nordicsemi.android.sdr.archiveListOfItems.ArchiveItemsFragment">
+    tools:context="no.nordicsemi.android.sdr.archive.ArchiveItemsFragment">
 
    <android.support.constraint.ConstraintLayout
        android:id="@+id/archive_panel"

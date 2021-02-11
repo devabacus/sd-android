@@ -1,4 +1,4 @@
-package no.nordicsemi.android.sdr.archiveListOfItems;
+package no.nordicsemi.android.sdr.archive;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;

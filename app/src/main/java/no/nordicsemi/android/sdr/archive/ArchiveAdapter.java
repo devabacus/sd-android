@@ -1,6 +1,5 @@
-package no.nordicsemi.android.sdr.archiveListOfItems;
+package no.nordicsemi.android.sdr.archive;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,12 +16,17 @@ import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 import no.nordicsemi.android.sdr.buttons.ButtonFrag;
 
-public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDetail.ArchiveViewHolder>{
+public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveViewHolder>{
 
     private List<ArchiveData> archiveDataList;
+    private View.OnClickListener onClickListener;
+    private View.OnLongClickListener onLongClickListener;
 
-    ArchiveAdapterDetail(List<ArchiveData> archiveDataList) {
+
+    ArchiveAdapter(List<ArchiveData> archiveDataList, View.OnClickListener onClickListener, View.OnLongClickListener onLongClickListener) {
         this.archiveDataList = archiveDataList;
+        this.onClickListener = onClickListener;
+        this.onLongClickListener = onLongClickListener;
     }
 
     @NonNull
@@ -37,27 +41,23 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
         notifyDataSetChanged();
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ArchiveViewHolder holder, int position) {
 
-        holder.tvWeight.setBackgroundColor(Color.TRANSPARENT);
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM HH:mm", new Locale("ru"));
         format.format(new Date());
         ArchiveData archiveData = archiveDataList.get(position);
         holder.tvDateTime.setText(String.valueOf(format.format(archiveData.getTimePoint())));
-        // if weight with marker - stable max
-        if (archiveData.getTypeOfWeight() == 1){
-            holder.tvWeight.setBackgroundColor(Color.GREEN);
-            // else if weight with marker - max value
-        } else if (archiveData.getTypeOfWeight() == 2) {
-            holder.tvWeight.setBackgroundColor(Color.RED);
-        }
         holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
         if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
             holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
         }
 
+        holder.tvNumWeight.setText(String.valueOf(archiveData.getNumOfWeight()));
         holder.itemView.setTag(archiveData);
+        holder.itemView.setOnClickListener(onClickListener);
+        holder.itemView.setOnLongClickListener(onLongClickListener);
     }
 
     @Override
@@ -70,12 +70,14 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
         TextView tvDateTime;
         TextView tvWeight;
         TextView tvTare;
+        TextView tvNumWeight;
 
         ArchiveViewHolder(View itemView) {
             super(itemView);
             tvDateTime = (TextView)itemView.findViewById(R.id.tv_datetime);
             tvWeight = (TextView)itemView.findViewById(R.id.tv_weight);
             tvTare = (TextView)itemView.findViewById(R.id.tv_tare);
+            tvNumWeight = (TextView)itemView.findViewById(R.id.tv_num_weight);
         }
     }
 }

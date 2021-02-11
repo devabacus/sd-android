@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-
+//https://docs.google.com/spreadsheets/d/e/2PACX-1vR5iNzBcq8JMZQvyIe7iiaVzQcd0DmtKQboodMbwCimfBSooqsXbKJ_LRCWA9KXvAzxUw5G5ZOuJ3QH/pubhtml
         viewModel.getConnectionState().observe(this, connectionState::setText);
         viewModel.isConnected().observe(this, connected -> {
             if (!connected) {

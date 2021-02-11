@@ -1,10 +1,8 @@
-package no.nordicsemi.android.sdr.archiveListOfItems;
+package no.nordicsemi.android.sdr.archive;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.Objects;

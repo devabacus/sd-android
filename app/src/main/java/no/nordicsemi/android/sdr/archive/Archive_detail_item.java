@@ -1,4 +1,4 @@
-package no.nordicsemi.android.sdr.archiveListOfItems;
+package no.nordicsemi.android.sdr.archive;
 
 
 import android.annotation.SuppressLint;
