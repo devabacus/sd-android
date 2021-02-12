@@ -83,6 +83,14 @@
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toBottomOf="@id/frag_debug" />
 
+			<fragment
+				android:id="@+id/frag_archive_debug"
+				android:visibility="gone"
+				android:name="no.nordicsemi.android.sdr.archive.ArchiveDebug"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:layout_constraintTop_toBottomOf="@id/frag_weight" />
+
 
 			<fragment
 				android:id="@+id/frag_butSet"
@@ -90,7 +98,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/frag_weight"/>
+				app:layout_constraintTop_toBottomOf="@id/frag_archive_debug"/>
 
 			<fragment
 				android:id="@+id/frag_but"
@@ -115,6 +123,16 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toBottomOf="@id/frag_state"
+				app:layout_constraintStart_toStartOf="parent"
+				tools:layout_editor_absoluteX="0dp" />
+
+			<fragment
+				android:id="@+id/frag_parse_ble_data"
+				android:name="no.nordicsemi.android.sdr.ParseBleData"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:visibility="gone"
+				app:layout_constraintTop_toBottomOf="@id/frag_scale_set"
 				app:layout_constraintStart_toStartOf="parent"
 				tools:layout_editor_absoluteX="0dp" />
 

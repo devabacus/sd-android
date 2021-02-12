@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
 import no.nordicsemi.android.sdr.Cmd;
@@ -39,7 +38,7 @@ import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.StateFragment;
 import no.nordicsemi.android.sdr.WeightPanel;
 import no.nordicsemi.android.sdr.database.CorButton;
-import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 import no.nordicsemi.android.sdr.preferences.PrefHardBtns;
@@ -54,7 +53,7 @@ public class HardwareButtonsFrag extends Fragment {
 
     HardButsViewModel hardButsViewModel;
     ButtonsViewModel buttonsViewModel;
-    BlinkyViewModel blinkyViewModel;
+    BleViewModel bleViewModel;
     StateViewModel stateViewModel;
     Vibrator vibrator;
     CorButton curCorButton;
@@ -118,7 +117,7 @@ public class HardwareButtonsFrag extends Fragment {
             public void onFinish() {
                 if (timeForCorrectStart) {
                     if (StateFragment.option_volume != 0) {
-                        blinkyViewModel.sendTX(ButtonFrag.makeMsg(curCorButton).toString());
+                        bleViewModel.sendTX(ButtonFrag.makeMsg(curCorButton).toString());
                         StateFragment.txQueue.add("s13/1");
                     }
 
@@ -188,7 +187,7 @@ public class HardwareButtonsFrag extends Fragment {
 
         buttonsViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ButtonsViewModel.class);
         hardButsViewModel = ViewModelProviders.of(getActivity()).get(HardButsViewModel.class);
-        blinkyViewModel = ViewModelProviders.of(getActivity()).get(BlinkyViewModel.class);
+        bleViewModel = ViewModelProviders.of(getActivity()).get(BleViewModel.class);
         stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
 
 
@@ -282,7 +281,7 @@ public class HardwareButtonsFrag extends Fragment {
                     tvButNum.setText(String.valueOf(finalNum+1));
                 });
             } else if(corSet) {
-                blinkyViewModel.sendTX(Cmd.COR_RESET);
+                bleViewModel.sendTX(Cmd.COR_RESET);
                 starttimer();
                 WeightPanel.tare = 0;
                 tvButNum.setText("0-");

@@ -17,6 +17,8 @@
        android:layout_marginStart="20dp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
+       app:layout_constraintStart_toStartOf="@id/weight_panel_id"
+       app:layout_constraintTop_toTopOf="@id/weight_panel_id"
        />
 
     <!--<CheckBox-->
@@ -55,6 +57,7 @@
     <Button
         android:id="@+id/btn_archive"
         android:text="@string/Archive_btn"
+        app:layout_constraintTop_toTopOf="@id/weight_panel_id"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="20dp"
         android:layout_width="wrap_content"
@@ -66,7 +69,6 @@
         android:id="@+id/debug_archive_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_margin="5dp"
         app:layout_constraintTop_toBottomOf="@id/btn_archive"
         app:layout_constraintStart_toStartOf="parent"

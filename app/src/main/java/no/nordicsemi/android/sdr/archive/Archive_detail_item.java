@@ -51,7 +51,7 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
         tvDetail = (TextView)v.findViewById(R.id.tv_detail);
 
         btnCloseDetail = (Button)v.findViewById(R.id.btn_close_detail);
-        archiveViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ArchiveViewModel.class);
+        archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
         recViewArchiveDetail = (RecyclerView)v.findViewById(R.id.rec_view_arch_detail);
         archiveAdapterDetail = new ArchiveAdapterDetail(new ArrayList<>());
         recViewArchiveDetail.setAdapter(archiveAdapterDetail);

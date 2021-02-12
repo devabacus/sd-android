@@ -15,14 +15,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.buttons.ButtonsViewModel;
-import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 import no.nordicsemi.android.sdr.buttons.ButtonFrag;
@@ -38,7 +36,7 @@ import static no.nordicsemi.android.sdr.preferences.PrefUserFrag.KEY_PASS_INPUT;
 public class StateFragment extends Fragment {
 
     private static final String TAG = "test1";
-    private BlinkyViewModel blinkyViewModel;
+    private BleViewModel bleViewModel;
     ButtonsViewModel buttonsViewModel;
     HardButsViewModel hardButsViewModel;
     public static int option_archive = 0;
@@ -65,7 +63,7 @@ public class StateFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
+        bleViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BleViewModel.class);
         StateViewModel stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
         hardButsViewModel = ViewModelProviders.of(getActivity()).get(HardButsViewModel.class);
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
@@ -89,13 +87,13 @@ public class StateFragment extends Fragment {
 
         txQueue = new ArrayList<>();
 
-        blinkyViewModel.isTXsent().observe(getActivity(), isTxSent -> {
+        bleViewModel.isTXsent().observe(getActivity(), isTxSent -> {
             assert isTxSent != null;
             //есть чо отправить
 //            Log.d(TAG, "onCreateView: isTxSent = " + isTxSent);
 //            Log.d(TAG, "onCreateView: txQueue.size() = " + txQueue.size());
             if (isTxSent && (txQueue.size() > 0)) {
-                blinkyViewModel.sendTX(txQueue.get(0));
+                bleViewModel.sendTX(txQueue.get(0));
                 txQueue.remove(0);
             }
         });
@@ -113,12 +111,12 @@ public class StateFragment extends Fragment {
             }
         });
 
-        blinkyViewModel.getConnectionState().observe(getActivity(), s -> {
+        bleViewModel.getConnectionState().observe(getActivity(), s -> {
 
            // assert s != null;
             if (s.equals("готово")) {
-                blinkyViewModel.sendTX(Cmd.INIT);
-                blinkyViewModel.sendTX(Cmd.ADC_SHOW_ON_BLE);
+                bleViewModel.sendTX(Cmd.INIT);
+                bleViewModel.sendTX(Cmd.ADC_SHOW_ON_BLE);
 
             }
         });
@@ -139,7 +137,7 @@ public class StateFragment extends Fragment {
             }
         });
 
-        blinkyViewModel.getUartData().observe(getActivity(), s -> {
+        bleViewModel.getUartData().observe(getActivity(), s -> {
             Log.d(TAG, "onCreateView: s = " + s);
             assert s != null;
             if (s.matches("^ad.*")) {
@@ -312,11 +310,11 @@ public class StateFragment extends Fragment {
 
         if (adcShow) {
             tvAdc.setVisibility(View.VISIBLE);
-            blinkyViewModel.sendTX(Cmd.ADC_SHOW_ON_BLE);
+            bleViewModel.sendTX(Cmd.ADC_SHOW_ON_BLE);
         } else {
             adcValue = 0;
             tvAdc.setVisibility(View.GONE);
-            blinkyViewModel.sendTX(Cmd.ADC_SHOW_OFF);
+            bleViewModel.sendTX(Cmd.ADC_SHOW_OFF);
         }
     }
 }

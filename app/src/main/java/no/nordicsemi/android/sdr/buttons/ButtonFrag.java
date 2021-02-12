@@ -26,7 +26,7 @@ import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.Util;
 import no.nordicsemi.android.sdr.database.AppDatabase;
 import no.nordicsemi.android.sdr.database.CorButton;
-import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 
@@ -55,7 +55,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     Button btnRes;
     public static String curUser = "admin1";
     private ButtonsViewModel buttonsViewModel;
-    private BlinkyViewModel blinkyViewModel;
+    private BleViewModel bleViewModel;
     private StateViewModel stateViewModel;
     private HardButsViewModel hardButsViewModel;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
@@ -84,7 +84,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
+        bleViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BleViewModel.class);
         //blinkyViewModel.connect(device);
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
         stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
@@ -134,9 +134,9 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         });
         cbCorMode.setOnClickListener(v1 -> {
             if(cbCorMode.isChecked()){
-                blinkyViewModel.sendTX(Cmd.COR_MODE_AUTO);
+                bleViewModel.sendTX(Cmd.COR_MODE_AUTO);
             } else {
-                blinkyViewModel.sendTX(Cmd.COR_MODE_MANUAL);
+                bleViewModel.sendTX(Cmd.COR_MODE_MANUAL);
             }
         });
 //        blinkyViewModel.getUartData().observe(getActivity(), s -> Log.d(TAG, "onChanged: getData " + s));
@@ -190,7 +190,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         });
         btnRes.setOnClickListener(v1 -> {
             //Log.d(TAG, "onCreateView: COR_RESET");
-            blinkyViewModel.sendTX(Cmd.COR_RESET);
+            bleViewModel.sendTX(Cmd.COR_RESET);
             CorButton corButton = new CorButton(0, "0", "", 0,0);
             buttonsViewModel.setmCurCorButton(corButton);
 
@@ -231,7 +231,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
         makeMsg(corButton);
         Log.d(TAG, "onClick: msg = " + makeMsg(corButton).toString());
         //if(!setOpened)
-        blinkyViewModel.sendTX(makeMsg(corButton).toString());
+        bleViewModel.sendTX(makeMsg(corButton).toString());
     }
     @Override
     public boolean onLongClick(View v) {

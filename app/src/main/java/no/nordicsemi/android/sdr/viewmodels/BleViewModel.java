@@ -50,7 +50,7 @@ import no.nordicsemi.android.log.Logger;
 import static no.nordicsemi.android.log.Logger.log;
 
 
-public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCallbacks, ILogger {
+public class BleViewModel extends AndroidViewModel implements BlinkyManagerCallbacks, ILogger {
 	private final BlinkyManager mBlinkyManager;
 
 	private static final String TAG = "test";
@@ -103,7 +103,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		return mTXdata;
 	}
 
-	public BlinkyViewModel(@NonNull final Application application) {
+	public BleViewModel(@NonNull final Application application) {
 		super(application);
 
 		// Initialize the manager

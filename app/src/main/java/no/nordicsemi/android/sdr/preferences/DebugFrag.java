@@ -18,7 +18,7 @@ import android.widget.TextView;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
-import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,7 +48,7 @@ public class DebugFrag extends Fragment {
         final Button btnSend = (Button)v.findViewById(R.id.btn_send);
         constrDebug = (ConstraintLayout)v.findViewById(R.id.constr_debug);
 
-        final BlinkyViewModel viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
+        final BleViewModel viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BleViewModel.class);
 
         viewModel.sendUartData().observe(this, tvTxMsg::setText);
 

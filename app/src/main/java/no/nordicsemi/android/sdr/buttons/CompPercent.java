@@ -16,7 +16,7 @@ import android.widget.SeekBar;
 
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.database.CorButton;
-import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 
 import java.util.Objects;
 
@@ -29,7 +29,7 @@ public class CompPercent extends Fragment implements View.OnClickListener {
     private static final String TAG = "CompPercent";
 
     ButtonsViewModel buttonsViewModel;
-    BlinkyViewModel blinkyViewModel;
+    BleViewModel bleViewModel;
 
     EditText etCompValue;
     Button btnDecComp, btnIncComp;
@@ -49,7 +49,7 @@ public class CompPercent extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         buttonsViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ButtonsViewModel.class);
-        blinkyViewModel = ViewModelProviders.of(getActivity()).get(BlinkyViewModel.class);
+        bleViewModel = ViewModelProviders.of(getActivity()).get(BleViewModel.class);
 
 
         View v = inflater.inflate(R.layout.fragment_comp_percent, container, false);
@@ -111,9 +111,9 @@ public class CompPercent extends Fragment implements View.OnClickListener {
                         String s = String.valueOf(curCorButton.getCorValue());
                         Log.d(TAG, "onProgressChanged: curCorButton.getCorValue = " + s);
                         String msg = "$" + "p" + curCorButton.getCorValue() + "c" + compCorValue + "&";
-                        if(compCorValue != 0) blinkyViewModel.sendTX(msg);
+                        if(compCorValue != 0) bleViewModel.sendTX(msg);
                     } else {
-                        blinkyViewModel.sendTX("$r&");
+                        bleViewModel.sendTX("$r&");
                     }
 
             }

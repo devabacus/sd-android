@@ -25,7 +25,7 @@ import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.Util;
 import no.nordicsemi.android.sdr.database.AppDatabase;
 import no.nordicsemi.android.sdr.database.CorButton;
-import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 
 import java.util.Objects;
 
@@ -40,7 +40,7 @@ public class Butset extends Fragment implements View.OnClickListener {
 
 
     ButtonsViewModel buttonsViewModel;
-    BlinkyViewModel blinkyViewModel;
+    BleViewModel bleViewModel;
     Button btnClose, btnSave, btnInc, btnDec;
     EditText etButName;
     CorButton curCorButton;
@@ -92,7 +92,7 @@ public class Butset extends Fragment implements View.OnClickListener {
         appDatabase = AppDatabase.getDatabase(this.getContext());
 
         buttonsViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ButtonsViewModel.class);
-        blinkyViewModel = ViewModelProviders.of(getActivity()).get(BlinkyViewModel.class);
+        bleViewModel = ViewModelProviders.of(getActivity()).get(BleViewModel.class);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         final View v = inflater.inflate(R.layout.fragment_butset, container, false);
@@ -132,7 +132,7 @@ public class Butset extends Fragment implements View.OnClickListener {
 
         //seekBar.setProgress(10);
         rgCorDir.setOnCheckedChangeListener((group, checkedId) -> {
-            blinkyViewModel.sendTX(Cmd.COR_RESET);
+            bleViewModel.sendTX(Cmd.COR_RESET);
             switch (checkedId) {
 
                 case R.id.rbPlus:
@@ -171,7 +171,7 @@ public class Butset extends Fragment implements View.OnClickListener {
                 etCorValue.setText(String.valueOf(corValue));
 
                 if(!firstOpenSet){
-                    blinkyViewModel.sendTX("$" + dirCor + corValue + "&");
+                    bleViewModel.sendTX("$" + dirCor + corValue + "&");
                 }
 //                if(curCorButton != null){
 //                    if(curCorButton.getCorValue() != 0){
@@ -271,7 +271,7 @@ public class Butset extends Fragment implements View.OnClickListener {
                 setLayout.setVisibility(View.GONE);
                 buttonsViewModel.setmSetButton(false);
                 firstOpenSet = false;
-                blinkyViewModel.sendTX(Cmd.COR_RESET);
+                bleViewModel.sendTX(Cmd.COR_RESET);
                 seekBar.setProgress(0);
                 etCorValue.setText("");
 
@@ -280,7 +280,7 @@ public class Butset extends Fragment implements View.OnClickListener {
                 //кнопки на контроллере корявые поэтому конвертируем
                 int remBut = Util.butNumConv((int)curCorButton.getId() + 1);
                 //Log.d(TAG, "remote button: " + String.valueOf(remBut));
-                if(remote_but_update) blinkyViewModel.sendTX("s4/" + String.valueOf(remBut));
+                if(remote_but_update) bleViewModel.sendTX("s4/" + String.valueOf(remBut));
                 butName = etButName.getText().toString();
 
                 corValue = Integer.valueOf(etCorValue.getText().toString());
@@ -295,12 +295,12 @@ public class Butset extends Fragment implements View.OnClickListener {
 
                 /////////// Сначала ждем подтверждение отправки/////////////////////
                 sentOneTime = false;
-                blinkyViewModel.isTXsent().observe(Objects.requireNonNull(getActivity()), aBoolean -> {
+                bleViewModel.isTXsent().observe(Objects.requireNonNull(getActivity()), aBoolean -> {
                     assert aBoolean != null;
                     mTXsent = aBoolean;
 
                     if (aBoolean && !sentOneTime) {
-                        blinkyViewModel.sendTX(Cmd.COR_RESET);
+                        bleViewModel.sendTX(Cmd.COR_RESET);
                         sentOneTime = true;
                     }
                 });

@@ -58,7 +58,7 @@ import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag;
 import no.nordicsemi.android.sdr.preferences.SetPrefActivity;
-import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
 
 import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeBtnDec;
@@ -87,11 +87,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_blinky);
+        setContentView(R.layout.main_layout);
+
 
         final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final BlinkyViewModel viewModel = ViewModelProviders.of(this).get(BlinkyViewModel.class);
+        final BleViewModel viewModel = ViewModelProviders.of(this).get(BleViewModel.class);
         hardButsViewModel = ViewModelProviders.of(this).get(HardButsViewModel.class);
 
         final Intent intent = getIntent();

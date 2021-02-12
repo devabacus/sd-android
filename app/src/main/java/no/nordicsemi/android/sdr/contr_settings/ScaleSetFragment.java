@@ -21,7 +21,7 @@ import java.util.Objects;
 import no.nordicsemi.android.sdr.Cmd;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.StateFragment;
-import no.nordicsemi.android.sdr.viewmodels.BlinkyViewModel;
+import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 
 import static no.nordicsemi.android.sdr.preferences.PrefWeightFrag.KEY_DISCRETE_VALUE;
@@ -36,7 +36,7 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
 
     Button btnCalZero, btnCalOn, btnCalWeight;
     TextView tvCalInfo;
-    BlinkyViewModel blinkyViewModel;
+    BleViewModel bleViewModel;
     ConstraintLayout contSettLayout;
     StateViewModel stateViewModel;
     int adc_value = 0;
@@ -72,10 +72,10 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
 
         editor = sharedPreferences.edit();
 
-        blinkyViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BlinkyViewModel.class);
+        bleViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(BleViewModel.class);
         StateViewModel stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
 
-        blinkyViewModel.getUartData().observe(getActivity(), s -> {
+        bleViewModel.getUartData().observe(getActivity(), s -> {
             assert s != null;
             if(s.matches("s5..")){
                 tvCalInfo.setText("Калибровка..");
@@ -138,7 +138,7 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_cal_zero:
                 //turn ADC off
-                blinkyViewModel.sendTX("s1/0");
+                bleViewModel.sendTX("s1/0");
                 StateFragment.txQueue.add("s14/" + etMaxWeight.getText().toString());
                 StateFragment.txQueue.add("s15/" + etDiscrete.getText().toString());
                 StateFragment.txQueue.add("s16/" + etCalWeight.getText().toString());
@@ -147,14 +147,14 @@ public class ScaleSetFragment extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.btn_cal_weight:
-                blinkyViewModel.sendTX(Cmd.CAL_WEIGHT);
+                bleViewModel.sendTX(Cmd.CAL_WEIGHT);
                 editor.putString(KEY_MAX_WEIGHT_VALUE, etMaxWeight.getText().toString());
                 editor.putString(KEY_DISCRETE_VALUE, etDiscrete.getText().toString());
                 editor.apply();
                 break;
 
             case R.id.btn_cal_on:
-            blinkyViewModel.sendTX(Cmd.CAL_LOAD);
+            bleViewModel.sendTX(Cmd.CAL_LOAD);
 
             break;
         }

@@ -34,7 +34,6 @@ public class StateViewModel extends AndroidViewModel {
     }
     public void setmWeightValue(final float weight_value) { mWeightValue.setValue(weight_value);}
 
-
     public void setmAutoCorMode(final Integer autoCorMode){
         mAutoCorMode.setValue(autoCorMode);
     }
