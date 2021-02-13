@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.sdr.archive.ArchiveSaving;
 import no.nordicsemi.android.sdr.buttons.ButtonsViewModel;
 import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
@@ -244,7 +245,7 @@ public class StateFragment extends Fragment {
 
                         } else if (option_value == 0) {
                             // демо-режим архива закончился
-                            if (WeightPanel.archive) {
+                            if (ArchiveSaving.archive) {
                                 Toast.makeText(getContext(), "Демо-режим архива закончился. Обратитесь к разработчикам", Toast.LENGTH_SHORT).show();
                             }
                             option_archive = 0;

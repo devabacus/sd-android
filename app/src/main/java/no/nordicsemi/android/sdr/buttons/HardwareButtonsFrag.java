@@ -37,6 +37,7 @@ import no.nordicsemi.android.sdr.MainActivity;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.StateFragment;
 import no.nordicsemi.android.sdr.WeightPanel;
+import no.nordicsemi.android.sdr.archive.ArchiveSaving;
 import no.nordicsemi.android.sdr.database.CorButton;
 import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
@@ -283,7 +284,7 @@ public class HardwareButtonsFrag extends Fragment {
             } else if(corSet) {
                 bleViewModel.sendTX(Cmd.COR_RESET);
                 starttimer();
-                WeightPanel.tare = 0;
+                ArchiveSaving.tare = 0;
                 tvButNum.setText("0-");
                 //hardButsViewModel.setmNumber(0);
             }

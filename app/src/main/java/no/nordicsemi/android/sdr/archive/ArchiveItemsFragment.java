@@ -130,9 +130,9 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
 
         if (ButtonFrag.curUser.equals("admin") || ButtonFrag.curUser.equals("admin1")) {
             btnDeleteAll.setVisibility(View.VISIBLE);
-            if (!WeightPanel.debug_archive) {
-                btnDeleteAll.setVisibility(View.GONE);
-            }
+//            if (!WeightPanel.debug_archive) {
+//                btnDeleteAll.setVisibility(View.GONE);
+//            }
         } else {
             btnDeleteAll.setVisibility(View.GONE);
         }

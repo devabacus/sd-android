@@ -3,19 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="no.nordicsemi.android.sdr.archive.ArchiveDebug">
+    android:id="@+id/archive_fragment"
+    tools:context="no.nordicsemi.android.sdr.archive.ArchiveSaving">
+
+    <Button
+        android:id="@+id/btn_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/addit_archive_but"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_archive"
+        android:layout_marginEnd="10dp"
+        />
+
+<!--    <Button-->
+<!--        android:id="@+id/btn_test1"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/addit_archive_but"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/btn_archive"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        />-->
+
+
+    <Button
+        android:id="@+id/btn_archive"
+        android:text="@string/Archive_btn"
+        app:layout_constraintTop_toTopOf="@id/archive_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/debug_archive_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_archive"
         app:layout_constraintStart_toStartOf="parent"
         >
 
         <TextView
-            android:id="@+id/tv_debug_date_id"
+            android:id="@+id/tv_debug_date"
             tools:text="8:12:34"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -24,10 +58,10 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/tv_debug_weight_id"
+            android:id="@+id/tv_debug_weight"
             tools:text="150"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_debug_date_id"
+            app:layout_constraintStart_toEndOf="@id/tv_debug_date"
             android:layout_marginStart="20dp"
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.2"
@@ -35,34 +69,37 @@
 
 
         <TextView
-            android:id="@+id/tv_debug_adc_id"
+            android:id="@+id/tv_debug_adc"
             tools:text="150"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_debug_weight_id"
+            app:layout_constraintStart_toEndOf="@id/tv_debug_weight"
             android:layout_marginStart="10dp"
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.2"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/tv_debug_tare_id"
+            android:id="@+id/tv_debug_tare"
             tools:text="-50"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_debug_adc_id"
+            app:layout_constraintStart_toEndOf="@id/tv_debug_adc"
             android:layout_marginStart="10sp"
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.1"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/tv_debug_type_id"
+            android:id="@+id/tv_debug_type"
             tools:text="1"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_debug_tare_id"
+            app:layout_constraintStart_toEndOf="@id/tv_debug_tare"
             android:layout_marginStart="20sp"
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.1"
             android:layout_height="wrap_content" />
+
+
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

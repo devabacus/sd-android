@@ -14,4 +14,5 @@ public class Cmd {
     public static final String CAL_LOAD = "s5/3";
     public static final String NUM_COR_BUT9_ON = "s6/9";
     public static final String NUM_COR_BUT9_OFF = "s6/3";
+    public static final String INCREASE_ARCHIVE_COUNTER = "s13/2";
 }

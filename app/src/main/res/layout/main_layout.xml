@@ -86,7 +86,7 @@
 			<fragment
 				android:id="@+id/frag_archive_debug"
 				android:visibility="gone"
-				android:name="no.nordicsemi.android.sdr.archive.ArchiveDebug"
+				android:name="no.nordicsemi.android.sdr.archive.ArchiveSaving"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toBottomOf="@id/frag_weight" />
