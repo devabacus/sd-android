@@ -31,7 +31,7 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     public static final String TAG = "test";
     ArchiveData archiveDataMax;
     int currentAcrhiveData = 0;
-    Button btnDeleteAll;
+    Button btnDeleteAll, btnExport;
 
     @Nullable
     @Override
@@ -42,16 +42,12 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         View v = inflater.inflate(R.layout.fragment_archive_items1, container, false);
 
         btnDeleteAll = (Button)v.findViewById(R.id.btn_delete_all);
+        btnExport = (Button)v.findViewById(R.id.btn_export);
         recViewArchive = (RecyclerView)v.findViewById(R.id.rec_view_arch);
         archiveAdapter = new ArchiveAdapter(new ArrayList<>(), this, this);
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
-
-
-
         btnDeleteAll.setOnClickListener(v1 -> archiveViewModel.deleteAllArchiveItems());
-
-
         archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType ->{
             if (archiveType != null) {
            //     Toast.makeText(getContext(), "есть такое дерьмо", Toast.LENGTH_SHORT).show();
@@ -106,12 +102,14 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
 
     @Override
     public void onClick(View v) {
+//        switch (v) {
+//            case R.id.btn_delete_all:
+//        }
         //TODO детальный вывод взвешивания
         ArchiveData archiveData = (ArchiveData) v.getTag();
         numOfWeightPicked = archiveData.getNumOfWeight();
         archiveViewModel.setmOpenDetailArchive(true);
         //archiveViewModel.setmNumOfWeightPicked(archiveData.getNumOfWeight());
-
     }
 
     @Override

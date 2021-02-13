@@ -14,13 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.Cmd;
@@ -45,13 +43,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     TextView tvDebugDate, tvDebugWeight, tvDebugAdc, tvDebugTare, tvDebugType;
 
     public static final String TAG = "test";
-
     float weightValueLast = 0;
-    int weightValueInt = 0;
     private ArchiveViewModel archiveViewModel;
-    private ArchiveData archiveData;
-    float weight = 0;
-
 
     public static int numOfWeight = 1;
 
@@ -60,7 +53,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     int timeStab = 3;
     int timeCounter = 0;
     boolean timerCounting = false;
-    int weightTimeSec = 0;
     float minWeightForSave = 1;
     boolean incWeight = false;
     boolean decWeight = false;
@@ -69,7 +61,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     Boolean archiveADC;
     Boolean corArchiveSave;
     int archiveDriverMax;
-    boolean enoughChange = false;
     Boolean show_weight;
 
     float weightValueFloat = 0;
@@ -81,7 +72,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     float adcWeight = 0;
     public static int tare = 0;
     int arch = 0;
-    int typeOfWeight = 0;
     boolean weightTonn = false;
 
     float weightMax = 0;
@@ -90,7 +80,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     int adcValueMax = 0;
     Date dateTimeMax;
 
-    Date dateTime[];
+    Date[] dateTime;
     ArrayList<Date> dateTimeArrL;
     ArrayList<Float> weightValueArrL;
     ArrayList<Integer> tare_arrL;
@@ -99,14 +89,92 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     ArrayList<Integer> typeOfWeight_arrL;
     Boolean butSet = false;
 
+    void initArrays() {
+        dateTime = new Date[20];
+        dateTimeMax = new Date();
+        dateTimeArrL = new ArrayList<>();
+        weightValueArrL = new ArrayList<>();
+        adcWeight_arrL = new ArrayList<>();
+        adcValue_arrL = new ArrayList<>();
+        tare_arrL = new ArrayList<>();
+        typeOfWeight_arrL = new ArrayList<>();
+    }
+    void getViewModels() {
+        bleViewModel = ViewModelProviders.of((getActivity())).get(BleViewModel.class);
+        archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
+        stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
+    }
+    void findAllViews(View v) {
+        btnArhive = v.findViewById(R.id.btn_archive);
+        btnTest = v.findViewById(R.id.btn_test);
+        debugArchiveLayout = v.findViewById(R.id.debug_archive_layout);
+        tvDebugDate = v.findViewById(R.id.tv_debug_date);
+        tvDebugWeight = v.findViewById(R.id.tv_debug_weight);
+        tvDebugAdc = v.findViewById(R.id.tv_debug_adc);
+        tvDebugTare = v.findViewById(R.id.tv_debug_tare);
+        tvDebugType = v.findViewById(R.id.tv_debug_type);
+    }
+    void sharedPrefGetData(SharedPreferences sp) {
+        show_weight = sp.getBoolean(SettingsFragment.KEY_WEIGHT_SHOW, false);
+        archive = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE, false);
+        debug_archive = sp.getBoolean(PrefArchive.KEY_DEBUG, false);
+        archiveADC = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE_ADC, false);
+        corArchiveSave = sp.getBoolean(PrefArchive.KEY_CORR_ARCHIVE, false);
+        weightTonn = sp.getBoolean(PrefArchive.KEY_WEIGHT_TONN, false);
+        archiveDriverMax = Integer.parseInt(sp.getString(PrefArchive.KEY_ARCHIVE_DRIVER_WEIGHT_MAX, "0"));
+        discrete = Float.parseFloat(sp.getString(PrefWeightFrag.KEY_DISCRETE_VALUE, "0"));
+        maxDeviation = Float.parseFloat(sp.getString(PrefArchive.KEY_DISCRETE_MAX, "1"));
+        timeStab = Integer.parseInt(sp.getString(PrefArchive.KEY_TIME_STAB, "3"));
+        minWeightForSave = Float.parseFloat(sp.getString(PrefArchive.KEY_MIN_WEIGHT, "1"));
+    }
+
+    void getLastArchiveItem() {
+        archiveViewModel.getArchiveListLast().observe(getActivity(), archiveDataList -> {
+            assert archiveDataList != null;
+            if ((archiveDataList.size() > 0) && (!corArchiveSave)) {
+                //мы запрашиваем из базы список с лимитом 1, т.е. по факту приходит список с одной последней записью
+                numOfWeight = archiveDataList.get(0).getNumOfWeight();
+            }
+        });
+    }
+    void getBtnState() {
+        ButtonsViewModel buttonsViewModel;
+        buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
+        buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
+            assert corButton != null;
+            Log.d(TAG, "onCreateView:" + corButton.getButNum());
+            if (!corButton.getButNum().isEmpty()) {
+                tare = Integer.parseInt(corButton.getButNum());
+            }
+        });
+
+        buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
+            butSet = aBoolean;
+        });
+    }
+    void weightObserve() {
+        parsedDataViewModel = ViewModelProviders.of(getActivity()).get(ParsedDataViewModel.class);
+        parsedDataViewModel.getWeightValue().observe(getActivity(), weight -> {
+            weightValueFloat = weight;
+            fillDataForArchive();
+        });
+    }
+    void cleanDebug() {
+        tvDebugDate.setText("");
+        tvDebugWeight.setText("");
+        tvDebugTare.setText("");
+        tvDebugAdc.setText("");
+        tvDebugType.setText("");
+    }
+
     public boolean minChange() {
         //if the difference between a current weight and the previous one more than acceptable difference
         return Math.abs(weightValueFloat - weightSavedLast) > maxDeviation;
     }
-
     public float driveWeightFind() {
         return (weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1));
     }
+
 
     public void archive_arr_fill(int i, int type) {
 
@@ -154,17 +222,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         tvDebugType.setText(tvDebugType.getText() + "\n" + String.valueOf(typeOfWeight_arrL.get(i)));
     }
 
-    void initArrays() {
-        dateTime = new Date[20];
-        dateTimeMax = new Date();
-        dateTimeArrL = new ArrayList<>();
-        weightValueArrL = new ArrayList<>();
-        adcWeight_arrL = new ArrayList<>();
-        adcValue_arrL = new ArrayList<>();
-        tare_arrL = new ArrayList<>();
-        typeOfWeight_arrL = new ArrayList<>();
-    }
-
     void archiveOnlyCorr() {
         stateViewModel.getIsCorActive().observe(getActivity(), corActive -> {
             assert corActive != null;
@@ -194,33 +251,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     }
 
-    void getLastArchiveItem() {
-        archiveViewModel.getArchiveListLast().observe(getActivity(), archiveDataList -> {
-            assert archiveDataList != null;
-            if ((archiveDataList.size() > 0) && (!corArchiveSave)) {
-                //мы запрашиваем из базы список с лимитом 1, т.е. по факту приходит список с одной последней записью
-                numOfWeight = archiveDataList.get(0).getNumOfWeight();
-            }
-        });
-
-    }
-
-    void getBtnState() {
-        ButtonsViewModel buttonsViewModel;
-        buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
-        buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
-            assert corButton != null;
-            Log.d(TAG, "onCreateView:" + corButton.getButNum());
-            if (!corButton.getButNum().isEmpty()) {
-                tare = Integer.parseInt(corButton.getButNum());
-            }
-        });
-
-        buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
-            butSet = aBoolean;
-        });
-    }
-
     void stabTimerWork() {
         Handler handler = new Handler();
         int delay = 1000;
@@ -232,15 +262,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             }
         }, delay);
     }
-
-    void weightObserve() {
-        parsedDataViewModel = ViewModelProviders.of(getActivity()).get(ParsedDataViewModel.class);
-        parsedDataViewModel.getWeightValue().observe(getActivity(), weight -> {
-            weightValueFloat = weight;
-            fillDataForArchive();
-        });
-    }
-
     void stabTimerIsFired() {
         if (timerCounting) {
             timeCounter++;
@@ -264,6 +285,25 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 timerCounting = false;
             }
         }
+    }
+
+
+
+    void fillDataForArchive() {
+        //save to archive. The weight is zero
+        if (weightTonn) {
+            weightValueFloat *= 1000;
+        }
+        if ((weightValueFloat != weightValueLast) && (weightValueFloat > minWeightForSave)) {
+            addNewItemInArr();
+        }
+        //if it's unload and weight within minWeightForSaveZone
+        else if (weightValueFloat < minWeightForSave && decWeight && (weightValueArrL.size() > 0)) {
+            saveArraysIntoDatabase();
+            resetArchiveVars();
+        }
+        Log.d(TAG, "weightFloatFromBLEviewmodel: " + weightValueFloat);
+        weightValueLast = weightValueFloat;
     }
 
     void addNewItemInArr() {
@@ -292,19 +332,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         }
         //Log.d(TAG, "onCreateView: вес отличается. Запустили таймер");
         timerCounting = true;
-    }
-
-    void resetArchiveVars() {
-        arch = 0;
-        decWeight = false;
-        weightMax = 0;
-        weightMax = 0;
-        tareMax = 0;
-        adcValueMax = 0;
-        adcWeightMax = 0;
-        archMax = 0;
-        weightSavedMax = 0;
-        weightSavedLast = 0;
     }
 
     void saveArraysIntoDatabase() {
@@ -348,67 +375,18 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         }
     }
 
-    void fillDataForArchive() {
-        //save to archive. The weight is zero
-        if (weightTonn) {
-            weightValueFloat *= 1000;
-        }
-        if ((weightValueFloat != weightValueLast) && (weightValueFloat > minWeightForSave)) {
-            addNewItemInArr();
-        }
-        //if it's unload and weight within minWeightForSaveZone
-        else if (weightValueFloat < minWeightForSave && decWeight && (weightValueArrL.size() > 0)) {
-            saveArraysIntoDatabase();
-
-            resetArchiveVars();
-
-        }
-        Log.d(TAG, "weightFloatFromBLEviewmodel: " + weightValueFloat);
-        weightValueLast = weightValueFloat;
+    void resetArchiveVars() {
+        arch = 0;
+        decWeight = false;
+        weightMax = 0;
+        weightMax = 0;
+        tareMax = 0;
+        adcValueMax = 0;
+        adcWeightMax = 0;
+        archMax = 0;
+        weightSavedMax = 0;
+        weightSavedLast = 0;
     }
-
-    void sharedPrefGetData(SharedPreferences sp) {
-        show_weight = sp.getBoolean(SettingsFragment.KEY_WEIGHT_SHOW, false);
-        archive = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE, false);
-        debug_archive = sp.getBoolean(PrefArchive.KEY_DEBUG, false);
-        archiveADC = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE_ADC, false);
-        corArchiveSave = sp.getBoolean(PrefArchive.KEY_CORR_ARCHIVE, false);
-        weightTonn = sp.getBoolean(PrefArchive.KEY_WEIGHT_TONN, false);
-        archiveDriverMax = Integer.parseInt(sp.getString(PrefArchive.KEY_ARCHIVE_DRIVER_WEIGHT_MAX, "0"));
-        discrete = Float.parseFloat(sp.getString(PrefWeightFrag.KEY_DISCRETE_VALUE, "0"));
-        maxDeviation = Float.parseFloat(sp.getString(PrefArchive.KEY_DISCRETE_MAX, "1"));
-        timeStab = Integer.parseInt(sp.getString(PrefArchive.KEY_TIME_STAB, "3"));
-        minWeightForSave = Float.parseFloat(sp.getString(PrefArchive.KEY_MIN_WEIGHT, "1"));
-    }
-
-
-    void cleanDebug() {
-        tvDebugDate.setText("");
-        tvDebugWeight.setText("");
-        tvDebugTare.setText("");
-        tvDebugAdc.setText("");
-        tvDebugType.setText("");
-    }
-
-    void getViewModels() {
-        bleViewModel = ViewModelProviders.of((getActivity())).get(BleViewModel.class);
-        archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
-        stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
-    }
-
-    void findAllViews(View v) {
-//        View v = inflater.inflate(R.layout.fragment_weight_panel, container, false);
-        btnArhive = v.findViewById(R.id.btn_archive);
-        btnTest = v.findViewById(R.id.btn_test);
-//        btnTestHttp = v.findViewById(R.id.btn_test1);
-        debugArchiveLayout = v.findViewById(R.id.debug_archive_layout);
-        tvDebugDate = v.findViewById(R.id.tv_debug_date);
-        tvDebugWeight = v.findViewById(R.id.tv_debug_weight);
-        tvDebugAdc = v.findViewById(R.id.tv_debug_adc);
-        tvDebugTare = v.findViewById(R.id.tv_debug_tare);
-        tvDebugType = v.findViewById(R.id.tv_debug_type);
-    }
-
 
     @Override
     public void onResume() {

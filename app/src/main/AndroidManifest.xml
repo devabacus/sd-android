@@ -48,6 +48,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme"
+
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name="no.nordicsemi.android.sdr.SplashScreenActivity"
@@ -63,6 +64,7 @@
             android:name="no.nordicsemi.android.sdr.ScannerActivity"
             android:icon="@drawable/ic_blinky_feature"
             android:label="@string/feature_name"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -72,12 +74,18 @@
         </activity>
         <activity
             android:name="no.nordicsemi.android.sdr.MainActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"
             />
         <activity android:name="no.nordicsemi.android.sdr.preferences.SetPrefActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Pref"/>
-        <activity android:name="no.nordicsemi.android.sdr.contr_settings.ContSettingsActivity" />
-        <activity android:name="no.nordicsemi.android.sdr.archive.Archive" />
+        <activity android:name="no.nordicsemi.android.sdr.contr_settings.ContSettingsActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name="no.nordicsemi.android.sdr.archive.Archive"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>
