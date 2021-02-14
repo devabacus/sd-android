@@ -2,21 +2,26 @@ package no.nordicsemi.android.sdr.archive;
 
 import android.app.DatePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.support.annotation.LongDef;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 
 public class Archive extends AppCompatActivity {
 
@@ -25,6 +30,7 @@ public class Archive extends AppCompatActivity {
     public static Date startDate;
     public static Date endDate;
     ArchiveViewModel archiveViewModel;
+    List<ArchiveData> listOfArchive;
 
 
     void findViews() {
@@ -61,8 +67,6 @@ public class Archive extends AppCompatActivity {
         btnEnd.setText(getDateStr(endDate));
     }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +81,44 @@ public class Archive extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         btnStart.setOnClickListener(v -> callDatePicker(0));
         btnEnd.setOnClickListener(v -> callDatePicker(1));
+
+        archiveViewModel.getIsDateUpdate().observe(this, isUpdated -> {
+            if (isUpdated) {
+                archiveViewModel.getArchiveListByDates(Archive.startDate, Archive.endDate).observe(this, archiveListByDate -> {
+                    if (archiveListByDate != null) {
+//                        archiveAdapter.addItems(archiveListByDate);
+                        listOfArchive = archiveListByDate;
+                    }
+                });
+            }
+        });
+
+        btnExport.setOnClickListener(v -> {
+                Log.d(TAG, "onClick: listOfArchive = " + listOfArchive.toString());
+                        for (int i = 0; i < listOfArchive.size(); i++) {
+                String fileName = getDateStr(startDate) + "-" + getDateStr(endDate);
+                FileExport fileExport = new FileExport();
+                String pathToFile = fileExport.writeToFile(fileName, "xml", listOfArchive, this);
+                Toast.makeText(this, pathToFile, Toast.LENGTH_LONG).show();
+//                FileGenerate fileGenerate = new FileGenerate(listOfArchive);
+//                String pathToFile = fileExport.writeToFile("ivan durak", ,this);
+//            Log.d(TAG, listOfArchive.get(i).getTimePoint() + ", " +
+//                    listOfArchive.get(i).getMainWeight() + ", " +
+//                    listOfArchive.get(i).getNumOfWeight() + ", " +
+//                    listOfArchive.get(i).getAdcWeight() + ", " +
+//                    listOfArchive.get(i).getAdcArchiveValue() + ", " +
+//                    listOfArchive.get(i).getTareValue() + ", " +
+//                    listOfArchive.get(i).getTypeOfWeight());
+
+                            //                FileExport fileExport = new FileExport();
+//                String pathToFile = fileExport.writeToFile("ivan durak", Objects.requireNonNull(getContext()));
+//                Toast.makeText(getContext(), pathToFile, Toast.LENGTH_SHORT).show();
+//                FtpRoutines ftpRoutines = new FtpRoutines();
+//                ftpRoutines.sendFileToServer("185.12.92.65", "katitka@etalon-ufa.ru", "123QWEasdZXC", pathToFile);
+
+                        }
+
+        });
     }
 
 
