@@ -42,69 +42,58 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         archiveViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ArchiveViewModel.class);
 
         View v = inflater.inflate(R.layout.fragment_archive_items1, container, false);
-        recViewArchive = (RecyclerView)v.findViewById(R.id.rec_view_arch);
+        recViewArchive = (RecyclerView) v.findViewById(R.id.rec_view_arch);
         archiveAdapter = new ArchiveAdapter(new ArrayList<>(), this, this);
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
-        archiveViewModel.getIsDateUpdate().observe(getActivity(), isUpdated -> {
-            if(isUpdated){
-                archiveViewModel.getArchiveListByDates(Archive.startDate, Archive.endDate).observe(getActivity(), archiveListByDate -> {
-                    if(archiveListByDate != null) {
-                        Log.d(TAG, "onCreateView: by date size = " + archiveListByDate.size());
-                        for(int i = 0; i < archiveListByDate.size(); i ++ ){
-                            Log.d(TAG, archiveListByDate.get(i).getTimePoint().getTime() + ", " +
-                                    archiveListByDate.get(i).getMainWeight() + ", " +
-                                    archiveListByDate.get(i).getNumOfWeight() + ", " +
-                                    archiveListByDate.get(i).getAdcWeight() + ", " +
-                                    archiveListByDate.get(i).getAdcArchiveValue() + ", " +
-                                    archiveListByDate.get(i).getTareValue() + ", " +
-                                    archiveListByDate.get(i).getTypeOfWeight());
-                        }
-                    }
-                    archiveAdapter.addItems(archiveListByDate);
-                });
 
+        archiveViewModel.getIsDateUpdate().observe(getActivity(), isUpdated -> {
+            if (isUpdated) {
+                archiveViewModel.getArchiveListByDates(Archive.startDate, Archive.endDate).observe(getActivity(), archiveListByDate -> {
+                    if (archiveListByDate != null) {
+                        archiveAdapter.addItems(archiveListByDate);
+                    }
+                });
             }
         });
 
 
-
-        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType ->{
+        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType -> {
             if (archiveType != null) {
-           //     Toast.makeText(getContext(), "есть такое дерьмо", Toast.LENGTH_SHORT).show();
+                //     Toast.makeText(getContext(), "есть такое дерьмо", Toast.LENGTH_SHORT).show();
             } else {
-             //   Toast.makeText(getContext(), "жопа", Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(getContext(), "жопа", Toast.LENGTH_SHORT).show();
             }
         });
         Log.d(TAG, "onCreateView: hello");
 
-        archiveViewModel.getArchiveListbyType(1).observe(getActivity(), archiveListByType -> {
-            if (archiveListByType != null) {
-                //archiveViewModel.getArchiveListbyType(2)
-//                for(int i = 0; i < archiveListByType.size(); i++) {
-//                    if(archiveListByType.get(i).getTypeOfWeight() == 2){
-//                        archiveDataMax = archiveListByType.get(i);
-//                        currentAcrhiveData = archiveListByType.get(i).getNumOfWeight();
-//                    }
-                Log.d(TAG, "onCreateView: by date" + archiveListByType.toString());
-               archiveAdapter.addItems(archiveListByType);
-                //Toast.makeText(getContext(), "archiveListByType is not null", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(), "нет записей", Toast.LENGTH_SHORT).show();
-            }
-            Log.d(TAG, "onCreateView: archiveListByType.size() = " + archiveListByType.size());
-            for (int i = 0; i < archiveListByType.size(); i++) {
-
-                Log.d(TAG, archiveListByType.get(i).getTimePoint().getTime() + ", " +
-                        archiveListByType.get(i).getMainWeight() + ", " +
-                        archiveListByType.get(i).getNumOfWeight() + ", " +
-                        archiveListByType.get(i).getAdcWeight() + ", " +
-                        archiveListByType.get(i).getAdcArchiveValue() + ", " +
-                        archiveListByType.get(i).getTareValue() + ", " +
-                        archiveListByType.get(i).getTypeOfWeight());
-            }
-        });
+//        archiveViewModel.getArchiveListbyType(1).observe(getActivity(), archiveListByType -> {
+//            if (archiveListByType != null) {
+//                //archiveViewModel.getArchiveListbyType(2)
+////                for(int i = 0; i < archiveListByType.size(); i++) {
+////                    if(archiveListByType.get(i).getTypeOfWeight() == 2){
+////                        archiveDataMax = archiveListByType.get(i);
+////                        currentAcrhiveData = archiveListByType.get(i).getNumOfWeight();
+////                    }
+//                Log.d(TAG, "onCreateView: by date" + archiveListByType.toString());
+//               archiveAdapter.addItems(archiveListByType);
+//                //Toast.makeText(getContext(), "archiveListByType is not null", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(getContext(), "нет записей", Toast.LENGTH_SHORT).show();
+//            }
+//            Log.d(TAG, "onCreateView: archiveListByType.size() = " + archiveListByType.size());
+//            for (int i = 0; i < archiveListByType.size(); i++) {
+//
+//                Log.d(TAG, archiveListByType.get(i).getTimePoint().getTime() + ", " +
+//                        archiveListByType.get(i).getMainWeight() + ", " +
+//                        archiveListByType.get(i).getNumOfWeight() + ", " +
+//                        archiveListByType.get(i).getAdcWeight() + ", " +
+//                        archiveListByType.get(i).getAdcArchiveValue() + ", " +
+//                        archiveListByType.get(i).getTareValue() + ", " +
+//                        archiveListByType.get(i).getTypeOfWeight());
+//            }
+//        });
 
 //        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveListByType ->{
 //
@@ -131,8 +120,7 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     }
 
     @Override
-    public boolean onLongClick(View v)
-    {
+    public boolean onLongClick(View v) {
         ArchiveData archiveData = (ArchiveData) v.getTag();
         if (ButtonFrag.curUser.equals("admin") || ButtonFrag.curUser.equals("admin1")) {
             archiveViewModel.deleteArchiveItem(archiveData);

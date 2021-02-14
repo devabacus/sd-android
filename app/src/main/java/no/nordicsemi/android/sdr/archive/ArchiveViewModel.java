@@ -68,6 +68,11 @@ public class ArchiveViewModel extends AndroidViewModel {
         return archiveListbyType;
     }
 
+//    public void setArchiveDates(Date start, Date end) {
+//        archiveListByDates = archiveDatabase.archiveFromDao().getItemsByTheDates(start, end);
+//        return archiveListByDates;
+//    }
+
     public LiveData<List<ArchiveData>> getArchiveListByDates(Date start, Date end) {
         archiveListByDates = archiveDatabase.archiveFromDao().getItemsByTheDates(start, end);
         return archiveListByDates;

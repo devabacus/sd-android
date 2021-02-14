@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -33,20 +34,45 @@ public class Archive extends AppCompatActivity {
         btnDeleteAll = findViewById(R.id.btn_delete_all);
     }
 
-    void initDataBtn() {
-        String curDate = new SimpleDateFormat("dd.MM.yy", new Locale("ru")).format(new Date());
-        btnStart.setText(curDate);
-        btnEnd.setText(curDate);
+    Date getStartEndDate(Date date, boolean isEndDate){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        if(isEndDate) {
+            c.set(Calendar.HOUR_OF_DAY, 23);
+            c.set(Calendar.MINUTE, 59);
+            c.set(Calendar.SECOND, 59);
+        }
+        return c.getTime();
     }
+
+    String getDateStr(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
+        return sdf.format(date);
+    }
+
+    void initDataBtn() {
+        startDate = getStartEndDate(new Date(), false);
+        endDate = getStartEndDate(new Date(), true);
+        btnStart.setText(getDateStr(startDate));
+        btnEnd.setText(getDateStr(endDate));
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         archiveViewModel = ViewModelProviders.of(this).get(ArchiveViewModel.class);
+        archiveViewModel.setDateUpdated(true);
         setContentView(R.layout.activity_archive);
         findViews();
         initDataBtn();
         final Toolbar toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
+        toolbar2.setTitle("Архив");
         setSupportActionBar(toolbar2);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         btnStart.setOnClickListener(v -> callDatePicker(0));
@@ -62,15 +88,13 @@ public class Archive extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, year, monthOfYear, dayOfMonth) -> {
                     cal.set(year, monthOfYear, dayOfMonth);
-                    String curDate = new SimpleDateFormat("dd.MM.yy", new Locale("ru")).format(cal.getTime());
-
                     if (typeDate == 0) {
-                        btnStart.setText(curDate);
-                        Log.d(TAG, "callDatePicker: " + cal.getTime().getTime());
+                        startDate = getStartEndDate(cal.getTime(), false);
+                        btnStart.setText(getDateStr(startDate));
                         startDate = cal.getTime();
                     } else if (typeDate == 1) {
-                        endDate = cal.getTime();
-                        btnEnd.setText(curDate);
+                        endDate = getStartEndDate(cal.getTime(), true);
+                        btnEnd.setText(getDateStr(endDate));
                     }
                     archiveViewModel.setDateUpdated(true);
                 }, mYear, mMonth, mDay);

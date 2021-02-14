@@ -8,6 +8,7 @@
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_layout2"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -21,21 +22,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/archive_title"
-        android:text="@string/archive_title"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/appbar_layout2"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
 
     <android.support.constraint.ConstraintLayout
-        app:layout_constraintTop_toBottomOf="@id/archive_title"
+        app:layout_constraintTop_toBottomOf="@id/appbar_layout2"
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/archive_interface"
         android:layout_width="match_parent"
