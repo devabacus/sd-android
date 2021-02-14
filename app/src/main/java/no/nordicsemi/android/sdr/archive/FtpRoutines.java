@@ -21,7 +21,7 @@ public class FtpRoutines {
         if(ftpClient == null) ftpClient = new FTPClient();
     }
 
-    public void sendFileToServer(String serverAddress, String login, String pass, String path){
+    public void sendFileToServer(String serverAddress, String login, String pass, String path, String remoteFileName){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -31,7 +31,7 @@ public class FtpRoutines {
                     if(isAuth) Log.d(TAG, "auth: connection is SUCCESS");
                     ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                     ftpClient.enterLocalPassiveMode();
-                    uploadFile(path);
+                    uploadFile(path, remoteFileName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -47,13 +47,13 @@ public class FtpRoutines {
         ftpClient.enterLocalPassiveMode();
     }
 
-    void uploadFile(String pathToFile) throws IOException {
+    void uploadFile(String pathToFile, String fileName) throws IOException {
         File file = new File(pathToFile);
         readFileToLog(file);
         FileInputStream in = new FileInputStream(file);
         ftpClient.enterLocalPassiveMode();
         ftpClient.changeWorkingDirectory("/public_html/scale/icons");
-        boolean result = ftpClient.storeFile("config.txt", in);
+        boolean result = ftpClient.storeFile(fileName, in);
         Log.d(TAG, "result upload to server is " + (result ?"SUCCESS":"FAILED"));
         in.close();
         ftpClient.logout();

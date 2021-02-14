@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
 
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.Cmd;
@@ -78,7 +79,11 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     float adcWeightMax = 0;
     int tareMax = 0;
     int adcValueMax = 0;
+
+    long startStabWeight = 0;
+    long endStabWeight = 0;
     Date dateTimeMax;
+    Timer mTimer;
 
     Date[] dateTime;
     ArrayList<Date> dateTimeArrL;
@@ -406,10 +411,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.d("archive saving", "archive saving works");
         View v = inflater.inflate(R.layout.fragment_archive_debug, container, false);
-
         findAllViews(v);
         btnArhive.setOnClickListener(this);
         btnTest.setOnClickListener(this);
@@ -439,13 +441,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 for (int i = 0; i < arch; i++) {
                     archive_arr_show(i);
                 }
-                break;
-//            case R.id.btn_test1:
-//                FileExport fileExport = new FileExport();
-//                String pathToFile = fileExport.writeToFile("ivan durak", Objects.requireNonNull(getContext()));
-//                Toast.makeText(getContext(), pathToFile, Toast.LENGTH_SHORT).show();
-//                FtpRoutines ftpRoutines = new FtpRoutines();
-//                ftpRoutines.sendFileToServer("185.12.92.65", "katitka@etalon-ufa.ru", "123QWEasdZXC", pathToFile);
         }
     }
 

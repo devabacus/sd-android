@@ -95,28 +95,13 @@ public class Archive extends AppCompatActivity {
 
         btnExport.setOnClickListener(v -> {
                 Log.d(TAG, "onClick: listOfArchive = " + listOfArchive.toString());
-                        for (int i = 0; i < listOfArchive.size(); i++) {
+
                 String fileName = getDateStr(startDate) + "-" + getDateStr(endDate);
                 FileExport fileExport = new FileExport();
                 String pathToFile = fileExport.writeToFile(fileName, "xml", listOfArchive, this);
-                Toast.makeText(this, pathToFile, Toast.LENGTH_LONG).show();
-//                FileGenerate fileGenerate = new FileGenerate(listOfArchive);
-//                String pathToFile = fileExport.writeToFile("ivan durak", ,this);
-//            Log.d(TAG, listOfArchive.get(i).getTimePoint() + ", " +
-//                    listOfArchive.get(i).getMainWeight() + ", " +
-//                    listOfArchive.get(i).getNumOfWeight() + ", " +
-//                    listOfArchive.get(i).getAdcWeight() + ", " +
-//                    listOfArchive.get(i).getAdcArchiveValue() + ", " +
-//                    listOfArchive.get(i).getTareValue() + ", " +
-//                    listOfArchive.get(i).getTypeOfWeight());
-
-                            //                FileExport fileExport = new FileExport();
-//                String pathToFile = fileExport.writeToFile("ivan durak", Objects.requireNonNull(getContext()));
-//                Toast.makeText(getContext(), pathToFile, Toast.LENGTH_SHORT).show();
-//                FtpRoutines ftpRoutines = new FtpRoutines();
-//                ftpRoutines.sendFileToServer("185.12.92.65", "katitka@etalon-ufa.ru", "123QWEasdZXC", pathToFile);
-
-                        }
+                            Toast.makeText(this, "done", Toast.LENGTH_SHORT).show();
+                FtpRoutines ftpRoutines = new FtpRoutines();
+                ftpRoutines.sendFileToServer("185.12.92.65", "katitka@etalon-ufa.ru", "123QWEasdZXC", pathToFile, fileName + ".xml");
 
         });
     }

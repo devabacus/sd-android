@@ -14,7 +14,7 @@ import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 
 public class FileExport {
 
-    private final String TAG = "sd-android-fileExport";
+    private final String TAG = "test";
 
     public String writeToFile(String fileName, String format, List<ArchiveData> listOfData, Context context)
     {
@@ -46,12 +46,13 @@ public class FileExport {
             FileOutputStream fOut = new FileOutputStream(file, true);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
             FileGenerate fileGenerate= new FileGenerate();
-
+            Log.d(TAG, "writeToFile: <archive>");
             myOutWriter.append("<archive>");
             for(int i = 0; i < listOfData.size(); i++){
                 myOutWriter.append(fileGenerate.itemToXml(listOfData.get(i)));
             }
             myOutWriter.append("</archive>");
+            Log.d(TAG, "writeToFile: <archive>");
             Log.d(TAG, "writeToFile: path : " + file.toString());
             myOutWriter.close();
 
