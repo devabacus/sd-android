@@ -21,6 +21,25 @@
         android:text="@string/clearAll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        android:layout_marginEnd="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_date_end"
+        android:text="@string/end_date"
+        app:layout_constraintEnd_toStartOf="@id/btn_export"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_date_start"
+        android:text="@string/start_date"
+        app:layout_constraintEnd_toStartOf="@id/btn_date_end"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

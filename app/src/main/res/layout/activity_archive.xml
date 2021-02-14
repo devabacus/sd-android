@@ -32,22 +32,77 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <fragment
-        android:name="no.nordicsemi.android.sdr.archive.ArchiveInterface"
-        android:id="@+id/frag_archive_interface"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
+
+    <android.support.constraint.ConstraintLayout
         app:layout_constraintTop_toBottomOf="@id/archive_title"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="10dp"
-        />
+        android:id="@+id/archive_interface"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <Button
+            android:id="@+id/btn_date_start"
+            android:text="@string/start_date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <Button
+            android:id="@+id/btn_date_end"
+            android:text="@string/end_date"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_date_start"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_export"
+            android:text="@string/export"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_date_end"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_delete_all"
+            android:text="@string/clearAll"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_export"
+            android:visibility="gone"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+<!--    <fragment-->
+<!--        android:name="no.nordicsemi.android.sdr.archive.ArchiveInterface"-->
+<!--        android:id="@+id/frag_archive_interface"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/archive_interface"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        />-->
 
     <fragment
         android:name="no.nordicsemi.android.sdr.archive.Archive_detail_item"
         android:id="@+id/frag_detail_archive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/frag_archive_interface"
+        app:layout_constraintTop_toBottomOf="@id/archive_interface"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="10dp"
         />

@@ -8,6 +8,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.TypeConverters;
 
+import java.util.Date;
 import java.util.List;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
@@ -34,6 +35,9 @@ public interface ArchiveDao {
 
     @Query("select * from ArchiveData where typeOfWeight >= :typeOfWeight")
     LiveData<List<ArchiveData>> getItemByTypeOfWeight(int typeOfWeight);
+
+    @Query("select * from ArchiveData where timePoint BETWEEN :start AND :end")
+    LiveData<List<ArchiveData>> getItemsByTheDates(Date start, Date end);
 
     @Delete
     void deleteItem(ArchiveData archiveData);

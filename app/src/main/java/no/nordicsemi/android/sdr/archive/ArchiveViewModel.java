@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 
 import android.support.annotation.NonNull;
 
+import java.util.Date;
 import java.util.List;
 
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
@@ -19,9 +20,12 @@ public class ArchiveViewModel extends AndroidViewModel {
     private final LiveData<List<ArchiveData>> archiveListLast;
     private LiveData<List<ArchiveData>> archiveListbyNum;
     private LiveData<List<ArchiveData>> archiveListbyType;
+    private LiveData<List<ArchiveData>> archiveListByDates;
 
 
     private ArchiveDatabase archiveDatabase;
+
+    private final MutableLiveData<Boolean> misDateUpdated = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mOpenDetailArchive = new MutableLiveData<>();
     private final MutableLiveData<Integer> mNumOfWeightPicked = new MutableLiveData<>();
 
@@ -34,14 +38,26 @@ public class ArchiveViewModel extends AndroidViewModel {
         //this.archiveList = archiveList;
     }
 
-    public LiveData<Boolean> mIsDetailOpen(){
+    public LiveData<Boolean> mIsDetailOpen() {
         return mOpenDetailArchive;
     }
-    public LiveData<Integer> getNumOfWeightPicked(){return mNumOfWeightPicked;}
+
+    public LiveData<Boolean> getIsDateUpdate() {
+        return misDateUpdated;
+    }
+
+    public LiveData<Integer> getNumOfWeightPicked() {
+        return mNumOfWeightPicked;
+    }
+
     public LiveData<List<ArchiveData>> getArchiveList() {
         return archiveList;
     }
-    public LiveData<List<ArchiveData>> getArchiveListLast() {return archiveListLast;}
+
+    public LiveData<List<ArchiveData>> getArchiveListLast() {
+        return archiveListLast;
+    }
+
     public LiveData<List<ArchiveData>> getArchiveListbyNum(int numOfWeightPicked) {
         archiveListbyNum = archiveDatabase.archiveFromDao().getItemByNumOfWeight(numOfWeightPicked);
         return archiveListbyNum;
@@ -52,15 +68,24 @@ public class ArchiveViewModel extends AndroidViewModel {
         return archiveListbyType;
     }
 
-    public void setmOpenDetailArchive(final Boolean archiveDetailOpen){
+    public LiveData<List<ArchiveData>> getArchiveListByDates(Date start, Date end) {
+        archiveListByDates = archiveDatabase.archiveFromDao().getItemsByTheDates(start, end);
+        return archiveListByDates;
+    }
+
+    public void setDateUpdated(final Boolean isUpdated) {
+        misDateUpdated.setValue(isUpdated);
+    }
+
+    public void setmOpenDetailArchive(final Boolean archiveDetailOpen) {
         mOpenDetailArchive.setValue(archiveDetailOpen);
     }
 
-    public void setmNumOfWeightPicked(final Integer numOfWeightPicked){
+    public void setmNumOfWeightPicked(final Integer numOfWeightPicked) {
         mNumOfWeightPicked.setValue(numOfWeightPicked);
     }
 
-    public void addArchiveItem(final ArchiveData archiveData){
+    public void addArchiveItem(final ArchiveData archiveData) {
         new AddAsyncTask(archiveDatabase).execute(archiveData);
     }
 
@@ -73,10 +98,12 @@ public class ArchiveViewModel extends AndroidViewModel {
     }
 
 
-    private static class AddAsyncTask extends AsyncTask<ArchiveData, Void, Void>{
+    private static class AddAsyncTask extends AsyncTask<ArchiveData, Void, Void> {
         private ArchiveDatabase db;
 
-        AddAsyncTask(ArchiveDatabase db){this.db = db;}
+        AddAsyncTask(ArchiveDatabase db) {
+            this.db = db;
+        }
 
         @Override
         protected Void doInBackground(ArchiveData... archiveData) {
@@ -85,10 +112,12 @@ public class ArchiveViewModel extends AndroidViewModel {
         }
     }
 
-    private static class DeleteAsyncTask extends AsyncTask<ArchiveData, Void, Void>{
+    private static class DeleteAsyncTask extends AsyncTask<ArchiveData, Void, Void> {
         private ArchiveDatabase db;
 
-        DeleteAsyncTask(ArchiveDatabase db){this.db = db;}
+        DeleteAsyncTask(ArchiveDatabase db) {
+            this.db = db;
+        }
 
 
         @Override
@@ -99,12 +128,13 @@ public class ArchiveViewModel extends AndroidViewModel {
     }
 
 
-    private static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void>{
+    private static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
         private ArchiveDatabase db;
 
         DeleteAllAsyncTask(ArchiveDatabase db) {
             this.db = db;
         }
+
         @Override
         protected Void doInBackground(Void... voids) {
             db.archiveFromDao().deleteAll();

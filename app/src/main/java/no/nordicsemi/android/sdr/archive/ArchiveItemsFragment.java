@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
@@ -32,6 +34,7 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     ArchiveData archiveDataMax;
     int currentAcrhiveData = 0;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -43,6 +46,28 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         archiveAdapter = new ArchiveAdapter(new ArrayList<>(), this, this);
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
+
+        archiveViewModel.getIsDateUpdate().observe(getActivity(), isUpdated -> {
+            if(isUpdated){
+                archiveViewModel.getArchiveListByDates(Archive.startDate, Archive.endDate).observe(getActivity(), archiveListByDate -> {
+                    if(archiveListByDate != null) {
+                        Log.d(TAG, "onCreateView: by date size = " + archiveListByDate.size());
+                        for(int i = 0; i < archiveListByDate.size(); i ++ ){
+                            Log.d(TAG, archiveListByDate.get(i).getTimePoint().getTime() + ", " +
+                                    archiveListByDate.get(i).getMainWeight() + ", " +
+                                    archiveListByDate.get(i).getNumOfWeight() + ", " +
+                                    archiveListByDate.get(i).getAdcWeight() + ", " +
+                                    archiveListByDate.get(i).getAdcArchiveValue() + ", " +
+                                    archiveListByDate.get(i).getTareValue() + ", " +
+                                    archiveListByDate.get(i).getTypeOfWeight());
+                        }
+                    }
+                    archiveAdapter.addItems(archiveListByDate);
+                });
+
+            }
+        });
+
 
 
         archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType ->{
@@ -62,7 +87,7 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
 //                        archiveDataMax = archiveListByType.get(i);
 //                        currentAcrhiveData = archiveListByType.get(i).getNumOfWeight();
 //                    }
-
+                Log.d(TAG, "onCreateView: by date" + archiveListByType.toString());
                archiveAdapter.addItems(archiveListByType);
                 //Toast.makeText(getContext(), "archiveListByType is not null", Toast.LENGTH_SHORT).show();
             } else {
@@ -71,7 +96,7 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
             Log.d(TAG, "onCreateView: archiveListByType.size() = " + archiveListByType.size());
             for (int i = 0; i < archiveListByType.size(); i++) {
 
-                Log.d(TAG, archiveListByType.get(i).getTimePoint() + ", " +
+                Log.d(TAG, archiveListByType.get(i).getTimePoint().getTime() + ", " +
                         archiveListByType.get(i).getMainWeight() + ", " +
                         archiveListByType.get(i).getNumOfWeight() + ", " +
                         archiveListByType.get(i).getAdcWeight() + ", " +
@@ -84,7 +109,6 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
 //        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveListByType ->{
 //
 //        });
-
 
         //archiveViewModel.getArchiveListbyNum(1).observe(getActivity(),archiveDataListByNum -> archiveAdapter.addItems(archiveDataListByNum));
 //        archiveViewModel.getArchiveList().observe(getActivity(), new Observer<List<ArchiveData>>() {

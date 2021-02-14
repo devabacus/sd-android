@@ -189,7 +189,9 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="addit_archive_but">test</string>
-    <string name="clearAll">Стереть все</string>
+    <string name="clearAll">Очистить</string>
+    <string name="start_date">Нач</string>
+    <string name="end_date">Оконч</string>
     <string name="export">Экспорт</string>
     <string name="auth">Авторизация</string>
     <string name="entry">Войти</string>
