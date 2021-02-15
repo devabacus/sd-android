@@ -146,7 +146,7 @@ public class BleViewModel extends AndroidViewModel implements BlinkyManagerCallb
 	@Override
 	public void onDataReceived(final String state) {
 		mRXdata.postValue(state);
-		Log.d(TAG, "RX: " + state);
+//		Log.d(TAG, "RX: " + state);
 		//Log.d(TAG, "onDataReceived: Сброс");
 	}
 

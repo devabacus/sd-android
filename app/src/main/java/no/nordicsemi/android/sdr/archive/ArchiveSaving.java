@@ -41,7 +41,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     ParsedDataViewModel parsedDataViewModel;
     ConstraintLayout debugArchiveLayout;
     Button btnArhive, btnTest;
-    TextView tvDebugDate, tvDebugWeight, tvDebugAdc, tvDebugTare, tvDebugType;
+    TextView tvDebugDate, tvDebugWeight, tvDebugAdc, tvDebugTare, tvDebugType, tvDebugTrueWeight, tvDebugStabTime;
 
     public static final String TAG = "test";
     float weightValueLast = 0;
@@ -73,12 +73,14 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     float adcWeight = 0;
     public static int tare = 0;
     int arch = 0;
+    int archLast = 0;
     boolean weightTonn = false;
 
     float weightMax = 0;
     float adcWeightMax = 0;
     int tareMax = 0;
     int adcValueMax = 0;
+    int timeStabMax = 0;
 
     long startStabWeight = 0;
     long endStabWeight = 0;
@@ -88,7 +90,9 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     Date[] dateTime;
     ArrayList<Date> dateTimeArrL;
     ArrayList<Float> weightValueArrL;
+    ArrayList<Float> weightTrueArrL;
     ArrayList<Integer> tare_arrL;
+    ArrayList<Integer> stab_timeL;
     ArrayList<Integer> adcValue_arrL;
     ArrayList<Float> adcWeight_arrL;
     ArrayList<Integer> typeOfWeight_arrL;
@@ -99,16 +103,20 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         dateTimeMax = new Date();
         dateTimeArrL = new ArrayList<>();
         weightValueArrL = new ArrayList<>();
+        weightTrueArrL = new ArrayList<>();
         adcWeight_arrL = new ArrayList<>();
         adcValue_arrL = new ArrayList<>();
         tare_arrL = new ArrayList<>();
+        stab_timeL = new ArrayList<>();
         typeOfWeight_arrL = new ArrayList<>();
     }
+
     void getViewModels() {
         bleViewModel = ViewModelProviders.of((getActivity())).get(BleViewModel.class);
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
         stateViewModel = ViewModelProviders.of(getActivity()).get(StateViewModel.class);
     }
+
     void findAllViews(View v) {
         btnArhive = v.findViewById(R.id.btn_archive);
         btnTest = v.findViewById(R.id.btn_test);
@@ -118,7 +126,10 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         tvDebugAdc = v.findViewById(R.id.tv_debug_adc);
         tvDebugTare = v.findViewById(R.id.tv_debug_tare);
         tvDebugType = v.findViewById(R.id.tv_debug_type);
+        tvDebugTrueWeight = v.findViewById(R.id.tv_debug_true_weight);
+        tvDebugStabTime = v.findViewById(R.id.tv_debug_stab_time);
     }
+
     void sharedPrefGetData(SharedPreferences sp) {
         show_weight = sp.getBoolean(SettingsFragment.KEY_WEIGHT_SHOW, false);
         archive = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE, false);
@@ -142,6 +153,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             }
         });
     }
+
     void getBtnState() {
         ButtonsViewModel buttonsViewModel;
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
@@ -157,6 +169,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             butSet = aBoolean;
         });
     }
+
     void weightObserve() {
         parsedDataViewModel = ViewModelProviders.of(getActivity()).get(ParsedDataViewModel.class);
         parsedDataViewModel.getWeightValue().observe(getActivity(), weight -> {
@@ -164,18 +177,22 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             fillDataForArchive();
         });
     }
+
     void cleanDebug() {
         tvDebugDate.setText("");
         tvDebugWeight.setText("");
         tvDebugTare.setText("");
         tvDebugAdc.setText("");
         tvDebugType.setText("");
+        tvDebugTrueWeight.setText("");
+        tvDebugStabTime.setText("");
     }
 
     public boolean minChange() {
         //if the difference between a current weight and the previous one more than acceptable difference
         return Math.abs(weightValueFloat - weightSavedLast) > maxDeviation;
     }
+
     public float driveWeightFind() {
         return (weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1));
     }
@@ -191,38 +208,30 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             adcWeight_arrL.add(i, adcWeight);
             adcValue_arrL.add(i, StateFragment.adcValue);
             tare_arrL.add(i, tare);
+            weightTrueArrL.add(i, weightValueFloat + tare);
+            stab_timeL.add(i, timeCounter);
         } else if (type == 2) {
             dateTimeArrL.add(arch, dateTimeMax);
             weightValueArrL.add(arch, weightMax);
             adcWeight_arrL.add(arch, adcWeightMax);
             adcValue_arrL.add(arch, adcValueMax);
+            weightTrueArrL.add(arch, weightMax + tareMax);
             tare_arrL.add(arch, tareMax);
+            stab_timeL.add(arch, timeStabMax);
         }
     }
 
     public void archive_arr_show(int i) {
-//        Log.d("test", dateTime[i] + ", " +
-//                weightValueFloat_arr[i] + ", " +
-//                adcWeight_arr[i] + ", " +
-//                adcValue_arr[i] + ", " +
-//                tare_arr[i] + ", " +
-//                typeOfWeight_arr[i] + "\n");
-
-        //Log.d(TAG, "archive_arr_show: " + weightValueArrL.get(i) + ", ");
-
-//        Log.d(TAG, "Array list" + dateTimeArrL.get(i) + ", " +
-//                weightValueArrL.get(i) + ", " +
-//                adcWeight_arrL.get(i) + ", " +
-//                adcValue_arrL.get(i) + ", " +
-//                tare_arrL.get(i) + ", " +
-//                typeOfWeight_arrL.get(i) + "\n");
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
-        format.format(new Date());
         tvDebugDate.setText(tvDebugDate.getText() + "\n" + String.valueOf(format.format(dateTimeArrL.get(i))));
         tvDebugWeight.setText(tvDebugWeight.getText() + "\n" + String.valueOf(weightValueArrL.get(i)));
+        tvDebugTrueWeight.setText(tvDebugTrueWeight.getText() + "\n" + String.valueOf(weightTrueArrL.get(i)));
         if (adcValue_arrL.get(i) > 0) {
             tvDebugAdc.setText(tvDebugAdc.getText() + "\n" + String.valueOf(adcValue_arrL.get(i)));
+        } else {
+            tvDebugAdc.setVisibility(View.INVISIBLE);
         }
+        tvDebugStabTime.setText(tvDebugStabTime.getText() + "\n" + "s" + String.valueOf(stab_timeL.get(i)));
         tvDebugTare.setText(tvDebugTare.getText() + "\n" + String.valueOf(tare_arrL.get(i)));
         tvDebugType.setText(tvDebugType.getText() + "\n" + String.valueOf(typeOfWeight_arrL.get(i)));
     }
@@ -267,9 +276,10 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             }
         }, delay);
     }
+
     void stabTimerIsFired() {
+        timeCounter++;
         if (timerCounting) {
-            timeCounter++;
             //if the timer counted more or equal to timestab from settings and weight more
             // than minimun weight for save and it's not unstable things of the scale
             if ((timeCounter >= timeStab) && (weightValueFloat > minWeightForSave) && minChange()) {
@@ -292,13 +302,12 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         }
     }
 
-
-
     void fillDataForArchive() {
         //save to archive. The weight is zero
         if (weightTonn) {
             weightValueFloat *= 1000;
         }
+        // вес изменился
         if ((weightValueFloat != weightValueLast) && (weightValueFloat > minWeightForSave)) {
             addNewItemInArr();
         }
@@ -307,12 +316,34 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             saveArraysIntoDatabase();
             resetArchiveVars();
         }
-        Log.d(TAG, "weightFloatFromBLEviewmodel: " + weightValueFloat);
+//        Log.d(TAG, "weightFloatFromBLEviewmodel: " + weightValueFloat);
         weightValueLast = weightValueFloat;
     }
 
+    void archive_log_show(int i) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
+        Log.d(TAG, "Array list" + format.format(dateTimeArrL.get(i)) + ", " +
+                weightValueArrL.get(i) + ", " +
+                weightTrueArrL.get(i) + ", " +
+                adcWeight_arrL.get(i) + ", " +
+                adcValue_arrL.get(i) + ", " +
+                tare_arrL.get(i) + ", " +
+                stab_timeL.get(i) + ", " +
+                typeOfWeight_arrL.get(i) + "\n");
+
+    }
+
+
     void addNewItemInArr() {
         if (minChange()) {
+//            Log.d(TAG, "arch = " + arch);
+            if (arch > 0) {
+                if (arch != archLast) {
+                    stab_timeL.add(arch - 1, timeCounter);
+                    archive_log_show(arch - 1);
+                    archLast = arch;
+                }
+            }
             timeCounter = 0;
         }
         // update weight max value (it's located in first member of array)
@@ -321,6 +352,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             weightMax = weightValueFloat;
             tareMax = tare;
             adcValueMax = StateFragment.adcValue;
+            adcWeightMax = adcWeight;
             adcWeightMax = adcWeight;
             //Log.d(TAG, "onCreateView: weightMax = " + weightMax);
         }
@@ -333,6 +365,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             //Log.d(TAG, "weightValueFloat = " + weightValueFloat + ", weightValueLast = " + weightValueLast);
             incWeight = false;
             decWeight = true;
+            //заполняем максимальный вес, хотя максимальным был предыдущий!!!!
             archive_arr_fill(arch, 2);
         }
         //Log.d(TAG, "onCreateView: вес отличается. Запустили таймер");
@@ -388,6 +421,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         tareMax = 0;
         adcValueMax = 0;
         adcWeightMax = 0;
+        timeStabMax = 0;
         archMax = 0;
         weightSavedMax = 0;
         weightSavedLast = 0;
@@ -443,7 +477,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 }
         }
     }
-
 
 
     @Override

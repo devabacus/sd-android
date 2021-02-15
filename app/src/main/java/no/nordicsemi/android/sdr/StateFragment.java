@@ -139,10 +139,8 @@ public class StateFragment extends Fragment {
         });
 
         bleViewModel.getUartData().observe(getActivity(), s -> {
-            Log.d(TAG, "onCreateView: s = " + s);
             assert s != null;
             if (s.matches("^ad.*")) {
-                Log.d(TAG, "ad зашел");
                 String adcValueStr = s.substring(s.indexOf('d') + 1);
                 adcValueStr = adcValueStr.replaceAll("[^0-9]", "");
                 if (adcValueStr.matches("[0-9]*")) {
@@ -153,10 +151,8 @@ public class StateFragment extends Fragment {
                 String resAdc = String.format(getString(R.string.adc1), adcValue);
                 tvAdc.setText(resAdc);
             } else if (s.matches("c1/0")){
-                Log.d(TAG, "c1/0 зашел");
                 Toast.makeText(getContext(), "Вам доступно только 2 кнопки.", Toast.LENGTH_SHORT).show();
             } else if (s.matches("c2/0")){
-                Log.d(TAG, "c2/0 зашел");
                 Toast.makeText(getContext(), "Вам доступно только 8 кнопок.", Toast.LENGTH_SHORT).show();
             }
 
@@ -219,11 +215,8 @@ public class StateFragment extends Fragment {
 
 
                 }
-//                Log.d(TAG, "onCreateView: notif_num = " + notif_num);
-//                Log.d(TAG, "onCreateView: notif_value = " + notif_value);
             }
             else if (s.matches("o.*/.*")) {
-                Log.d(TAG, "0 зашел");
                 int slashIndex1 = s.indexOf('/');
                 int option_num = Integer.valueOf(s.substring(1, slashIndex1));
                 int option_value = Integer.valueOf(s.substring(slashIndex1 + 1).replaceAll("[^0-9]", ""));
