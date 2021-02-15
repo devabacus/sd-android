@@ -198,7 +198,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     }
 
     public float driveWeightFind() {
-        return (weightValueArrL.get(archMaxStab) - weightValueArrL.get(archMaxStab + 1));
+//        return (weightValueArrL.get(archMaxStab) - weightValueArrL.get(archMaxStab + 1));
+        return (weightValueArrL.get(archMaxStab - 1) - weightValueArrL.get(archMaxStab));
     }
 
 
@@ -342,14 +343,12 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             addNewItemInArr();
         }
         //if it's unload and weight within minWeightForSaveZone
-        else if (weightValueFloat < minWeightForSave && decWeight && (weightValueArrL.size() > 0)) {
+        else if (weightValueFloat < minWeightForSave && decWeight) { //&& (weightValueArrL.size() > 0)
             saveArraysIntoDatabase();
-            resetArchiveVars();
         }
 //        Log.d(TAG, "weightFloatFromBLEviewmodel: " + weightValueFloat);
         weightValueLast = weightValueFloat;
     }
-
 
 
     void addNewItemInArr() {
@@ -393,32 +392,36 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     void saveArraysIntoDatabase() {
         numOfWeight++;
         cleanDebug();
-        //Toast.makeText(getContext(), "max stab weight = " + String.valueOf(weightValueArrL.get(archMax)), Toast.LENGTH_SHORT).show();
-        //change type of weight for mark max stab item
+        Log.d(TAG, "saveArraysIntoDatabase: arch = " + arch);
         // проверяем вышел ли водитель. Если да, то берем за основное взвешивание следующее после максимального
-        if ((arch > 1) && (driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0)) {
-            typeOfWeight_arrL.set(archMaxStab + 1, 1);
-        } else if (weightSavedMax != 0) {
+        //todo надо разобраться с вычетанием водителя
+//        if ((arch > 1) && (driveWeightFind() <= archiveDriverMax) && (driveWeightFind() > 0)) {
+//            typeOfWeight_arrL.set(archMaxStab + 1, 1);
+//        }
+//        else
+        if (weightSavedMax != 0) {
 //                        Log.d(TAG, "weightSavedMax != 0");
             typeOfWeight_arrL.set(archMaxStab, 1);
         }
-//                    Log.d(TAG, "weightMax = " + weightMax);
-//                    Log.d(TAG, "weightSavedMax = " + weightSavedMax);
-        //}
         //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
         if (Math.abs(weightMax - weightSavedMax) > maxDeviation) {
-//                        Log.d(TAG, "onCreateView: weightMax != weightSavedMax");
-            if(arch > 1) {
+
+
+            if(arch == 0) {
+                archive_arr_fill(0, 2);
+            } else if ((dateTimeMax.getTime() < dateTimeArrL.get(0).getTime())) {
+                archive_arr_fill(0, 2);
+            } else if (arch > 0){
+                int k = 0;
+                //перебираем массив, чтобы вставить в нужное место максимальное взвешивание
                 for (int i = 0; i < dateTimeArrL.size(); i++) {
-                    if (dateTimeMax.getTime() > dateTimeArrL.get(i).getTime() && weightMax > 0) {
-                        archive_arr_fill(i + 1, 2);
-                        weightMax = 0;
+                    if ((dateTimeMax.getTime() > dateTimeArrL.get(i).getTime())) {
+                        k = i;
                     }
                 }
+                archive_arr_fill(k + 1, 2);
             }
-//
-            //dateTimeMax.getTime()
-//            archive_arr_fill(arch, 2);
+
         } else {
             arch--;
         }
@@ -428,9 +431,12 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             archive_arr_show(i);
 
             if (archive) {
+
                 bleViewModel.sendTX(Cmd.INCREASE_ARCHIVE_COUNTER);
                 // if archive activated or in demo
+
                 if (StateFragment.option_archive != 0) {
+                    Log.d(TAG, "onCreateView: option_archive in archiveSaving = " + StateFragment.option_archive);
                     // сохраняем в базу данных
                     archiveViewModel.addArchiveItem(new ArchiveData(numOfWeight, dateTimeArrL.get(i),
                             weightValueArrL.get(i), weightTrueArrL.get(i), adcWeight_arrL.get(i),
@@ -439,6 +445,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 }
             }
         }
+        initArrays();
+        resetArchiveVars();
     }
 
     void resetArchiveVars() {

@@ -29,6 +29,7 @@ import no.nordicsemi.android.sdr.preferences.PrefArchive;
 import no.nordicsemi.android.sdr.preferences.SettingsFragment;
 
 import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeButton;
+import static no.nordicsemi.android.sdr.preferences.PrefArchive.KEY_OPTION_ARCHIVE;
 import static no.nordicsemi.android.sdr.preferences.PrefUserFrag.KEY_PASS_INPUT;
 
 /**
@@ -229,6 +230,7 @@ public class StateFragment extends Fragment {
 
                         if (option_value == 2) {
                             // опция архива активирована
+                            Log.d(TAG, "onCreateView: архив активирован");
                             option_archive = 2;
                             editor.putString(PrefArchive.KEY_OPTION_ARCHIVE, "1");
 
@@ -281,6 +283,7 @@ public class StateFragment extends Fragment {
 //      prefNumOfButs = Integer.valueOf(sharedPreferences.getString(KEY_LIST_NUM_BUTTONS, "8"));
         adcShow = sharedPreferences.getBoolean(SettingsFragment.KEY_ADC_SHOW, false);
         Boolean showContSet = sharedPreferences.getBoolean(SettingsFragment.KEY_SHOW_CONT_SETTINGS_FRAG, false);
+//        option_archive = sharedPreferences.getString(KEY_OPTION_ARCHIVE, "1");
         pref_wallpaper_show = sharedPreferences.getBoolean(SettingsFragment.KEY_WALLPAPER_SHOW, true);
         Boolean pass_input = sharedPreferences.getBoolean(KEY_PASS_INPUT, false);
 
