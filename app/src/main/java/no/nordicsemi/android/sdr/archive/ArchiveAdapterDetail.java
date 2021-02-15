@@ -1,5 +1,6 @@
 package no.nordicsemi.android.sdr.archive;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -53,10 +54,11 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
             holder.tvWeight.setBackgroundColor(Color.RED);
         }
         holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
+        holder.tvTrueWeight.setText(String.valueOf(archiveData.getTrueWeight()));
         if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
             holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
         }
-
+        holder.tvStabTime.setText(archiveData.getStabTime() + "c");
         holder.itemView.setTag(archiveData);
     }
 
@@ -69,13 +71,17 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
 
         TextView tvDateTime;
         TextView tvWeight;
+        TextView tvTrueWeight;
         TextView tvTare;
+        TextView tvStabTime;
 
         ArchiveViewHolder(View itemView) {
             super(itemView);
             tvDateTime = (TextView)itemView.findViewById(R.id.tv_datetime);
             tvWeight = (TextView)itemView.findViewById(R.id.tv_weight);
             tvTare = (TextView)itemView.findViewById(R.id.tv_tare);
+            tvTrueWeight = (TextView)itemView.findViewById(R.id.tv_true_weight);
+            tvStabTime = (TextView)itemView.findViewById(R.id.tv_stab_time);
         }
     }
 }

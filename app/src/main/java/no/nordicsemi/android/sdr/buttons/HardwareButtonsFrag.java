@@ -231,6 +231,7 @@ public class HardwareButtonsFrag extends Fragment {
         });
 
         stateViewModel.getIsCorActive().observe(getActivity(), aBoolean -> {
+            Log.d(TAG, "onCreateView: getIsCorActive()  = " + aBoolean);
             assert aBoolean != null;
             if (aBoolean) {
                 if (volumeActivatedVibro) {

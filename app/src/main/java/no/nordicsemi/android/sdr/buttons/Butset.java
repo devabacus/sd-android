@@ -204,7 +204,7 @@ public class Butset extends Fragment implements View.OnClickListener {
             if (integer != null) compValue = integer;
         });
         // Проверяем флаг захода в настройки
-        buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
+        buttonsViewModel.ismSetUpButton().observe(getActivity(), aBoolean -> {
             if (aBoolean != null) {
                 firstOpenSet = aBoolean;
                 //Log.d(TAG, "onCreateView: firstOpenSet = "+ firstOpenSet);
@@ -269,7 +269,7 @@ public class Butset extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btnClose:
                 setLayout.setVisibility(View.GONE);
-                buttonsViewModel.setmSetButton(false);
+                buttonsViewModel.setmSetUpButton(false);
                 firstOpenSet = false;
                 bleViewModel.sendTX(Cmd.COR_RESET);
                 seekBar.setProgress(0);
@@ -288,7 +288,7 @@ public class Butset extends Fragment implements View.OnClickListener {
                         curCorButton.getId(), butName, dirCor, corValue, compValue
                 ));
                 setLayout.setVisibility(View.GONE);
-                buttonsViewModel.setmSetButton(false);
+                buttonsViewModel.setmSetUpButton(false);
                 //new Handler().postDelayed(this::resetCor, 500);
                 seekBar.setProgress(0);
                 etCorValue.setText("");

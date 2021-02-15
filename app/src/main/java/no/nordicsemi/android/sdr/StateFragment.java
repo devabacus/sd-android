@@ -81,7 +81,7 @@ public class StateFragment extends Fragment {
         //tvContrInfo = v.findViewById(R.id.tv_contr_info);
 
 
-        buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
+        buttonsViewModel.ismSetUpButton().observe(getActivity(), aBoolean -> {
             assert aBoolean != null;
             btnSetButton = aBoolean;
         });
@@ -171,6 +171,7 @@ public class StateFragment extends Fragment {
                         if (notif_value == 1 || notif_value == 2 || notif_value == 3) {
                             tvCorState.setText("активно");
                             if (!btnSetButton) {
+                                Log.d(TAG, "onCreateView: setmIsCorActive(true)");
                                 stateViewModel.setmIsCorActive(true);
                             }
                         } else if (notif_value == 0) {

@@ -202,4 +202,7 @@
     <string name="background1">Фоновое изображение</string>
     <string name="capacity">Макс. вес</string>
     <string name="accuracy">Погрешность</string>
+
+
+    <string name="stabTime">%dс</string>
 </resources>

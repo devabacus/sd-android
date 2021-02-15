@@ -140,7 +140,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
             }
         });
 //        blinkyViewModel.getUartData().observe(getActivity(), s -> Log.d(TAG, "onChanged: getData " + s));
-        buttonsViewModel.ismSetButton().observe(getActivity(), b->{
+        buttonsViewModel.ismSetUpButton().observe(getActivity(), b->{
             if(b!=null){
                 setOpened = b;
                 // Log.d(TAG, "onCreateView: setOpened = " + setOpened);
@@ -241,7 +241,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
             CorButton corButton = (CorButton) v.getTag();
             buttonsViewModel.setmCurCorButton(corButton);
             // кричим что хотим видеть настройки, флаг в 1
-            buttonsViewModel.setmSetButton(true);
+            buttonsViewModel.setmSetUpButton(true);
             //Log.d(TAG, "onLongClick: setmSetButton = true");
         }
 

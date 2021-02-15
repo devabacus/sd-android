@@ -76,7 +76,7 @@ public class CompPercent extends Fragment implements View.OnClickListener {
             compCorValue = corButton.getCompValue();
         });
 
-        buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
+        buttonsViewModel.ismSetUpButton().observe(getActivity(), aBoolean -> {
 
             if (aBoolean != null) {
                 if (aBoolean) {

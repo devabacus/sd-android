@@ -39,6 +39,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     StateViewModel stateViewModel;
     ParsedDataViewModel parsedDataViewModel;
+    ButtonsViewModel buttonsViewModel;
     ConstraintLayout debugArchiveLayout;
     Button btnArhive, btnTest;
     TextView tvDebugDate, tvDebugWeight, tvDebugAdc, tvDebugTare, tvDebugType, tvDebugTrueWeight, tvDebugStabTime;
@@ -64,23 +65,27 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     int archiveDriverMax;
     Boolean show_weight;
 
+    Boolean butSetUp = false;
+
     float weightValueFloat = 0;
     float weightSavedLast = 0;
     float weightSavedMax = 0;
 
     int archMax = 0;
 
-    float adcWeight = 0;
+    int adcWeight = 0;
     public static int tare = 0;
     int arch = 0;
     int archLast = 0;
     boolean weightTonn = false;
+    boolean isCorActive = false;
 
     float weightMax = 0;
-    float adcWeightMax = 0;
+    int adcWeightMax = 0;
     int tareMax = 0;
     int adcValueMax = 0;
     int timeStabMax = 0;
+
 
     long startStabWeight = 0;
     long endStabWeight = 0;
@@ -94,9 +99,9 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     ArrayList<Integer> tare_arrL;
     ArrayList<Integer> stab_timeL;
     ArrayList<Integer> adcValue_arrL;
-    ArrayList<Float> adcWeight_arrL;
+    ArrayList<Integer> adcWeight_arrL;
     ArrayList<Integer> typeOfWeight_arrL;
-    Boolean butSet = false;
+
 
     void initArrays() {
         dateTime = new Date[20];
@@ -155,18 +160,17 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     }
 
     void getBtnState() {
-        ButtonsViewModel buttonsViewModel;
+
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
         buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
             assert corButton != null;
-            Log.d(TAG, "onCreateView:" + corButton.getButNum());
-            if (!corButton.getButNum().isEmpty()) {
-                tare = Integer.parseInt(corButton.getButNum());
+            if (!corButton.getButNum().isEmpty() ) {
+                    tare = Integer.parseInt(corButton.getButNum());
             }
         });
 
-        buttonsViewModel.ismSetButton().observe(getActivity(), aBoolean -> {
-            butSet = aBoolean;
+        buttonsViewModel.ismSetUpButton().observe(getActivity(), aBoolean -> {
+            butSetUp = aBoolean;
         });
     }
 
@@ -201,7 +205,10 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     public void archive_arr_fill(int i, int type) {
 
         typeOfWeight_arrL.add(i, type);
-
+        if(!isCorActive) {
+            tare = 0;
+            tareMax = 0;
+        }
         if (type == 0) {
             dateTimeArrL.add(i, new Date());
             weightValueArrL.add(i, weightValueFloat);
@@ -236,16 +243,25 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         tvDebugType.setText(tvDebugType.getText() + "\n" + String.valueOf(typeOfWeight_arrL.get(i)));
     }
 
+
+    void observeButActive(){
+        stateViewModel.getIsCorActive().observe(getActivity(), corActive -> {
+            assert corActive != null;
+            isCorActive = corActive;
+            Log.d(TAG, "observeButActive: corActive = " + isCorActive);
+        });
+    }
+
     void archiveOnlyCorr() {
         stateViewModel.getIsCorActive().observe(getActivity(), corActive -> {
             assert corActive != null;
-            if (!butSet) {
+            if (!butSetUp) {
                 if (corArchiveSave) {
                     archive_arr_fill(0, 2);
                     // blinkyViewModel.sendTX("s13/2");
-                    archiveViewModel.addArchiveItem(new ArchiveData(new Date(),
-                            weightValueArrL.get(0), numOfWeight, adcWeight_arrL.get(0),
-                            adcValue_arrL.get(0), tare, 2));
+                    archiveViewModel.addArchiveItem(new ArchiveData(numOfWeight, new Date(),
+                            weightValueArrL.get(0),weightTrueArrL.get(0), adcWeight_arrL.get(0),
+                            adcValue_arrL.get(0), tare, stab_timeL.get(0), 2));
                     numOfWeight++;
                     // Toast.makeText(getContext(), "Сохранили", Toast.LENGTH_SHORT).show();
                     Handler handler = new Handler();
@@ -296,6 +312,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 }
 
                 arch++;
+                Log.d(TAG, "stabTimerIsFired: arch = " + arch);
                 //Log.d(TAG, "run: стабильный вес. Таймер сбросили`");
                 timerCounting = false;
             }
@@ -330,7 +347,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 tare_arrL.get(i) + ", " +
                 stab_timeL.get(i) + ", " +
                 typeOfWeight_arrL.get(i) + "\n");
-
     }
 
 
@@ -404,9 +420,9 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 // if archive activated or in demo
                 if (StateFragment.option_archive != 0) {
                     // сохраняем в базу данных
-                    archiveViewModel.addArchiveItem(new ArchiveData(dateTimeArrL.get(i),
-                            weightValueArrL.get(i), numOfWeight, adcWeight_arrL.get(i),
-                            adcValue_arrL.get(i), tare_arrL.get(i), typeOfWeight_arrL.get(i)));
+                    archiveViewModel.addArchiveItem(new ArchiveData(numOfWeight, dateTimeArrL.get(i),
+                            weightValueArrL.get(i), weightTrueArrL.get(i), adcWeight_arrL.get(i),
+                            adcValue_arrL.get(i), tare_arrL.get(i), stab_timeL.get(i), typeOfWeight_arrL.get(i)));
                     //Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -459,7 +475,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         getLastArchiveItem();
         stabTimerWork();
         archiveOnlyCorr();
-
+        observeButActive();
         return v;
 
     }

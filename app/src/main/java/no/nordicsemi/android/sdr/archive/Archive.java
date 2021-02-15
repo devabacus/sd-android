@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +27,8 @@ import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 public class Archive extends AppCompatActivity {
 
     private static final String TAG = "test";
-    Button btnDeleteAll, btnExport, btnStart, btnEnd;
+    Button btnExport, btnStart, btnEnd, btnDeleteAll;
+
     public static Date startDate;
     public static Date endDate;
     ArchiveViewModel archiveViewModel;
@@ -81,6 +83,14 @@ public class Archive extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         btnStart.setOnClickListener(v -> callDatePicker(0));
         btnEnd.setOnClickListener(v -> callDatePicker(1));
+        btnDeleteAll.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                archiveViewModel.deleteAllArchiveItems();
+                ArchiveSaving.numOfWeight = 0;
+                return false;
+            }
+        });
 
         archiveViewModel.getIsDateUpdate().observe(this, isUpdated -> {
             if (isUpdated) {

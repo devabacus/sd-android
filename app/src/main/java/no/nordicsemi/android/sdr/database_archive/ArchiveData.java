@@ -16,19 +16,23 @@ public class ArchiveData {
     private final Date timePoint;
     private final int numOfWeight;
     private final float mainWeight;
-    private final float adcWeight;
+    private final float trueWeight;
+    private final int adcWeight;
     private final int adcArchiveValue;
+    private final int stabTime;
     private final int tareValue;
     private final int typeOfWeight;
 
 
-    public ArchiveData(Date timePoint, float mainWeight, int numOfWeight, float adcWeight, int adcArchiveValue, int tareValue, int typeOfWeight) {
+    public ArchiveData(int numOfWeight, Date timePoint, float mainWeight, float trueWeight, int adcWeight, int adcArchiveValue, int tareValue, int stabTime,  int typeOfWeight) {
+        this.numOfWeight = numOfWeight;
         this.timePoint = timePoint;
         this.mainWeight = mainWeight;
-        this.numOfWeight = numOfWeight;
+        this.trueWeight = trueWeight;
         this.adcWeight = adcWeight;
         this.adcArchiveValue = adcArchiveValue;
         this.tareValue = tareValue;
+        this.stabTime = stabTime;
         this.typeOfWeight = typeOfWeight;
     }
 
@@ -36,19 +40,35 @@ public class ArchiveData {
         return timePoint;
     }
 
-    public int getNumOfWeight() { return numOfWeight; }
+    public int getNumOfWeight() {
+        return numOfWeight;
+    }
 
     public float getMainWeight() {
         return mainWeight;
     }
 
-    public float getAdcWeight() { return adcWeight; }
+    public float getTrueWeight() {
+        return trueWeight;
+    }
+
+    public int getAdcWeight() {
+        return adcWeight;
+    }
 
     public int getTareValue() {
         return tareValue;
     }
 
-    public int getAdcArchiveValue() {return adcArchiveValue;}
+    public int getStabTime() {
+        return stabTime;
+    }
 
-    public int getTypeOfWeight(){return typeOfWeight;}
+    public int getAdcArchiveValue() {
+        return adcArchiveValue;
+    }
+
+    public int getTypeOfWeight() {
+        return typeOfWeight;
+    }
 }
