@@ -71,7 +71,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     float weightSavedLast = 0;
     float weightSavedMax = 0;
 
-    int archMax = 0;
+    int archMaxStab = 0;
 
     int adcWeight = 0;
     public static int tare = 0;
@@ -164,8 +164,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
         buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
             assert corButton != null;
-            if (!corButton.getButNum().isEmpty() ) {
-                    tare = Integer.parseInt(corButton.getButNum());
+            if (!corButton.getButNum().isEmpty()) {
+                tare = Integer.parseInt(corButton.getButNum());
             }
         });
 
@@ -198,14 +198,14 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     }
 
     public float driveWeightFind() {
-        return (weightValueArrL.get(archMax) - weightValueArrL.get(archMax + 1));
+        return (weightValueArrL.get(archMaxStab) - weightValueArrL.get(archMaxStab + 1));
     }
 
 
     public void archive_arr_fill(int i, int type) {
 
         typeOfWeight_arrL.add(i, type);
-        if(!isCorActive) {
+        if (!isCorActive) {
             tare = 0;
             tareMax = 0;
         }
@@ -218,15 +218,28 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             weightTrueArrL.add(i, weightValueFloat + tare);
             stab_timeL.add(i, timeCounter);
         } else if (type == 2) {
-            dateTimeArrL.add(arch, dateTimeMax);
-            weightValueArrL.add(arch, weightMax);
-            adcWeight_arrL.add(arch, adcWeightMax);
-            adcValue_arrL.add(arch, adcValueMax);
-            weightTrueArrL.add(arch, weightMax + tareMax);
-            tare_arrL.add(arch, tareMax);
-            stab_timeL.add(arch, timeStabMax);
+            dateTimeArrL.add(i, dateTimeMax);
+            weightValueArrL.add(i, weightMax);
+            adcWeight_arrL.add(i, adcWeightMax);
+            adcValue_arrL.add(i, adcValueMax);
+            weightTrueArrL.add(i, weightMax + tareMax);
+            tare_arrL.add(i, tareMax);
+            stab_timeL.add(i, timeStabMax);
         }
     }
+
+    void archive_log_show(int i) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
+        Log.d(TAG, "Array list" + format.format(dateTimeArrL.get(i)) + ", " + String.valueOf(arch) + ", " +
+                weightValueArrL.get(i) + ", " +
+                weightTrueArrL.get(i) + ", " +
+                adcWeight_arrL.get(i) + ", " +
+                adcValue_arrL.get(i) + ", " +
+                tare_arrL.get(i) + ", " +
+                stab_timeL.get(i) + ", " +
+                typeOfWeight_arrL.get(i) + "\n");
+    }
+
 
     public void archive_arr_show(int i) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
@@ -244,7 +257,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     }
 
 
-    void observeButActive(){
+    void observeButActive() {
         stateViewModel.getIsCorActive().observe(getActivity(), corActive -> {
             assert corActive != null;
             isCorActive = corActive;
@@ -260,7 +273,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                     archive_arr_fill(0, 2);
                     // blinkyViewModel.sendTX("s13/2");
                     archiveViewModel.addArchiveItem(new ArchiveData(numOfWeight, new Date(),
-                            weightValueArrL.get(0),weightTrueArrL.get(0), adcWeight_arrL.get(0),
+                            weightValueArrL.get(0), weightTrueArrL.get(0), adcWeight_arrL.get(0),
                             adcValue_arrL.get(0), tare, stab_timeL.get(0), 2));
                     numOfWeight++;
                     // Toast.makeText(getContext(), "Сохранили", Toast.LENGTH_SHORT).show();
@@ -308,11 +321,11 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 weightSavedLast = weightValueFloat;
                 if (weightSavedLast > weightSavedMax) {
                     weightSavedMax = weightSavedLast;
-                    archMax = arch;
+                    archMaxStab = arch;
                 }
 
                 arch++;
-                Log.d(TAG, "stabTimerIsFired: arch = " + arch);
+//                Log.d(TAG, "stabTimerIsFired: arch = " + arch);
                 //Log.d(TAG, "run: стабильный вес. Таймер сбросили`");
                 timerCounting = false;
             }
@@ -337,17 +350,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         weightValueLast = weightValueFloat;
     }
 
-    void archive_log_show(int i) {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
-        Log.d(TAG, "Array list" + format.format(dateTimeArrL.get(i)) + ", " +
-                weightValueArrL.get(i) + ", " +
-                weightTrueArrL.get(i) + ", " +
-                adcWeight_arrL.get(i) + ", " +
-                adcValue_arrL.get(i) + ", " +
-                tare_arrL.get(i) + ", " +
-                stab_timeL.get(i) + ", " +
-                typeOfWeight_arrL.get(i) + "\n");
-    }
 
 
     void addNewItemInArr() {
@@ -382,7 +384,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             incWeight = false;
             decWeight = true;
             //заполняем максимальный вес, хотя максимальным был предыдущий!!!!
-            archive_arr_fill(arch, 2);
+//            archive_arr_fill(arch, 2);
         }
         //Log.d(TAG, "onCreateView: вес отличается. Запустили таймер");
         timerCounting = true;
@@ -393,12 +395,12 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         cleanDebug();
         //Toast.makeText(getContext(), "max stab weight = " + String.valueOf(weightValueArrL.get(archMax)), Toast.LENGTH_SHORT).show();
         //change type of weight for mark max stab item
-        // проверяем ли предыдущее сохраненное сохр взвешивание для сохр веса без людей
+        // проверяем вышел ли водитель. Если да, то берем за основное взвешивание следующее после максимального
         if ((arch > 1) && (driveWeightFind() <= archiveDriverMax && driveWeightFind() > 0)) {
-            typeOfWeight_arrL.set(archMax + 1, 1);
+            typeOfWeight_arrL.set(archMaxStab + 1, 1);
         } else if (weightSavedMax != 0) {
 //                        Log.d(TAG, "weightSavedMax != 0");
-            typeOfWeight_arrL.set(archMax, 1);
+            typeOfWeight_arrL.set(archMaxStab, 1);
         }
 //                    Log.d(TAG, "weightMax = " + weightMax);
 //                    Log.d(TAG, "weightSavedMax = " + weightSavedMax);
@@ -406,7 +408,17 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
         if (Math.abs(weightMax - weightSavedMax) > maxDeviation) {
 //                        Log.d(TAG, "onCreateView: weightMax != weightSavedMax");
-            archive_arr_fill(arch, 2);
+            if(arch > 1) {
+                for (int i = 0; i < dateTimeArrL.size(); i++) {
+                    if (dateTimeMax.getTime() > dateTimeArrL.get(i).getTime() && weightMax > 0) {
+                        archive_arr_fill(i + 1, 2);
+                        weightMax = 0;
+                    }
+                }
+            }
+//
+            //dateTimeMax.getTime()
+//            archive_arr_fill(arch, 2);
         } else {
             arch--;
         }
@@ -438,7 +450,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         adcValueMax = 0;
         adcWeightMax = 0;
         timeStabMax = 0;
-        archMax = 0;
+        archMaxStab = 0;
         weightSavedMax = 0;
         weightSavedLast = 0;
     }

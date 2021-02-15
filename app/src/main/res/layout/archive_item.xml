@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="10dp"
-        tools:text="1."
+        tools:text="5461."
 
         />
 
@@ -26,8 +26,8 @@
         android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        app:layout_constraintStart_toEndOf="@id/tv_num_weight"
+        android:layout_marginStart="45dp"
+        app:layout_constraintStart_toStartOf="@id/tv_num_weight"
         tools:text="15.02 10:08"
 
         />

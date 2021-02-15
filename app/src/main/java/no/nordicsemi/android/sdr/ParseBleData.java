@@ -35,7 +35,7 @@ public class ParseBleData extends Fragment {
         bleViewModel.getUartData().observe(getActivity(), s -> {
 
             assert s != null;
-            Log.d(TAG, "Parse ble data: " + s.toString());
+//            Log.d(TAG, "Parse ble data: " + s.toString());
             if (s.matches("^wt.*")) {
                 String weightValueStr = s.substring(s.indexOf('t') + 1);
                 weightValueStr = weightValueStr.replaceAll("[^0-9.-]", "");
