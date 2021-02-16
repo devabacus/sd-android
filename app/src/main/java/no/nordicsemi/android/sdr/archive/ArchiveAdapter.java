@@ -21,8 +21,8 @@ import no.nordicsemi.android.sdr.buttons.ButtonFrag;
 public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveViewHolder>{
 
     private List<ArchiveData> archiveDataList;
-    private View.OnClickListener onClickListener;
-    private View.OnLongClickListener onLongClickListener;
+    private final View.OnClickListener onClickListener;
+    private final View.OnLongClickListener onLongClickListener;
     int _position;
 
     ArchiveAdapter(List<ArchiveData> archiveDataList, View.OnClickListener onClickListener, View.OnLongClickListener onLongClickListener) {
@@ -46,6 +46,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
 
 
 
+
     @Override
     public void onBindViewHolder(@NonNull ArchiveViewHolder holder, int position) {
 
@@ -53,11 +54,25 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
         format.format(new Date());
 
         ArchiveData archiveData = archiveDataList.get(position);
-        if(archiveData.getTypeOfWeight() != 1) {
+
+        boolean only_max_weight = (archiveData.getSuspectState() & SuspectMasks.ONLY_MAX_WEIGHT) == SuspectMasks.ONLY_MAX_WEIGHT;
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0,20,0,20);
+
+        holder.itemView.setLayoutParams(layoutParams);
+
+
+        if(archiveData.getTypeOfWeight() != 1 && !only_max_weight) {
           holder.itemView.setVisibility(View.GONE);
           holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0,0));
-        } else if (archiveData.getSuspectState() == 2){
+        } else if (archiveData.getSuspectState() > 0){
             holder.itemView.setBackgroundColor(Color.parseColor("#dcdedc"));
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+            holder.itemView.setVisibility(View.VISIBLE);
+            holder.itemView.setMinimumHeight(30);
+            holder.itemView.setLayoutParams(layoutParams);
+
         }
 
         //по идее на форуме написано надо так делать, но вроде работает и без этого

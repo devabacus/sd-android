@@ -48,6 +48,18 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
 
+//        archiveViewModel.getIsDateUpdate().observe(getActivity(), isUpdated -> {
+//            if (isUpdated) {
+//                archiveViewModel.getArchiveList().observe(getActivity(), archiveList -> {
+//                    if (archiveList != null) {
+//                        archiveAdapter.addItems(archiveList);
+//                    }
+//                });
+//            }
+//        });
+
+
+
         archiveViewModel.getIsDateUpdate().observe(getActivity(), isUpdated -> {
             if (isUpdated) {
                 archiveViewModel.getArchiveListByDates(Archive.startDate, Archive.endDate).observe(getActivity(), archiveListByDate -> {

@@ -36,7 +36,7 @@ public interface ArchiveDao {
     @Query("select * from ArchiveData where typeOfWeight >= :typeOfWeight")
     LiveData<List<ArchiveData>> getItemByTypeOfWeight(int typeOfWeight);
 
-    @Query("select * from ArchiveData where timePoint BETWEEN :start AND :end")
+    @Query("select * from ArchiveData where timePoint BETWEEN :start AND :end order by id DESC")
     LiveData<List<ArchiveData>> getItemsByTheDates(Date start, Date end);
 
     @Delete

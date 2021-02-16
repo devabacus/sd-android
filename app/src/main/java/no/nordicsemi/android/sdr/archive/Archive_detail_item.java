@@ -32,7 +32,7 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
     Button btnCloseDetail;
     RecyclerView recViewArchiveDetail;
     private ArchiveAdapterDetail archiveAdapterDetail;
-    TextView tvDetail;
+    TextView tvDetail, tvSuspect;
     //int numOfWeightPicked1 = 0;
 
 
@@ -49,6 +49,7 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
         View v = inflater.inflate(R.layout.fragment_archive_detail_item, container, false);
         archiveDetailLayout = (ConstraintLayout)v.findViewById(R.id.archive_detail_layout);
         tvDetail = (TextView)v.findViewById(R.id.tv_detail);
+        tvSuspect = (TextView)v.findViewById(R.id.tv_suspect);
 
         btnCloseDetail = (Button)v.findViewById(R.id.btn_close_detail);
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
@@ -73,13 +74,44 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
         archiveViewModel.mIsDetailOpen().observe(getActivity(), isDetailOpened ->{
             assert isDetailOpened != null;
             if (isDetailOpened) {
-                archiveViewModel.getArchiveListbyNum(ArchiveItemsFragment.numOfWeightPicked).observe(getActivity(), archiveListByNum -> archiveAdapterDetail.addItems(archiveListByNum));
+                archiveViewModel.getArchiveListbyNum(ArchiveItemsFragment.numOfWeightPicked).observe(getActivity(), archiveListByNum -> {
+                    if (archiveListByNum != null) {
+                        archiveAdapterDetail.addItems(archiveListByNum);
+                        int suspectState = 0;
+                        StringBuilder sb = new StringBuilder();
+                        if(archiveListByNum.size() != 0){
+                            suspectState = archiveListByNum.get(0).getSuspectState();
+                            tvSuspect.setText("");
+                        }
+
+                        if((suspectState & SuspectMasks.ONLY_MAX_WEIGHT) == SuspectMasks.ONLY_MAX_WEIGHT){
+                            sb.append("Нет стабильных значений");
+                        }
+                        if((suspectState & SuspectMasks.MAX_WEIGHT) == SuspectMasks.MAX_WEIGHT){
+                            if(sb.capacity() > 16) sb.append("\n");
+                            Log.d("test", "onCreateView: sb = " + sb.toString());
+                            Log.d("test", "onCreateView: sb.capacity = " + sb.capacity());
+                               sb.append("Недопустимый максимальный");
+                        }
+                        if((suspectState & SuspectMasks.DRIVER_DETECT) == SuspectMasks.DRIVER_DETECT){
+                            if(sb.capacity() > 16) sb.append("\n");
+                            sb.append("Обнаружен водитель");
+
+                        }
+                        Log.d("test", "onCreateView: sb.capacity = " + sb.capacity());
+                        tvSuspect.setText(sb.toString());
+                    }
+
+
+                });
                 Log.d("detail", "numOfWeightPicked = " + ArchiveItemsFragment.numOfWeightPicked);
                 archiveDetailLayout.setVisibility(View.VISIBLE);
                 tvDetail.setText("Детализация взвеш. № " + ArchiveItemsFragment.numOfWeightPicked);
+
                 //archiveViewModel.getArchiveListbyNum(numOfWeightPicked).observe(getActivity(), archiveListByNum -> archiveAdapterDetail.addItems(archiveListByNum));
             } else {
                 archiveDetailLayout.setVisibility(View.GONE);
+                tvSuspect.setText("");
             }
         });
 

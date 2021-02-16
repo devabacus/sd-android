@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_layout);
 
 
+
         final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final BleViewModel viewModel = ViewModelProviders.of(this).get(BleViewModel.class);

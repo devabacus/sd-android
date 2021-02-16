@@ -198,8 +198,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     }
 
     public float driveWeightFind() {
-//        return (weightValueArrL.get(archMaxStab) - weightValueArrL.get(archMaxStab + 1));
-        return (weightValueArrL.get(archMaxStab - 1) - weightValueArrL.get(archMaxStab));
+        return (weightValueArrL.get(archMaxStab) - weightValueArrL.get(archMaxStab + 1));
+//        return (weightValueArrL.get(archMaxStab - 1) - weightValueArrL.get(archMaxStab));
     }
 
 
@@ -252,7 +252,9 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         } else {
             tvDebugAdc.setVisibility(View.INVISIBLE);
         }
-        tvDebugStabTime.setText(tvDebugStabTime.getText() + "\n" + "s" + String.valueOf(stab_timeL.get(i)));
+        if(stab_timeL.size() > i){
+            tvDebugStabTime.setText(tvDebugStabTime.getText() + "\n" + "s" + String.valueOf(stab_timeL.get(i)));
+        }
         tvDebugTare.setText(tvDebugTare.getText() + "\n" + String.valueOf(tare_arrL.get(i)));
         tvDebugType.setText(tvDebugType.getText() + "\n" + String.valueOf(typeOfWeight_arrL.get(i)));
     }
@@ -354,6 +356,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     void addNewItemInArr() {
         if (minChange()) {
 //            Log.d(TAG, "arch = " + arch);
+            //значить уже был один стабильный, потому что там он инкрементируется
             if (arch > 0) {
                 if (arch != archLast) {
                     stab_timeL.add(arch - 1, timeCounter);
@@ -396,22 +399,33 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         Log.d(TAG, "saveArraysIntoDatabase: arch = " + arch);
         // проверяем вышел ли водитель. Если да, то берем за основное взвешивание следующее после максимального
         //todo надо разобраться с вычетанием водителя
-//        if ((arch > 1) && (driveWeightFind() <= archiveDriverMax) && (driveWeightFind() > 0)) {
-//            typeOfWeight_arrL.set(archMaxStab + 1, 1);
-//        }
-//        else
-        if (weightSavedMax != 0) {
+
+
+        if(weightValueArrL.size() > (archMaxStab + 2)){
+            if (driveWeightFind() <= (archiveDriverMax + maxDeviation)) {
+                if((weightValueArrL.get(archMaxStab + 2) - weightValueArrL.get(archMaxStab + 1)) <= (archiveDriverMax + maxDeviation)){
+                    typeOfWeight_arrL.set(archMaxStab + 1, 1);
+                        suspectState |= SuspectMasks.DRIVER_DETECT;
+                    Log.d(TAG, "driver weight = " + driveWeightFind() + " suspect = " + suspectState);
+                }
+            }
+        } else if (weightSavedMax != 0) {
 //                        Log.d(TAG, "weightSavedMax != 0");
             typeOfWeight_arrL.set(archMaxStab, 1);
         }
+
+//        if(arch > (archMaxStab + 1) && ((suspectState & SuspectMasks.DRIVER_DETECT) == 1))
+
         //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
         if (Math.abs(weightMax - weightSavedMax) > maxDeviation) {
 
             if(arch == 0) {
                 archive_arr_fill(0, 2);
+                suspectState |= SuspectMasks.ONLY_MAX_WEIGHT;
                 //это условие поставил вторым потому что если arch ноль то dateTimeArrL.get(0) возвращаем ошибку индекса
             } else if ((dateTimeMax.getTime() < dateTimeArrL.get(0).getTime())) {
                 archive_arr_fill(0, 2);
+                suspectState |= SuspectMasks.MAX_WEIGHT;
             } else if (arch > 0){
                 int k = 0;
                 //перебираем массив, чтобы вставить в нужное место максимальное взвешивание
@@ -421,8 +435,10 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                     }
                 }
                 archive_arr_fill(k + 1, 2);
+                suspectState |= SuspectMasks.MAX_WEIGHT;
             }
-            suspectState = 2;
+
+            Log.d(TAG, "max weight set suspect = " + suspectState);
 
         } else {
             arch--;
@@ -453,6 +469,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     void resetArchiveVars() {
         arch = 0;
+        archLast = 0;
         decWeight = false;
         weightMax = 0;
         weightMax = 0;

@@ -29,7 +29,7 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
     @NonNull
     @Override
     public ArchiveViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.archive_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.archive_detail_item, parent, false);
         return new ArchiveViewHolder(v);
     }
 
@@ -54,9 +54,12 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
             holder.tvWeight.setBackgroundColor(Color.RED);
         }
         holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
-        holder.tvTrueWeight.setText(String.valueOf(archiveData.getTrueWeight()));
+
         if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
-            holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
+            if(archiveData.getTareValue() != 0) {
+                holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
+                holder.tvTrueWeight.setText(String.valueOf(archiveData.getTrueWeight()));
+            }
         }
         holder.tvStabTime.setText(archiveData.getStabTime() + "c");
         holder.itemView.setTag(archiveData);
@@ -77,11 +80,11 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
 
         ArchiveViewHolder(View itemView) {
             super(itemView);
-            tvDateTime = (TextView)itemView.findViewById(R.id.tv_datetime);
-            tvWeight = (TextView)itemView.findViewById(R.id.tv_weight);
-            tvTare = (TextView)itemView.findViewById(R.id.tv_tare);
-            tvTrueWeight = (TextView)itemView.findViewById(R.id.tv_true_weight);
-            tvStabTime = (TextView)itemView.findViewById(R.id.tv_stab_time);
+            tvDateTime = (TextView)itemView.findViewById(R.id.tv_datetime1);
+            tvWeight = (TextView)itemView.findViewById(R.id.tv_weight1);
+            tvTare = (TextView)itemView.findViewById(R.id.tv_tare1);
+            tvTrueWeight = (TextView)itemView.findViewById(R.id.tv_true_weight1);
+            tvStabTime = (TextView)itemView.findViewById(R.id.tv_stab_time1);
         }
     }
 }
