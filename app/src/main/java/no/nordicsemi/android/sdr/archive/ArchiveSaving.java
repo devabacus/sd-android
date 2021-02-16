@@ -275,7 +275,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                     // blinkyViewModel.sendTX("s13/2");
                     archiveViewModel.addArchiveItem(new ArchiveData(numOfWeight, new Date(),
                             weightValueArrL.get(0), weightTrueArrL.get(0), adcWeight_arrL.get(0),
-                            adcValue_arrL.get(0), tare, stab_timeL.get(0), 2));
+                            adcValue_arrL.get(0), tare, stab_timeL.get(0), 2, 0));
                     numOfWeight++;
                     // Toast.makeText(getContext(), "Сохранили", Toast.LENGTH_SHORT).show();
                     Handler handler = new Handler();
@@ -392,6 +392,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     void saveArraysIntoDatabase() {
         numOfWeight++;
         cleanDebug();
+        int suspectState = 0;
         Log.d(TAG, "saveArraysIntoDatabase: arch = " + arch);
         // проверяем вышел ли водитель. Если да, то берем за основное взвешивание следующее после максимального
         //todo надо разобраться с вычетанием водителя
@@ -406,9 +407,9 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
         if (Math.abs(weightMax - weightSavedMax) > maxDeviation) {
 
-
             if(arch == 0) {
                 archive_arr_fill(0, 2);
+                //это условие поставил вторым потому что если arch ноль то dateTimeArrL.get(0) возвращаем ошибку индекса
             } else if ((dateTimeMax.getTime() < dateTimeArrL.get(0).getTime())) {
                 archive_arr_fill(0, 2);
             } else if (arch > 0){
@@ -421,6 +422,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 }
                 archive_arr_fill(k + 1, 2);
             }
+            suspectState = 2;
 
         } else {
             arch--;
@@ -440,7 +442,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                     // сохраняем в базу данных
                     archiveViewModel.addArchiveItem(new ArchiveData(numOfWeight, dateTimeArrL.get(i),
                             weightValueArrL.get(i), weightTrueArrL.get(i), adcWeight_arrL.get(i),
-                            adcValue_arrL.get(i), tare_arrL.get(i), stab_timeL.get(i), typeOfWeight_arrL.get(i)));
+                            adcValue_arrL.get(i), tare_arrL.get(i), stab_timeL.get(i), typeOfWeight_arrL.get(i), suspectState));
                     //Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
                 }
             }

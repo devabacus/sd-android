@@ -112,7 +112,6 @@ public class Archive extends AppCompatActivity {
                             Toast.makeText(this, "done", Toast.LENGTH_SHORT).show();
                 FtpRoutines ftpRoutines = new FtpRoutines();
                 ftpRoutines.sendFileToServer("185.12.92.65", "katitka@etalon-ufa.ru", "123QWEasdZXC", pathToFile, fileName + ".xml");
-
         });
     }
 

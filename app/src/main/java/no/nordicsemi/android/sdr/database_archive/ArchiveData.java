@@ -22,9 +22,11 @@ public class ArchiveData {
     private final int stabTime;
     private final int tareValue;
     private final int typeOfWeight;
+    private final int suspectState;
 
 
-    public ArchiveData(int numOfWeight, Date timePoint, float mainWeight, float trueWeight, int adcWeight, int adcArchiveValue, int tareValue, int stabTime,  int typeOfWeight) {
+
+    public ArchiveData(int numOfWeight, Date timePoint, float mainWeight, float trueWeight, int adcWeight, int adcArchiveValue, int tareValue, int stabTime,  int typeOfWeight, int suspectState) {
         this.numOfWeight = numOfWeight;
         this.timePoint = timePoint;
         this.mainWeight = mainWeight;
@@ -34,6 +36,7 @@ public class ArchiveData {
         this.tareValue = tareValue;
         this.stabTime = stabTime;
         this.typeOfWeight = typeOfWeight;
+        this.suspectState = suspectState;
     }
 
     public Date getTimePoint() {
@@ -70,5 +73,8 @@ public class ArchiveData {
 
     public int getTypeOfWeight() {
         return typeOfWeight;
+    }
+    public int getSuspectState() {
+        return suspectState;
     }
 }

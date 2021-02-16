@@ -6,7 +6,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {ArchiveData.class}, version = 2)
+@Database(entities = {ArchiveData.class}, version = 3)
 public abstract class ArchiveDatabase extends RoomDatabase {
     private static ArchiveDatabase INSTANCE;
 

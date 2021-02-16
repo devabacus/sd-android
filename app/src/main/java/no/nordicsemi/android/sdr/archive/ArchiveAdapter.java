@@ -1,5 +1,6 @@
 package no.nordicsemi.android.sdr.archive;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,19 +51,20 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
 
         SimpleDateFormat format = new SimpleDateFormat("dd.MM HH:mm", new Locale("ru"));
         format.format(new Date());
-        Log.d("test", "onBindViewHolder: ");
 
         ArchiveData archiveData = archiveDataList.get(position);
         if(archiveData.getTypeOfWeight() != 1) {
           holder.itemView.setVisibility(View.GONE);
           holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0,0));
+        } else if (archiveData.getSuspectState() == 2){
+            holder.itemView.setBackgroundColor(Color.parseColor("#dcdedc"));
         }
 
+        //по идее на форуме написано надо так делать, но вроде работает и без этого
 //        if(archiveData.getTypeOfWeight() == 2) {
 //            holder.itemView.setVisibility(View.VISIBLE);
 //            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 //        }
-
             holder.tvDateTime.setText(String.valueOf(format.format(archiveData.getTimePoint())));
             holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
 
@@ -77,29 +79,6 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
             holder.itemView.setTag(archiveData);
             holder.itemView.setOnClickListener(onClickListener);
             holder.itemView.setOnLongClickListener(onLongClickListener);
-
-
-//        if(archiveData.getTypeOfWeight() == 2){
-//            Log.d("test", "onBindViewHolder: typeOfWeight = " + 2);
-//            holder.tvDateTime.setVisibility(View.INVISIBLE);
-//            holder.tvWeight.setVisibility(View.INVISIBLE);
-//            holder.tvTrueWeight.setVisibility(View.INVISIBLE);
-//            holder.tvTare.setVisibility(View.INVISIBLE);
-//            holder.tvNumWeight.setVisibility(View.INVISIBLE);
-//            holder.itemView.setVisibility(View.INVISIBLE);
-//        } else if (archiveData.getTypeOfWeight() == 1){
-//            holder.tvDateTime.setText(String.valueOf(format.format(archiveData.getTimePoint())));
-//            holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
-//            holder.tvTrueWeight.setText(String.valueOf(archiveData.getTrueWeight()));
-//            if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
-//                holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
-//            }
-//
-//            holder.tvNumWeight.setText(String.valueOf(archiveData.getNumOfWeight()));
-//            holder.itemView.setTag(archiveData);
-//            holder.itemView.setOnClickListener(onClickListener);
-//            holder.itemView.setOnLongClickListener(onLongClickListener);
-//        }
 
     }
 
