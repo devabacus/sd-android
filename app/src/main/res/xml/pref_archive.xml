@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="archive_save"
+        android:title="Сохранять в архив" />
+
     <EditTextPreference
         android:key="max_discrete"
         android:title="Макс. изменение веса, кг"
@@ -54,10 +59,7 @@
         android:title="Макс вес водителя + пассажиров, кг">
 
     </EditTextPreference>
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="archive_save"
-        android:title="Сохранять в архив" />
+
 
     <!--<SwitchPreference-->
         <!--android:key="archive_save_adc"-->

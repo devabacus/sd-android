@@ -82,15 +82,17 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
                         if(archiveListByNum.size() != 0){
                             suspectState = archiveListByNum.get(0).getSuspectState();
                             tvSuspect.setText("");
+                            if(suspectState != 0){
+                                tvSuspect.setVisibility(View.VISIBLE);
+                            } else {
+                                tvSuspect.setVisibility(View.GONE);
+                            }
                         }
-
                         if((suspectState & SuspectMasks.ONLY_MAX_WEIGHT) == SuspectMasks.ONLY_MAX_WEIGHT){
                             sb.append("Нет стабильных значений");
                         }
                         if((suspectState & SuspectMasks.MAX_WEIGHT) == SuspectMasks.MAX_WEIGHT){
                             if(sb.capacity() > 16) sb.append("\n");
-                            Log.d("test", "onCreateView: sb = " + sb.toString());
-                            Log.d("test", "onCreateView: sb.capacity = " + sb.capacity());
                                sb.append("Недопустимый максимальный");
                         }
                         if((suspectState & SuspectMasks.DRIVER_DETECT) == SuspectMasks.DRIVER_DETECT){

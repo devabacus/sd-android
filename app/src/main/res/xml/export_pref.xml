@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="ftp_server"
+        android:inputType="text"
+        android:hint="192.168.10.10"
+        android:title="Адрес сервера">
+    </EditTextPreference>
+
+    <EditTextPreference
+        android:key="ftp_login"
+        android:inputType="text"
+        android:title="Логин">
+    </EditTextPreference>
+
+    <EditTextPreference
+        android:key="ftp_pass"
+        android:inputType="textPassword"
+        android:title="Пароль">
+    </EditTextPreference>
+
+<!--    <no.nordicsemi.android.sdr.preferences.DatePreference-->
+<!--        android:key="keyname"-->
+<!--        android:title="Title of the preference"-->
+<!--        android:defaultValue="2014-08-01"-->
+<!--        android:summary="Summary"/>-->
+
+    <SwitchPreference
+        android:key="export_detail"
+        android:title="Архив с детализацией"
+        android:defaultValue="false"
+        />
+
+    <SwitchPreference
+        android:key="export_auto"
+        android:title="Автоматический экспорт"
+        android:defaultValue="false"
+        />
+
+    <no.nordicsemi.android.sdr.preferences.TimePreference
+        android:key="export_time"
+        android:title="Время автомат. экспорта"
+        android:defaultValue="23:55"
+        />
+
+
+
+
+</PreferenceScreen>

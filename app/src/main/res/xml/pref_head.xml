@@ -8,13 +8,17 @@
     <header
         android:fragment="no.nordicsemi.android.sdr.preferences.PrefWeightFrag"
         android:title="Весовые настройки"/>
-    <header
-        android:fragment="no.nordicsemi.android.sdr.preferences.PrefArchive"
-        android:title="Настройки архива"/>
+
     <header
         android:fragment="no.nordicsemi.android.sdr.preferences.PrefUserFrag"
         android:title="Настройки доступа"/>
     <header
         android:fragment="no.nordicsemi.android.sdr.preferences.PrefHardBtns"
         android:title="Аппаратные кнопки"/>
+    <header
+        android:fragment="no.nordicsemi.android.sdr.preferences.PrefArchive"
+        android:title="Настройки архива"/>
+    <header
+        android:fragment="no.nordicsemi.android.sdr.preferences.PrefExport"
+        android:title="Экспорт архива"/>
 </preference-headers>

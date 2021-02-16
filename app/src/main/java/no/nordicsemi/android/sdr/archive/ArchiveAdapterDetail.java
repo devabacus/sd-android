@@ -32,7 +32,6 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.archive_detail_item, parent, false);
         return new ArchiveViewHolder(v);
     }
-
     public void addItems(List<ArchiveData> archiveDataList){
         this.archiveDataList = archiveDataList;
         notifyDataSetChanged();
@@ -51,7 +50,7 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
             holder.tvWeight.setBackgroundColor(Color.GREEN);
             // else if weight with marker - max value
         } else if (archiveData.getTypeOfWeight() == 2) {
-            holder.tvWeight.setBackgroundColor(Color.RED);
+            holder.tvWeight.setBackgroundColor(Color.parseColor("#E68A8A"));
         }
         holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
 
