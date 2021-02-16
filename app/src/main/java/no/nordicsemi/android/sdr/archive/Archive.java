@@ -2,11 +2,14 @@ package no.nordicsemi.android.sdr.archive;
 
 import android.app.DatePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.LongDef;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +25,9 @@ import java.util.Locale;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.sdr.MainActivity;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
+import no.nordicsemi.android.sdr.preferences.SetPrefActivity;
 
 public class Archive extends AppCompatActivity {
 
@@ -137,12 +142,28 @@ public class Archive extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_archive, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.export:
+                break;
+            case R.id.export_settings:
+                Intent intent = new Intent();
+//                intent.setClass(Archive.this, .class);
+                startActivityForResult(intent, 0);
+                break;
+            case R.id.delete_whole_archive:
+                break;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -8,6 +8,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,10 @@ public class PrefWeightFrag extends PreferenceFragment implements SharedPreferen
         discretePref.setSummary(discreteValue);
     }
 
+
+
+
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
@@ -68,7 +73,28 @@ public class PrefWeightFrag extends PreferenceFragment implements SharedPreferen
             maxWeightPref.setSummary(sharedPreferences.getString(key, "0"));;
         } else if (key.equals(KEY_DISCRETE_VALUE)) {
             discretePref.setSummary(sharedPreferences.getString(key, "0"));;
+        } else if (key.equals("keyname")){
+
+            Log.d("test", "onSharedPreferenceChanged: = " + sharedPreferences.getString("keyname", "ничего"));
+
+        } else if (key.equals("timeExport")){
+
+            Log.d("test", "onSharedPreferenceChanged: " + sharedPreferences.getString("timeExport", "ничего"));
         }
+
+//        final DatePreference dp= (DatePreference) findPreference("keyname");
+//        dp.setText("2014-08-02");
+//        dp.setSummary("2014-08-02");
+//        dp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference,Object newValue) {
+//                //your code to change values.
+//                dp.setSummary((String) newValue);
+//                return true;
+//            }
+//        });
+
+
 
     }
 }
