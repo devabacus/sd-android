@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_AUTO;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_DETAIL;
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_TIME;
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_LOGIN;
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_PASSWORD;
@@ -44,7 +46,7 @@ public class Archive extends AppCompatActivity {
     public static Date endDate;
     ArchiveViewModel archiveViewModel;
     public static List<ArchiveData> listOfArchive;
-    SharedPreferences sp;
+
 
     void findViews() {
         btnStart = findViewById(R.id.btn_date_start);
@@ -109,31 +111,48 @@ public class Archive extends AppCompatActivity {
 
     }
 
+    //suspect 0 or 8
+
+    List<ArchiveData> getNotDetailedList(List<ArchiveData> list){
+        List<ArchiveData> _list = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            int suspect = list.get(i).getSuspectState();
+            int typeOfWeight = list.get(i).getTypeOfWeight();
+            if( typeOfWeight == 1 || suspect == SuspectMasks.ONLY_MAX_WEIGHT) {
+                _list.add(list.get(i));
+            }
+        }
+        return _list;
+    }
+
+
+
     public void export_archive(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        List<ArchiveData> listForExport = listOfArchive;
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
         String fileName = sdf.format(startDate) + "-" + sdf.format(endDate);
-        final File file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
+        File file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
+        int i = 1;
+        while(file.exists()){
+            if(fileName.contains("_")){
+                fileName = fileName.split("_")[0];
+            }
+            fileName += "_" + i;
+            file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
+            i++;
+        }
         FileExport fileExport = new FileExport(file);
-        String pathToFile = fileExport.writeToFile(listOfArchive);
+        if(!sp.getBoolean(KEY_EXPORT_DETAIL, true)){
+            listForExport = getNotDetailedList(listForExport);
+        }
+        String pathToFile = fileExport.writeToFile(listForExport);
         Log.d(TAG, "export_archive: path = " + pathToFile);
         Toast.makeText(this, "Экспорт завершен", Toast.LENGTH_SHORT).show();
         FtpRoutines ftpRoutines = new FtpRoutines();
         ftpRoutines.sendFileToServer(this, pathToFile, fileName + ".xml");
     }
 
-
-    public void export_archive2(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
-        String fileName = sdf.format(startDate) + "-" + sdf.format(endDate);
-        final File file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
-        FileExport fileExport = new FileExport(file);
-        Log.d(TAG, "export_archive2: " + fileExport.readFromFile(file));
-//        String pathToFile = fileExport.writeToFile(listOfArchive);
-//        Log.d(TAG, "export_archive: path = " + pathToFile);
-//        Toast.makeText(this, "Экспорт завершен", Toast.LENGTH_SHORT).show();
-//        FtpRoutines ftpRoutines = new FtpRoutines();
-//        ftpRoutines.sendFileToServer(this, pathToFile, fileName + ".xml");
-    }
 
 
     private void callDatePicker(int typeDate) {
@@ -174,9 +193,6 @@ public class Archive extends AppCompatActivity {
                 //todo нужно создать подтверждающее диалоговое окно
                 archiveViewModel.deleteAllArchiveItems();
                 ArchiveSaving.numOfWeight = 0;
-                break;
-            case R.id.test_archive:
-                export_archive2();
                 break;
             case android.R.id.home:
                 onBackPressed();

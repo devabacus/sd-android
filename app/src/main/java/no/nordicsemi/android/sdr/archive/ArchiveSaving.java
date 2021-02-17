@@ -37,6 +37,8 @@ import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.ParsedDataViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_DETAIL;
+
 public class ArchiveSaving extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
     BleViewModel bleViewModel;
@@ -91,6 +93,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     int timeStabMax = 0;
 
     boolean autoExport = false;
+    boolean exportDetail = false;
 
 
     long startStabWeight = 0;
@@ -159,6 +162,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         timeStab = Integer.parseInt(sp.getString(PrefArchive.KEY_TIME_STAB, "3"));
         minWeightForSave = Float.parseFloat(sp.getString(PrefArchive.KEY_MIN_WEIGHT, "1"));
         autoExport = sp.getBoolean(PrefExport.KEY_EXPORT_AUTO, false);
+        exportDetail = sp.getBoolean(PrefExport.KEY_EXPORT_DETAIL, false);
     }
 
     void getLastArchiveItem() {
@@ -477,16 +481,31 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                     //Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
                 }
                listOfArchiveData.add(archiveData);
-
             }
         }
         if(autoExport) {
+            if(!exportDetail){
+                listOfArchiveData = getNotDetailedList(listOfArchiveData);
+            }
             fileExport.writeToFile(listOfArchiveData);
         }
 
         initArrays();
         resetArchiveVars();
     }
+
+    List<ArchiveData> getNotDetailedList(List<ArchiveData> list){
+        List<ArchiveData> _list = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            int suspect = list.get(i).getSuspectState();
+            int typeOfWeight = list.get(i).getTypeOfWeight();
+            if( typeOfWeight == 1 || suspect == SuspectMasks.ONLY_MAX_WEIGHT) {
+                _list.add(list.get(i));
+            }
+        }
+        return _list;
+    }
+
 
     void resetArchiveVars() {
         arch = 0;
