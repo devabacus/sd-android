@@ -21,6 +21,13 @@
         android:title="Пароль">
     </EditTextPreference>
 
+    <EditTextPreference
+        android:key="ftp_path"
+        android:inputType="text"
+        android:hint="/export/scale_1/"
+        android:title="Директория на сервере">
+    </EditTextPreference>
+
 <!--    <no.nordicsemi.android.sdr.preferences.DatePreference-->
 <!--        android:key="keyname"-->
 <!--        android:title="Title of the preference"-->

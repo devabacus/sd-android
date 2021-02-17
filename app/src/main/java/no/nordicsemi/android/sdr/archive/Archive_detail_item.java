@@ -95,11 +95,10 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
                             if(sb.capacity() > 16) sb.append("\n");
                                sb.append("Недопустимый максимальный");
                         }
-                        if((suspectState & SuspectMasks.DRIVER_DETECT) == SuspectMasks.DRIVER_DETECT){
-                            if(sb.capacity() > 16) sb.append("\n");
-                            sb.append("Обнаружен водитель");
-
-                        }
+//                        if((suspectState & SuspectMasks.DRIVER_DETECT) == SuspectMasks.DRIVER_DETECT){
+//                            if(sb.capacity() > 16) sb.append("\n");
+//                            sb.append("Обнаружен водитель");
+//                        }
                         Log.d("test", "onCreateView: sb.capacity = " + sb.capacity());
                         tvSuspect.setText(sb.toString());
                     }

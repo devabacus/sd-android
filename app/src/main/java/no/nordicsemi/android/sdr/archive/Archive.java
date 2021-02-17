@@ -1,9 +1,11 @@
 package no.nordicsemi.android.sdr.archive;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.LongDef;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,11 +15,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,9 +25,13 @@ import java.util.Locale;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
-import no.nordicsemi.android.sdr.MainActivity;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
-import no.nordicsemi.android.sdr.preferences.SetPrefActivity;
+
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_AUTO;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_TIME;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_LOGIN;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_PASSWORD;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_SERVER;
 
 public class Archive extends AppCompatActivity {
 
@@ -37,13 +41,12 @@ public class Archive extends AppCompatActivity {
     public static Date startDate;
     public static Date endDate;
     ArchiveViewModel archiveViewModel;
-    List<ArchiveData> listOfArchive;
-
+    public static List<ArchiveData> listOfArchive;
+    SharedPreferences sp;
 
     void findViews() {
         btnStart = findViewById(R.id.btn_date_start);
         btnEnd = findViewById(R.id.btn_date_end);
-        btnExport = findViewById(R.id.btn_export);
         btnDeleteAll = findViewById(R.id.btn_delete_all);
     }
 
@@ -77,6 +80,8 @@ public class Archive extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         archiveViewModel = ViewModelProviders.of(this).get(ArchiveViewModel.class);
         archiveViewModel.setDateUpdated(true);
         setContentView(R.layout.activity_archive);
@@ -88,36 +93,29 @@ public class Archive extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         btnStart.setOnClickListener(v -> callDatePicker(0));
         btnEnd.setOnClickListener(v -> callDatePicker(1));
-        btnDeleteAll.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                archiveViewModel.deleteAllArchiveItems();
-                ArchiveSaving.numOfWeight = 0;
-                return false;
-            }
-        });
 
         archiveViewModel.getIsDateUpdate().observe(this, isUpdated -> {
             if (isUpdated) {
                 archiveViewModel.getArchiveListByDates(Archive.startDate, Archive.endDate).observe(this, archiveListByDate -> {
                     if (archiveListByDate != null) {
-//                        archiveAdapter.addItems(archiveListByDate);
                         listOfArchive = archiveListByDate;
                     }
                 });
             }
         });
 
-        btnExport.setOnClickListener(v -> {
-                Log.d(TAG, "onClick: listOfArchive = " + listOfArchive.toString());
 
-                String fileName = getDateStr(startDate) + "-" + getDateStr(endDate);
-                FileExport fileExport = new FileExport();
-                String pathToFile = fileExport.writeToFile(fileName, "xml", listOfArchive, this);
-                            Toast.makeText(this, "done", Toast.LENGTH_SHORT).show();
-                FtpRoutines ftpRoutines = new FtpRoutines();
-                ftpRoutines.sendFileToServer("185.12.92.65", "katitka@etalon-ufa.ru", "123QWEasdZXC", pathToFile, fileName + ".xml");
-        });
+    }
+
+    public void export_archive(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
+        String fileName = sdf.format(startDate) + "-" + sdf.format(endDate);
+        FileExport fileExport = new FileExport();
+        String pathToFile = fileExport.writeToFile(fileName, "xml", listOfArchive, this);
+        Log.d(TAG, "export_archive: path = " + pathToFile);
+        Toast.makeText(this, "Экспорт завершен", Toast.LENGTH_SHORT).show();
+        FtpRoutines ftpRoutines = new FtpRoutines();
+        ftpRoutines.sendFileToServer(this, pathToFile, fileName + ".xml");
     }
 
 
@@ -153,13 +151,12 @@ public class Archive extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.export:
-                break;
-            case R.id.export_settings:
-                Intent intent = new Intent();
-//                intent.setClass(Archive.this, .class);
-                startActivityForResult(intent, 0);
+                export_archive();
                 break;
             case R.id.delete_whole_archive:
+                //todo нужно создать подтверждающее диалоговое окно
+//                archiveViewModel.deleteAllArchiveItems();
+//                ArchiveSaving.numOfWeight = 0;
                 break;
             case android.R.id.home:
                 onBackPressed();

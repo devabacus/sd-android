@@ -31,14 +31,18 @@
 package no.nordicsemi.android.sdr;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -54,8 +58,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.adapter.ExtendedBluetoothDevice;
+import no.nordicsemi.android.sdr.archive.AlarmTask;
 import no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag;
 import no.nordicsemi.android.sdr.preferences.SetPrefActivity;
 import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
@@ -64,6 +71,8 @@ import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
 import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeBtnDec;
 import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeLongPressInc;
 import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumePressVibro;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_AUTO;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_TIME;
 
 
 @SuppressWarnings("ConstantConditions")
@@ -81,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private int request_code = 1;
     ImageView imageView;
     Boolean longPress = false;
+    SharedPreferences sp;
 
 
     @SuppressLint("CutPasteId")
@@ -88,6 +98,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
+
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean auto = sp.getBoolean(KEY_EXPORT_AUTO, false);
+        String timeExport = sp.getString(KEY_EXPORT_TIME, "");
+        Log.d(TAG, "onCreate: timeExport = " + timeExport);
+        String[] time = timeExport.split(":");
+        int hour = Integer.parseInt(time[0]);
+        int minute = Integer.parseInt(time[1]);
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                hour,
+                minute
+        );
+//
+        if(auto){
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(this, AlarmTask.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            Toast.makeText(this, "Alarm is set at " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+        }
 
 
 

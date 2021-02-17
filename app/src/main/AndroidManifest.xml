@@ -35,7 +35,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -52,8 +52,8 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name="no.nordicsemi.android.sdr.SplashScreenActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,8 +64,8 @@
             android:name="no.nordicsemi.android.sdr.ScannerActivity"
             android:icon="@drawable/ic_blinky_feature"
             android:label="@string/feature_name"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -74,18 +74,25 @@
         </activity>
         <activity
             android:name="no.nordicsemi.android.sdr.MainActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            />
-        <activity android:name="no.nordicsemi.android.sdr.preferences.SetPrefActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="no.nordicsemi.android.sdr.preferences.SetPrefActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Pref"/>
-        <activity android:name="no.nordicsemi.android.sdr.contr_settings.ContSettingsActivity"
-            android:screenOrientation="portrait"
+            android:theme="@style/Pref" />
+        <activity
+            android:name="no.nordicsemi.android.sdr.contr_settings.ContSettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="no.nordicsemi.android.sdr.archive.Archive"
+            android:screenOrientation="portrait" />
+
+        <receiver
+            android:name="no.nordicsemi.android.sdr.archive.AlarmTask"
+            android:enabled="true"
+            android:exported="true"
             />
-        <activity android:name="no.nordicsemi.android.sdr.archive.Archive"
-            android:screenOrientation="portrait"
-            />
+
     </application>
 
 </manifest>

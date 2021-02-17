@@ -8,11 +8,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import no.nordicsemi.android.blinky.R;
 
@@ -24,7 +22,8 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
 
     public static final String KEY_FTP_SERVER = "ftp_server";
     public static final String KEY_FTP_LOGIN = "ftp_login";
-    public static final String KEY_FTP_PASS = "ftp_pass";
+    public static final String KEY_FTP_PASSWORD = "ftp_pass";
+    public static final String KEY_FTP_PATH = "ftp_path";
     public static final String KEY_EXPORT_DETAIL = "export_detail";
     public static final String KEY_EXPORT_AUTO = "export_auto";
     public static final String KEY_EXPORT_TIME = "export_time";
@@ -32,7 +31,8 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
     Preference ftp_server;
     Preference ftp_login;
     Preference ftp_pass;
-//    Preference export_detail;
+    Preference ftp_path;
+    //    Preference export_detail;
     Preference export_auto;
     Preference export_time;
 
@@ -43,7 +43,7 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.export_pref);
+        addPreferencesFromResource(R.xml.pref_export);
     }
 
     @Override
@@ -58,25 +58,25 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         ftp_server = findPreference(KEY_FTP_SERVER);
         ftp_login = findPreference(KEY_FTP_LOGIN);
-        ftp_pass = findPreference(KEY_FTP_PASS);
+        ftp_pass = findPreference(KEY_FTP_PASSWORD);
+        ftp_path = findPreference(KEY_FTP_PATH);
         export_auto = findPreference(KEY_EXPORT_AUTO);
         export_time = findPreference(KEY_EXPORT_TIME);
 
 
-        String server = sharedPreferences.getString(KEY_FTP_SERVER,"");
-        String login = sharedPreferences.getString(KEY_FTP_LOGIN,"");
-        String pass = sharedPreferences.getString(KEY_FTP_PASS,"");
-        String time = sharedPreferences.getString(KEY_EXPORT_TIME,"");
-        boolean auto = sharedPreferences.getBoolean(KEY_EXPORT_AUTO,false);
+        String server = sharedPreferences.getString(KEY_FTP_SERVER, "");
+        String login = sharedPreferences.getString(KEY_FTP_LOGIN, "");
+        String pass = sharedPreferences.getString(KEY_FTP_PASSWORD, "");
+        String path = sharedPreferences.getString(KEY_FTP_PATH, "");
+        String time = sharedPreferences.getString(KEY_EXPORT_TIME, "");
+        boolean auto = sharedPreferences.getBoolean(KEY_EXPORT_AUTO, false);
 
         export_time.setEnabled(auto);
         ftp_server.setSummary(server);
         ftp_login.setSummary(login);
+        ftp_path.setSummary(path);
         export_time.setSummary(time);
     }
-
-
-
 
 
     @Override
@@ -85,12 +85,18 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
         Preference curPref = findPreference(key);
 
         if (key.equals(KEY_FTP_SERVER)) {
-            ftp_server.setSummary(sharedPreferences.getString(key, ""));;
+            ftp_server.setSummary(sharedPreferences.getString(key, ""));
+            ;
         } else if (key.equals(KEY_FTP_LOGIN)) {
-            ftp_login.setSummary(sharedPreferences.getString(key, ""));;
-        } else if (key.equals(KEY_EXPORT_TIME)){
-            export_time.setSummary(sharedPreferences.getString(key, ""));;
-        } else if (key.equals(KEY_EXPORT_AUTO)){
+            ftp_login.setSummary(sharedPreferences.getString(key, ""));
+            ;
+        } else if (key.equals(KEY_FTP_PATH)) {
+            ftp_path.setSummary(sharedPreferences.getString(key, ""));
+            ;
+        } else if (key.equals(KEY_EXPORT_TIME)) {
+            export_time.setSummary(sharedPreferences.getString(key, ""));
+            ;
+        } else if (key.equals(KEY_EXPORT_AUTO)) {
             export_time.setEnabled(sharedPreferences.getBoolean(key, false));
         }
     }
