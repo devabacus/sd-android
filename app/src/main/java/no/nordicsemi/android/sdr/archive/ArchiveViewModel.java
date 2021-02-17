@@ -98,6 +98,10 @@ public class ArchiveViewModel extends AndroidViewModel {
         new DeleteAsyncTask(archiveDatabase).execute(archiveData);
     }
 
+    public void deleteArchiveItemsByNum(int num) {
+        new DeleteByNumAsyncTask(archiveDatabase).execute(num);
+    }
+
     public void deleteAllArchiveItems() {
         new DeleteAllAsyncTask(archiveDatabase).execute();
     }
@@ -131,6 +135,21 @@ public class ArchiveViewModel extends AndroidViewModel {
             return null;
         }
     }
+
+
+    private static class DeleteByNumAsyncTask extends AsyncTask<Integer, Void, Void> {
+        private ArchiveDatabase db;
+
+        DeleteByNumAsyncTask(ArchiveDatabase db) {
+            this.db = db;
+        }
+        @Override
+        protected Void doInBackground(Integer... val) {
+            db.archiveFromDao().deleteAllItemByNum(val[0]);
+            return null;
+        }
+    }
+
 
 
     private static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {

@@ -1,5 +1,7 @@
 package no.nordicsemi.android.sdr.archive;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.arch.lifecycle.ViewModelProviders;
@@ -47,19 +49,6 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
-
-//        archiveViewModel.getIsDateUpdate().observe(getActivity(), isUpdated -> {
-//            if (isUpdated) {
-//                archiveViewModel.getArchiveList().observe(getActivity(), archiveList -> {
-//                    if (archiveList != null) {
-//                        archiveAdapter.addItems(archiveList);
-//                    }
-//                });
-//            }
-//        });
-
-
-
         archiveViewModel.getIsDateUpdate().observe(getActivity(), isUpdated -> {
             if (isUpdated) {
                 archiveViewModel.getArchiveListByDates(Archive.startDate, Archive.endDate).observe(getActivity(), archiveListByDate -> {
@@ -69,55 +58,6 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
                 });
             }
         });
-
-
-        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveType -> {
-            if (archiveType != null) {
-                //     Toast.makeText(getContext(), "есть такое дерьмо", Toast.LENGTH_SHORT).show();
-            } else {
-                //   Toast.makeText(getContext(), "жопа", Toast.LENGTH_SHORT).show();
-            }
-        });
-        Log.d(TAG, "onCreateView: hello");
-
-//        archiveViewModel.getArchiveListbyType(1).observe(getActivity(), archiveListByType -> {
-//            if (archiveListByType != null) {
-//                //archiveViewModel.getArchiveListbyType(2)
-////                for(int i = 0; i < archiveListByType.size(); i++) {
-////                    if(archiveListByType.get(i).getTypeOfWeight() == 2){
-////                        archiveDataMax = archiveListByType.get(i);
-////                        currentAcrhiveData = archiveListByType.get(i).getNumOfWeight();
-////                    }
-//                Log.d(TAG, "onCreateView: by date" + archiveListByType.toString());
-//               archiveAdapter.addItems(archiveListByType);
-//                //Toast.makeText(getContext(), "archiveListByType is not null", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(getContext(), "нет записей", Toast.LENGTH_SHORT).show();
-//            }
-//            Log.d(TAG, "onCreateView: archiveListByType.size() = " + archiveListByType.size());
-//            for (int i = 0; i < archiveListByType.size(); i++) {
-//
-//                Log.d(TAG, archiveListByType.get(i).getTimePoint().getTime() + ", " +
-//                        archiveListByType.get(i).getMainWeight() + ", " +
-//                        archiveListByType.get(i).getNumOfWeight() + ", " +
-//                        archiveListByType.get(i).getAdcWeight() + ", " +
-//                        archiveListByType.get(i).getAdcArchiveValue() + ", " +
-//                        archiveListByType.get(i).getTareValue() + ", " +
-//                        archiveListByType.get(i).getTypeOfWeight());
-//            }
-//        });
-
-//        archiveViewModel.getArchiveListbyType(2).observe(getActivity(), archiveListByType ->{
-//
-//        });
-
-        //archiveViewModel.getArchiveListbyNum(1).observe(getActivity(),archiveDataListByNum -> archiveAdapter.addItems(archiveDataListByNum));
-//        archiveViewModel.getArchiveList().observe(getActivity(), new Observer<List<ArchiveData>>() {
-//            @Override
-//            public void onChanged(@Nullable List<ArchiveData> archiveDataList) {
-//                Toast.makeText(getContext(), String.valueOf(archiveDataList.get(1).getMainWeight()), Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
         return v;
     }
@@ -135,10 +75,29 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
     public boolean onLongClick(View v) {
         ArchiveData archiveData = (ArchiveData) v.getTag();
         if (ButtonFrag.curUser.equals("admin") || ButtonFrag.curUser.equals("admin1")) {
-            archiveViewModel.deleteArchiveItem(archiveData);
-            Toast.makeText(getContext(), "Запись удалена", Toast.LENGTH_SHORT).show();
+            alertDialog(archiveData.getNumOfWeight());
         }
         return true;
+    }
+
+    void alertDialog(int num){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Удаление взвешивания № " + num)
+                .setMessage("Вы уверены?")
+                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                            archiveViewModel.deleteArchiveItemsByNum(num);
+                            Toast.makeText(getContext(), "Запись удалена", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
     }
 
 }

@@ -100,12 +100,12 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
         if(minute.length() < 2) {
             minute = "0" + minute;
         }
-        return hour + " : " + minute;
+        return hour + ":" + minute;
     }
 
     long getTimeMillis() {
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String[] time = timeExport.split(" : ");
+        String[] time = timeExport.split(":");
         int hour = Integer.parseInt(time[0]);
         int minute = Integer.parseInt(time[1]);
         Calendar calendar = Calendar.getInstance();
@@ -115,7 +115,8 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH),
                 hour,
-                minute
+                minute,
+                0
         );
         return calendar.getTimeInMillis();
     }

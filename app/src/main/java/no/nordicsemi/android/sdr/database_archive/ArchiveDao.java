@@ -39,6 +39,9 @@ public interface ArchiveDao {
     @Query("select * from ArchiveData where timePoint BETWEEN :start AND :end order by id DESC")
     LiveData<List<ArchiveData>> getItemsByTheDates(Date start, Date end);
 
+    @Query("DELETE FROM ArchiveData WHERE numOfWeight = :num")
+    void deleteAllItemByNum(int num);
+
     @Delete
     void deleteItem(ArchiveData archiveData);
 

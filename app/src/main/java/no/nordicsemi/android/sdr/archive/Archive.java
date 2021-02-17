@@ -1,8 +1,10 @@
 package no.nordicsemi.android.sdr.archive;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -26,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Function;
 
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
@@ -153,6 +156,26 @@ public class Archive extends AppCompatActivity {
         ftpRoutines.sendFileToServer(this, pathToFile, fileName + ".xml");
     }
 
+    void alertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Удаление архива")
+            .setMessage("Удалить весь архив?")
+                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        archiveViewModel.deleteAllArchiveItems();
+                        ArchiveSaving.numOfWeight = 0;
+                        Toast.makeText(Archive.this, "Архив удален", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
+    }
 
 
     private void callDatePicker(int typeDate) {
@@ -163,14 +186,15 @@ public class Archive extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, year, monthOfYear, dayOfMonth) -> {
                     cal.set(year, monthOfYear, dayOfMonth);
+//                    Log.d(TAG, "callDatePicker: date = " + );
                     if (typeDate == 0) {
                         startDate = getStartEndDate(cal.getTime(), false);
                         btnStart.setText(getDateStr(startDate));
-                        startDate = cal.getTime();
                     } else if (typeDate == 1) {
                         endDate = getStartEndDate(cal.getTime(), true);
                         btnEnd.setText(getDateStr(endDate));
                     }
+
                     archiveViewModel.setDateUpdated(true);
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
@@ -190,9 +214,7 @@ public class Archive extends AppCompatActivity {
                 export_archive();
                 break;
             case R.id.delete_whole_archive:
-                //todo нужно создать подтверждающее диалоговое окно
-                archiveViewModel.deleteAllArchiveItems();
-                ArchiveSaving.numOfWeight = 0;
+                alertDialog();
                 break;
             case android.R.id.home:
                 onBackPressed();
