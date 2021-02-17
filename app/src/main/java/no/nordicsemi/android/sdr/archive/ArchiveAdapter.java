@@ -18,6 +18,8 @@ import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 import no.nordicsemi.android.sdr.buttons.ButtonFrag;
 
+import static no.nordicsemi.android.sdr.WeightPanel.TAG;
+
 public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveViewHolder>{
 
     private List<ArchiveData> archiveDataList;
@@ -43,10 +45,6 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
         notifyDataSetChanged();
     }
 
-
-
-
-
     @Override
     public void onBindViewHolder(@NonNull ArchiveViewHolder holder, int position) {
 
@@ -60,7 +58,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
         layoutParams.setMargins(0,20,0,20);
 
         holder.itemView.setLayoutParams(layoutParams);
-
+        holder.itemView.setVisibility(View.VISIBLE);
 
         if(archiveData.getTypeOfWeight() != 1 && !only_max_weight) {
           holder.itemView.setVisibility(View.GONE);
@@ -75,11 +73,6 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
 
         }
 
-        //по идее на форуме написано надо так делать, но вроде работает и без этого
-//        if(archiveData.getTypeOfWeight() == 2) {
-//            holder.itemView.setVisibility(View.VISIBLE);
-//            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        }
             holder.tvDateTime.setText(String.valueOf(format.format(archiveData.getTimePoint())));
             holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
 
