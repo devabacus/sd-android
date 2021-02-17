@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.LongDef;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -110,12 +112,27 @@ public class Archive extends AppCompatActivity {
     public void export_archive(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
         String fileName = sdf.format(startDate) + "-" + sdf.format(endDate);
-        FileExport fileExport = new FileExport();
-        String pathToFile = fileExport.writeToFile(fileName, "xml", listOfArchive, this);
+        final File file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
+        FileExport fileExport = new FileExport(file);
+        String pathToFile = fileExport.writeToFile(listOfArchive);
         Log.d(TAG, "export_archive: path = " + pathToFile);
         Toast.makeText(this, "Экспорт завершен", Toast.LENGTH_SHORT).show();
         FtpRoutines ftpRoutines = new FtpRoutines();
         ftpRoutines.sendFileToServer(this, pathToFile, fileName + ".xml");
+    }
+
+
+    public void export_archive2(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
+        String fileName = sdf.format(startDate) + "-" + sdf.format(endDate);
+        final File file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
+        FileExport fileExport = new FileExport(file);
+        Log.d(TAG, "export_archive2: " + fileExport.readFromFile(file));
+//        String pathToFile = fileExport.writeToFile(listOfArchive);
+//        Log.d(TAG, "export_archive: path = " + pathToFile);
+//        Toast.makeText(this, "Экспорт завершен", Toast.LENGTH_SHORT).show();
+//        FtpRoutines ftpRoutines = new FtpRoutines();
+//        ftpRoutines.sendFileToServer(this, pathToFile, fileName + ".xml");
     }
 
 
@@ -155,8 +172,11 @@ public class Archive extends AppCompatActivity {
                 break;
             case R.id.delete_whole_archive:
                 //todo нужно создать подтверждающее диалоговое окно
-//                archiveViewModel.deleteAllArchiveItems();
-//                ArchiveSaving.numOfWeight = 0;
+                archiveViewModel.deleteAllArchiveItems();
+                ArchiveSaving.numOfWeight = 0;
+                break;
+            case R.id.test_archive:
+                export_archive2();
                 break;
             case android.R.id.home:
                 onBackPressed();

@@ -99,35 +99,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
 
-
-//        sp = PreferenceManager.getDefaultSharedPreferences(this);
-//        boolean auto = sp.getBoolean(KEY_EXPORT_AUTO, false);
-//        String timeExport = sp.getString(KEY_EXPORT_TIME, "");
-//        Log.d(TAG, "onCreate: timeExport = " + timeExport);
-//        String[] time = timeExport.split(":");
-//        int hour = Integer.parseInt(time[0]);
-//        int minute = Integer.parseInt(time[1]);
-//        Calendar calendar = Calendar.getInstance();
-//
-//        calendar.set(
-//                calendar.get(Calendar.YEAR),
-//                calendar.get(Calendar.MONTH),
-//                calendar.get(Calendar.DAY_OF_MONTH),
-//                hour,
-//                minute
-//        );
-////
-//        if(auto){
-//            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//            Intent intent = new Intent(this, AlarmTask.class);
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-//            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-//            Toast.makeText(this, "Alarm is set at " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
-//        }
-
-
-
-        final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final BleViewModel viewModel = ViewModelProviders.of(this).get(BleViewModel.class);
         hardButsViewModel = ViewModelProviders.of(this).get(HardButsViewModel.class);
@@ -135,15 +107,10 @@ public class MainActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final ExtendedBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
 
-        imageView = (ImageView)findViewById(R.id.img_view_hard);
-
+        imageView = findViewById(R.id.img_view_hard);
         scrollView = findViewById(R.id.device_container);
         consLayout = findViewById(R.id.conslayout);
-
-
-        //constBackground = findViewById(R.id.const_background);
         progressContainer = findViewById(R.id.progress_container);
-
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         if (device != null) {
@@ -158,21 +125,16 @@ public class MainActivity extends AppCompatActivity {
         // Configure the view model
 
         // Set up views
-        final LinearLayout progressContainer = (LinearLayout)findViewById(R.id.progress_container);
+        final LinearLayout progressContainer = (LinearLayout) findViewById(R.id.progress_container);
         final TextView connectionState = findViewById(R.id.connection_state);
         final View content = findViewById(R.id.device_container);
         constrDebug = findViewById(R.id.constr_debug);
-
-
-        //led.setOnClickListener(view -> viewModel.toggleLED("stas"));
-
         viewModel.isDeviceReady().observe(this, deviceRead -> {
             //progressContainer.setVisibility(View.VISIBLE);
             content.setVisibility(View.VISIBLE);
 
         });
 
-//https://docs.google.com/spreadsheets/d/e/2PACX-1vR5iNzBcq8JMZQvyIe7iiaVzQcd0DmtKQboodMbwCimfBSooqsXbKJ_LRCWA9KXvAzxUw5G5ZOuJ3QH/pubhtml
         viewModel.getConnectionState().observe(this, connectionState::setText);
         viewModel.isConnected().observe(this, connected -> {
             if (!connected) {
@@ -248,7 +210,9 @@ public class MainActivity extends AppCompatActivity {
         if (HardwareButtonsFrag.volumeButton) {
             if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_BACK) {
                 if (volumeLongPressInc != 0) {
-                    if (volumePressVibro) {mvibrate(200);}
+                    if (volumePressVibro) {
+                        mvibrate(200);
+                    }
                     longPress = true;
                     volButNum += volumeLongPressInc;
                     Log.d(TAG, "onKeyLongPress: long volume up");
@@ -260,7 +224,9 @@ public class MainActivity extends AppCompatActivity {
                     longPress = true;
                     volButNum = 0;
                     Log.d(TAG, "onKeyLongPress: long volume down");
-                    if (volumePressVibro) {mvibrate(200);}
+                    if (volumePressVibro) {
+                        mvibrate(200);
+                    }
                 }
             }
             hardButsViewModel.setmNumber(volButNum);

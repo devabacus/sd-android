@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,9 +16,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 
@@ -29,6 +32,7 @@ import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 import no.nordicsemi.android.sdr.preferences.PrefArchive;
 import no.nordicsemi.android.sdr.preferences.PrefWeightFrag;
 import no.nordicsemi.android.sdr.preferences.SettingsFragment;
+import no.nordicsemi.android.sdr.preferences.PrefExport;
 import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.ParsedDataViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
@@ -86,11 +90,16 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     int adcValueMax = 0;
     int timeStabMax = 0;
 
+    boolean autoExport = false;
+
 
     long startStabWeight = 0;
     long endStabWeight = 0;
     Date dateTimeMax;
     Timer mTimer;
+
+//    File exportFile;
+    FileExport fileExport;
 
     Date[] dateTime;
     ArrayList<Date> dateTimeArrL;
@@ -101,6 +110,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     ArrayList<Integer> adcValue_arrL;
     ArrayList<Integer> adcWeight_arrL;
     ArrayList<Integer> typeOfWeight_arrL;
+
+
 
 
     void initArrays() {
@@ -147,6 +158,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         maxDeviation = Float.parseFloat(sp.getString(PrefArchive.KEY_DISCRETE_MAX, "1"));
         timeStab = Integer.parseInt(sp.getString(PrefArchive.KEY_TIME_STAB, "3"));
         minWeightForSave = Float.parseFloat(sp.getString(PrefArchive.KEY_MIN_WEIGHT, "1"));
+        autoExport = sp.getBoolean(PrefExport.KEY_EXPORT_AUTO, false);
     }
 
     void getLastArchiveItem() {
@@ -445,6 +457,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         }
 
         //write all of the array items into the database
+        List<ArchiveData> listOfArchiveData = new ArrayList<>();
         for (int i = 0; i < arch + 1; i++) {
             archive_arr_show(i);
 
@@ -453,16 +466,24 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 bleViewModel.sendTX(Cmd.INCREASE_ARCHIVE_COUNTER);
                 // if archive activated or in demo
 
+                ArchiveData archiveData = new ArchiveData(numOfWeight, dateTimeArrL.get(i),
+                        weightValueArrL.get(i), weightTrueArrL.get(i), adcWeight_arrL.get(i),
+                        adcValue_arrL.get(i), tare_arrL.get(i), stab_timeL.get(i), typeOfWeight_arrL.get(i), suspectState);
+
                 if (StateFragment.option_archive != 0) {
                     Log.d(TAG, "onCreateView: option_archive in archiveSaving = " + StateFragment.option_archive);
                     // сохраняем в базу данных
-                    archiveViewModel.addArchiveItem(new ArchiveData(numOfWeight, dateTimeArrL.get(i),
-                            weightValueArrL.get(i), weightTrueArrL.get(i), adcWeight_arrL.get(i),
-                            adcValue_arrL.get(i), tare_arrL.get(i), stab_timeL.get(i), typeOfWeight_arrL.get(i), suspectState));
+                    archiveViewModel.addArchiveItem(archiveData);
                     //Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
                 }
+               listOfArchiveData.add(archiveData);
+
             }
         }
+        if(autoExport) {
+            fileExport.writeToFile(listOfArchiveData);
+        }
+
         initArrays();
         resetArchiveVars();
     }
@@ -494,6 +515,12 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             //Toast.makeText(getContext(), "отладка выкл", Toast.LENGTH_SHORT).show();
             debugArchiveLayout.setVisibility(View.GONE);
         }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
+        if(fileExport == null) {
+            File exportFile = new File(getActivity().getExternalFilesDir("archive_exports"), sdf.format(new Date()) + ".xml");
+            fileExport = new FileExport(exportFile);
+        }
+
         super.onResume();
     }
 
