@@ -59,7 +59,6 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
 
         holder.itemView.setLayoutParams(layoutParams);
         holder.itemView.setVisibility(View.VISIBLE);
-
         if(archiveData.getTypeOfWeight() != 1 && !only_max_weight) {
           holder.itemView.setVisibility(View.GONE);
           holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0,0));

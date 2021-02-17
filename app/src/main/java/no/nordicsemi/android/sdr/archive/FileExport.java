@@ -18,7 +18,6 @@ public class FileExport {
     public FileExport(File newFile) {
         if (file == null) {
             file = newFile;
-            Log.d(TAG, "FileExport: new file instance created");
         }
     }
 
@@ -27,9 +26,7 @@ public class FileExport {
             FileReader reader = new FileReader(file);
             BufferedReader br = new BufferedReader(reader);
             String line = br.readLine();
-            Log.d(TAG, "readFromFile: line = " + line);
             String[] withoutLastTag = line.split("</archive>");
-            Log.d(TAG, "readFromFile: line = " + withoutLastTag[0]);
             br.close();
             return withoutLastTag[0];
         } catch (IOException e) {
@@ -50,7 +47,6 @@ public class FileExport {
                 sb.append("<archive>");
             } else {
                 String previousData = readFromFile(file);
-                Log.d(TAG, "previousData = " + previousData);
                 sb.append(previousData);
             }
             writer = new FileWriter(file, isFileNew);

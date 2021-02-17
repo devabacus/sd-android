@@ -82,6 +82,8 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
         timeExport = sp.getString(KEY_EXPORT_TIME, "");
         boolean auto = sp.getBoolean(KEY_EXPORT_AUTO, false);
 
+        timeExport = addZeroToTime(timeExport);
+
         export_time.setEnabled(auto);
         ftp_server.setSummary(server);
         ftp_login.setSummary(login);
@@ -89,10 +91,21 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
         export_time.setSummary(timeExport);
     }
 
+    String addZeroToTime(String time) {
+        String hour = time.split(":")[0];
+        String minute = time.split(":")[1];
+        if(hour.length() < 2) {
+            hour = "0" + hour;
+        }
+        if(minute.length() < 2) {
+            minute = "0" + minute;
+        }
+        return hour + " : " + minute;
+    }
 
     long getTimeMillis() {
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String[] time = timeExport.split(":");
+        String[] time = timeExport.split(" : ");
         int hour = Integer.parseInt(time[0]);
         int minute = Integer.parseInt(time[1]);
         Calendar calendar = Calendar.getInstance();
@@ -112,7 +125,7 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
         Intent intent = new Intent(PrefExport.this.getActivity(), AlarmTask.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
         alarmManager.setRepeating(AlarmManager.RTC, getTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        Toast.makeText(getActivity(), "Alarm is set at " + timeExport, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Автоэкспорт каждый день в " + timeExport, Toast.LENGTH_LONG).show();
     }
 
 
@@ -132,6 +145,7 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
             ;
         } else if (key.equals(KEY_EXPORT_TIME)) {
             timeExport = sharedPreferences.getString(key, "");
+            timeExport = addZeroToTime(timeExport);
             export_time.setSummary(timeExport);
             alarmSet();
         } else if (key.equals(KEY_EXPORT_AUTO)) {
