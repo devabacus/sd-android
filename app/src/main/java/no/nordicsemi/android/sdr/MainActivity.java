@@ -100,30 +100,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_layout);
 
 
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean auto = sp.getBoolean(KEY_EXPORT_AUTO, false);
-        String timeExport = sp.getString(KEY_EXPORT_TIME, "");
-        Log.d(TAG, "onCreate: timeExport = " + timeExport);
-        String[] time = timeExport.split(":");
-        int hour = Integer.parseInt(time[0]);
-        int minute = Integer.parseInt(time[1]);
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH),
-                hour,
-                minute
-        );
+//        sp = PreferenceManager.getDefaultSharedPreferences(this);
+//        boolean auto = sp.getBoolean(KEY_EXPORT_AUTO, false);
+//        String timeExport = sp.getString(KEY_EXPORT_TIME, "");
+//        Log.d(TAG, "onCreate: timeExport = " + timeExport);
+//        String[] time = timeExport.split(":");
+//        int hour = Integer.parseInt(time[0]);
+//        int minute = Integer.parseInt(time[1]);
+//        Calendar calendar = Calendar.getInstance();
 //
-        if(auto){
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(this, AlarmTask.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-            Toast.makeText(this, "Alarm is set at " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
-        }
+//        calendar.set(
+//                calendar.get(Calendar.YEAR),
+//                calendar.get(Calendar.MONTH),
+//                calendar.get(Calendar.DAY_OF_MONTH),
+//                hour,
+//                minute
+//        );
+////
+//        if(auto){
+//            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//            Intent intent = new Intent(this, AlarmTask.class);
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+//            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+//            Toast.makeText(this, "Alarm is set at " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+//        }
 
 
 
