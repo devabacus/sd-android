@@ -1,6 +1,8 @@
 package no.nordicsemi.android.sdr.archive;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,10 +17,14 @@ import java.util.List;
 import java.util.Locale;
 
 import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.sdr.WeightPanel;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 import no.nordicsemi.android.sdr.buttons.ButtonFrag;
 
 import static no.nordicsemi.android.sdr.WeightPanel.TAG;
+import static no.nordicsemi.android.sdr.WeightPanel.weightInTonn;
+import static no.nordicsemi.android.sdr.preferences.PrefArchive.KEY_MAX_WEIGHT_TOLERANCE;
+import static xdroid.core.Global.getContext;
 
 public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveViewHolder>{
 
@@ -26,11 +32,15 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
     private final View.OnClickListener onClickListener;
     private final View.OnLongClickListener onLongClickListener;
     int _position;
+//    SharedPreferences sp;
+//    boolean weightInTonn;
 
     ArchiveAdapter(List<ArchiveData> archiveDataList, View.OnClickListener onClickListener, View.OnLongClickListener onLongClickListener) {
         this.archiveDataList = archiveDataList;
         this.onClickListener = onClickListener;
         this.onLongClickListener = onLongClickListener;
+//        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
     }
 
     @NonNull
@@ -52,7 +62,8 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
         format.format(new Date());
 
         ArchiveData archiveData = archiveDataList.get(position);
-
+//        float maxWeightTolerance = Float.parseFloat(sp.getString(KEY_MAX_WEIGHT_TOLERANCE, "0"));
+//        boolean maxWeightDetect = archiveData.getMainWeight()
         boolean only_max_weight = (archiveData.getSuspectState() & SuspectMasks.ONLY_MAX_WEIGHT) == SuspectMasks.ONLY_MAX_WEIGHT;
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(0,20,0,20);
@@ -62,9 +73,15 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
         if(archiveData.getTypeOfWeight() != 1 && !only_max_weight) {
           holder.itemView.setVisibility(View.GONE);
           holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0,0));
-        } else if (archiveData.getSuspectState() > 0){
+        } else if ((archiveData.getSuspectState() & SuspectMasks.MAX_WEIGHT) == SuspectMasks.MAX_WEIGHT){
             holder.itemView.setBackgroundColor(Color.parseColor("#dcdedc"));
-        } else {
+        } else if ((archiveData.getSuspectState() & SuspectMasks.ONLY_MAX_WEIGHT) == SuspectMasks.ONLY_MAX_WEIGHT){
+            holder.itemView.setBackgroundColor(Color.parseColor("#cfc1d6"));
+        } else if ((archiveData.getSuspectState() & SuspectMasks.STAB_WHILE_UNLOAD) == SuspectMasks.STAB_WHILE_UNLOAD){
+            holder.itemView.setBackgroundColor(Color.parseColor("#dcdedc"));
+        }
+
+        else {
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
             holder.itemView.setVisibility(View.VISIBLE);
             holder.itemView.setMinimumHeight(30);
@@ -72,8 +89,12 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
 
         }
 
+
+
             holder.tvDateTime.setText(String.valueOf(format.format(archiveData.getTimePoint())));
-            holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
+
+            holder.tvWeight.setText(WeightPanel.fmt(archiveData.getMainWeight())+(weightInTonn?"т":"кг"));
+
 
             if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
                 if(archiveData.getTareValue() != 0) {
@@ -81,7 +102,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
                     sbTare.append(archiveData.getTareValue());
                     if(archiveData.getIsPercent()) sbTare.append("%");
                     holder.tvTare.setText(sbTare);
-                    holder.tvTrueWeight.setText(String.valueOf(archiveData.getTrueWeight()));
+                    holder.tvTrueWeight.setText(WeightPanel.fmt(archiveData.getTrueWeight())+(weightInTonn?"т":"кг"));
                 }
             }
 
@@ -91,6 +112,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
             holder.itemView.setOnLongClickListener(onLongClickListener);
 
     }
+
 
     @Override
     public int getItemCount() {

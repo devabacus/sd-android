@@ -15,5 +15,19 @@
 
     </EditTextPreference>
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="weight_tonn"
+        android:title="Вес в тоннах" />
+
+
+<!--    <SwitchPreference-->
+<!--        android:key="weight_with_decimal"-->
+<!--        android:defaultValue="false"-->
+<!--        android:title="Вес с плавающей точкой">-->
+
+<!--    </SwitchPreference>-->
+
+
 
 </PreferenceScreen>

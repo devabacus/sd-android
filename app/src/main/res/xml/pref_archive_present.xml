@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="archive_save"
+        android:title="Сохранять в архив" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="archive_show_sum"
+        android:title="Отображать итого" />
+
+    <PreferenceCategory android:title="Указывать ошибки при взвешивании">
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="archive_suspect_max_weight"
+            android:title="Допустимое отклонение максимального" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="archive_suspect_stab_while_unload"
+            android:title="Стабильный вес при разгрузке" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="archive_suspect_only_max"
+            android:title="Нет стабильных взвешиваний" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Условия записи в архив">
+
+    <EditTextPreference
+        android:inputType="numberDecimal"
+        android:key="max_discrete"
+        android:title="Макс. изменение веса, кг">
+
+    </EditTextPreference>
+
+
+    <EditTextPreference
+        android:inputType="numberDecimal"
+        android:key="time_stab"
+
+        android:title="Время стабилизации, с">
+
+    </EditTextPreference>
+
+    <EditTextPreference
+        android:inputType="numberDecimal"
+        android:key="min_weight"
+
+        android:title="Минимальный вес, кг">
+
+    </EditTextPreference>
+
+    <EditTextPreference
+        android:defaultValue="1"
+        android:inputType="numberDecimal"
+        android:key="archive_driver_weight_max"
+        android:title="Макс. вес водителя, кг">
+
+    </EditTextPreference>
+
+    </PreferenceCategory>
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="debug_archive"
+        android:title="Отладка" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="adc_weight"
+        android:title="Сохранять вес с АЦП" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="cor_archive_save"
+        android:title="Сохранять по нажатию" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="weight_tonn"
+        android:title="Вес в тоннах" />
+
+</PreferenceScreen>

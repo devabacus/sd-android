@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.Cmd;
 import no.nordicsemi.android.sdr.StateFragment;
+import no.nordicsemi.android.sdr.WeightPanel;
 import no.nordicsemi.android.sdr.buttons.ButtonsViewModel;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 import no.nordicsemi.android.sdr.preferences.PrefArchive;
@@ -40,6 +41,7 @@ import no.nordicsemi.android.sdr.viewmodels.ParsedDataViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 
 import static java.lang.Math.abs;
+import static no.nordicsemi.android.sdr.preferences.PrefArchive.KEY_MAX_WEIGHT_TOLERANCE;
 
 public class ArchiveSaving extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
@@ -99,7 +101,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     boolean autoExport = false;
     boolean exportDetail = false;
-
+    float max_tolerance;
+    boolean stabWhileUnload;
 
     long startStabWeight = 0;
     long endStabWeight = 0;
@@ -108,6 +111,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     //    File exportFile;
     FileExport fileExport;
+    SharedPreferences sp;
 
     Date[] dateTime;
     ArrayList<Date> dateTimeArrL;
@@ -153,13 +157,13 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         tvDebugStabTime = v.findViewById(R.id.tv_debug_stab_time);
     }
 
-    void sharedPrefGetData(SharedPreferences sp) {
+    void sharedPrefGetData() {
         show_weight = sp.getBoolean(SettingsFragment.KEY_WEIGHT_SHOW, false);
         archive = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE, false);
         debug_archive = sp.getBoolean(PrefArchive.KEY_DEBUG, false);
         archiveADC = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE_ADC, false);
         corArchiveSave = sp.getBoolean(PrefArchive.KEY_CORR_ARCHIVE, false);
-        weightTonn = sp.getBoolean(PrefArchive.KEY_WEIGHT_TONN, false);
+        weightTonn = sp.getBoolean(PrefWeightFrag.KEY_WEIGHT_TONN, false);
         archiveDriverMax = Integer.parseInt(sp.getString(PrefArchive.KEY_ARCHIVE_DRIVER_WEIGHT_MAX, "0"));
         discrete = Float.parseFloat(sp.getString(PrefWeightFrag.KEY_DISCRETE_VALUE, "0"));
         maxDeviation = Float.parseFloat(sp.getString(PrefArchive.KEY_DISCRETE_MAX, "1"));
@@ -167,6 +171,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         minWeightForSave = Float.parseFloat(sp.getString(PrefArchive.KEY_MIN_WEIGHT, "1"));
         autoExport = sp.getBoolean(PrefExport.KEY_EXPORT_AUTO, false);
         exportDetail = sp.getBoolean(PrefExport.KEY_EXPORT_DETAIL, false);
+        stabWhileUnload = sp.getBoolean(PrefArchive.KEY_STAB_WHILE_UNLOAD, false);
+        max_tolerance = Float.parseFloat(Objects.requireNonNull(sp.getString(KEY_MAX_WEIGHT_TOLERANCE, "0")));
     }
 
     void getLastArchiveItem() {
@@ -250,14 +256,14 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             adcValue_arrL.add(i, StateFragment.adcValue);
             tare_arrL.add(i, tare);
             isPercent_arrL.add(i, isPersent);
-            weightTrueArrL.add(i, (isPersent && tare != 0) ? weightValueFloat * 100 /abs(tare): weightValueFloat - tare);
+            weightTrueArrL.add(i, (isPersent && tare != 0) ? weightValueFloat * 100 / abs(tare) : weightValueFloat - tare);
             stab_timeL.add(i, timeCounter);
         } else if (type == 2) {
             dateTimeArrL.add(i, dateTimeMax);
             weightValueArrL.add(i, weightMax);
             adcWeight_arrL.add(i, adcWeightMax);
             adcValue_arrL.add(i, adcValueMax);
-            weightTrueArrL.add(i, (isPersentMax && tareMax != 0)? weightMax  * 100 / abs(tareMax) : weightMax - tareMax);
+            weightTrueArrL.add(i, (isPersentMax && tareMax != 0) ? weightMax * 100 / abs(tareMax) : weightMax - tareMax);
             tare_arrL.add(i, tareMax);
             isPercent_arrL.add(i, isPersentMax);
             stab_timeL.add(i, timeStabMax);
@@ -271,7 +277,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 weightTrueArrL.get(i) + ", " +
                 adcWeight_arrL.get(i) + ", " +
                 adcValue_arrL.get(i) + ", " +
-                tare_arrL.get(i) + (isPercent_arrL.get(i)?"%":"") + ", " +
+                tare_arrL.get(i) + (isPercent_arrL.get(i) ? "%" : "") + ", " +
                 stab_timeL.get(i) + ", " +
                 typeOfWeight_arrL.get(i) + "\n");
     }
@@ -279,17 +285,17 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     public void archive_arr_show(int i) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
         tvDebugDate.setText(tvDebugDate.getText() + "\n" + format.format(dateTimeArrL.get(i)));
-        tvDebugWeight.setText(tvDebugWeight.getText() + "\n" + weightValueArrL.get(i));
-        tvDebugTrueWeight.setText(tvDebugTrueWeight.getText() + "\n" + weightTrueArrL.get(i));
+        tvDebugWeight.setText(tvDebugWeight.getText() + "\n" + WeightPanel.fmt(weightValueArrL.get(i)));
+        tvDebugTrueWeight.setText(tvDebugTrueWeight.getText() + "\n" + WeightPanel.fmt(weightTrueArrL.get(i)));
         if (adcValue_arrL.get(i) > 0) {
             tvDebugAdc.setText(tvDebugAdc.getText() + "\n" + adcValue_arrL.get(i));
         } else {
             tvDebugAdc.setVisibility(View.GONE);
         }
         if (stab_timeL.size() > i) {
-            tvDebugStabTime.setText(tvDebugStabTime.getText() + "\n" + (stab_timeL.get(i)>0?"s" + stab_timeL.get(i):""));
+            tvDebugStabTime.setText(tvDebugStabTime.getText() + "\n" + (stab_timeL.get(i) > 0 ? "s" + stab_timeL.get(i) : ""));
         }
-        String isPercent = (isPercent_arrL.get(i)&&(tare_arrL.get(i) != 0))?"%":"";
+        String isPercent = (isPercent_arrL.get(i) && (tare_arrL.get(i) != 0)) ? "%" : "";
         tvDebugTare.setText(tvDebugTare.getText() + "\n" + tare_arrL.get(i) + isPercent);
         tvDebugType.setText(tvDebugType.getText() + "\n" + typeOfWeight_arrL.get(i));
     }
@@ -361,7 +367,11 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                     archMaxStab = arch;
                 } else if (weightValueArrL.get(archMaxStab) - weightValueArrL.get(arch) > archiveDriverMax) {
                     //стабильное при разгрузке
-                    suspectState |= SuspectMasks.STAB_WHILE_UNLOAD;
+
+                    if(stabWhileUnload){
+                        suspectState |= SuspectMasks.STAB_WHILE_UNLOAD;
+                    }
+
                     Log.d(TAG, "stabTimerIsFired: stab unload suspect = " + suspectState);
                 }
 
@@ -453,7 +463,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 //        if(arch > (archMaxStab + 1) && ((suspectState & SuspectMasks.DRIVER_DETECT) == 1))
 
         //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
-        if (abs(weightMax - weightSavedMax) > maxDeviation) {
+
+        if (weightMax - weightSavedMax > maxDeviation) {
 
             if (arch == 0) {
                 archive_arr_fill(0, 2);
@@ -461,7 +472,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 //это условие поставил вторым потому что если arch ноль то dateTimeArrL.get(0) возвращаем ошибку индекса
             } else if ((dateTimeMax.getTime() < dateTimeArrL.get(0).getTime())) {
                 archive_arr_fill(0, 2);
-                suspectState |= SuspectMasks.MAX_WEIGHT;
+
             } else if (arch > 0) {
                 int k = 0;
                 //перебираем массив, чтобы вставить в нужное место максимальное взвешивание
@@ -471,6 +482,9 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                     }
                 }
                 archive_arr_fill(k + 1, 2);
+                suspectState |= SuspectMasks.MAX_WEIGHT;
+            }
+            if ((weightMax - weightSavedMax > max_tolerance) && (max_tolerance != 0) && (weightSavedMax != 0)){
                 suspectState |= SuspectMasks.MAX_WEIGHT;
             }
 
@@ -492,7 +506,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
                 ArchiveData archiveData = new ArchiveData(numOfWeight, dateTimeArrL.get(i),
                         weightValueArrL.get(i), weightTrueArrL.get(i), adcWeight_arrL.get(i),
-                        adcValue_arrL.get(i), tare_arrL.get(i), isPercent_arrL.get(i),stab_timeL.get(i), typeOfWeight_arrL.get(i), suspectState);
+                        adcValue_arrL.get(i), tare_arrL.get(i), isPercent_arrL.get(i), stab_timeL.get(i), typeOfWeight_arrL.get(i), suspectState);
 
                 if (StateFragment.option_archive != 0) {
                     Log.d(TAG, "onCreateView: option_archive in archiveSaving = " + StateFragment.option_archive);
@@ -546,8 +560,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     @Override
     public void onResume() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        sharedPrefGetData(sharedPreferences);
+        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sharedPrefGetData();
 
         if (debug_archive) {
             //Toast.makeText(getContext(), "отладка вкл", Toast.LENGTH_SHORT).show();

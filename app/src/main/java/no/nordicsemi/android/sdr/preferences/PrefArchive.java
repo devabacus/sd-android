@@ -30,9 +30,10 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     public static final String KEY_ARCHIVE_SAVE_ADC = "archive_save_adc";
     public static final String KEY_ARCHIVE_DRIVER_WEIGHT_MAX = "archive_driver_weight_max";
     public static final String KEY_OPTION_ARCHIVE = "option_archive";
-    public static final String KEY_WEIGHT_TONN = "weight_tonn";
     public static final String KEY_ADC_WEIGHT = "adc_weight";
     public static final String KEY_CORR_ARCHIVE = "cor_archive_save";
+    public static final String KEY_MAX_WEIGHT_TOLERANCE = "archive_suspect_max_weight";
+    public static final String KEY_STAB_WHILE_UNLOAD = "archive_suspect_stab_while_unload";
 
 
     Preference discreteMaxPref;
@@ -41,6 +42,7 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     Preference driverMaxPref;
     Preference archiveSavePref;
     Preference archiveCorSave;
+    Preference maxWeightTolerance;
 
     public PrefArchive() {
         // Required empty public constructor
@@ -71,10 +73,12 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         driverMaxPref = findPreference(KEY_ARCHIVE_DRIVER_WEIGHT_MAX);
         archiveSavePref = findPreference(KEY_ARCHIVE_SAVE);
         archiveCorSave = findPreference(KEY_CORR_ARCHIVE);
+        maxWeightTolerance = findPreference(KEY_MAX_WEIGHT_TOLERANCE);
         String maxDiscrete = sharedPreferences.getString(KEY_DISCRETE_MAX,"1");
         String stableTime = sharedPreferences.getString(KEY_TIME_STAB,"3");
         String minWeightValue = sharedPreferences.getString(KEY_MIN_WEIGHT,"1");
         String driverMaxValue = sharedPreferences.getString(KEY_ARCHIVE_DRIVER_WEIGHT_MAX,"0");
+        String weightTolerance = sharedPreferences.getString(KEY_MAX_WEIGHT_TOLERANCE,"0");
 
 
         if (curUser.equals("admin") || curUser.equals("admin1")) {
@@ -89,7 +93,7 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         timeStabPref.setSummary(stableTime);
         minWeightPref.setSummary(minWeightValue);
         driverMaxPref.setSummary(driverMaxValue);
-
+        maxWeightTolerance.setSummary(weightTolerance);
 
     }
 
@@ -110,6 +114,8 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         } else if (key.equals(KEY_ARCHIVE_DRIVER_WEIGHT_MAX)) {
             curPref = driverMaxPref;
             curPref.setSummary(sharedPreferences.getString(key, "0"));
+        } else if (key.equals(KEY_MAX_WEIGHT_TOLERANCE)) {
+            maxWeightTolerance.setSummary(sharedPreferences.getString(key, "0"));
         }
 
     }

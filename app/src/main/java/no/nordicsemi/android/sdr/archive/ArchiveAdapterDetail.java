@@ -15,8 +15,11 @@ import java.util.List;
 import java.util.Locale;
 
 import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.sdr.WeightPanel;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 import no.nordicsemi.android.sdr.buttons.ButtonFrag;
+
+import static no.nordicsemi.android.sdr.WeightPanel.weightInTonn;
 
 public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDetail.ArchiveViewHolder>{
 
@@ -49,11 +52,14 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
             holder.tvWeight.setBackgroundColor(Color.GREEN);
             // else if weight with marker - max value
         } else if (archiveData.getTypeOfWeight() == 2) {
-            holder.tvWeight.setBackgroundColor(Color.parseColor("#E68A8A"));
+            holder.tvWeight.setBackgroundColor(Color.parseColor("#cfc1d6"));
+//            if ((archiveData.getSuspectState() & SuspectMasks.MAX_WEIGHT) == SuspectMasks.MAX_WEIGHT){
+//
+//            }
         } else if (archiveData.getTypeOfWeight() == 3) {
             holder.tvWeight.setBackgroundColor(Color.parseColor("#fcba03"));
         }
-        holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
+        holder.tvWeight.setText(WeightPanel.fmt(archiveData.getMainWeight())+(weightInTonn?"т":"кг"));
 
         if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
             if(archiveData.getTareValue() != 0) {
@@ -61,10 +67,13 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
                 sbTare.append(archiveData.getTareValue());
                 if(archiveData.getIsPercent()) sbTare.append("%");
                 holder.tvTare.setText(sbTare);
-                holder.tvTrueWeight.setText(String.valueOf(archiveData.getTrueWeight()));
+                holder.tvTrueWeight.setText(WeightPanel.fmt(archiveData.getTrueWeight())+(weightInTonn?"т":"кг"));
             }
         }
-        holder.tvStabTime.setText(archiveData.getStabTime() + "c");
+        int stabTime = archiveData.getStabTime();
+        if(stabTime != 0) {
+            holder.tvStabTime.setText(stabTime + "c");
+        }
         holder.itemView.setTag(archiveData);
     }
 

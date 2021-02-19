@@ -112,7 +112,7 @@
     <string name="tx">TX:</string>
     <string name="zero_weight">0.0</string>
     <string name="Archive_btn">Архив</string>
-    <string name="start_weight">0.0</string>
+    <string name="start_weight">0кг</string>
     <string name="detail_weight">Детализация</string>
     <string name="archive_title">Архив взвешиваний</string>
     <string name="title_activity_set_pref1">Settings</string>

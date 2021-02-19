@@ -37,7 +37,7 @@
         android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         app:layout_constraintStart_toEndOf="@id/tv_datetime"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="19500"
@@ -48,7 +48,7 @@
         android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
+        android:layout_marginStart="90dp"
         app:layout_constraintStart_toEndOf="@id/tv_datetime"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="17500"
@@ -72,7 +72,7 @@
         style="@style/Text.item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="140dp"
+        android:layout_marginStart="160dp"
         android:textAlignment="textEnd"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@id/tv_datetime"
@@ -82,18 +82,18 @@
 
         tools:text="-2000" />
 
-    <TextView
-        android:id="@+id/tv_stab_time"
-        style="@style/Text.item"
-        android:layout_width="wrap_content"
-        android:textSize="15sp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/tv_datetime"
-        android:layout_marginStart="180dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.2"
-        tools:text="14"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_stab_time"-->
+<!--        style="@style/Text.item"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:textSize="15sp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintStart_toEndOf="@id/tv_datetime"-->
+<!--        android:layout_marginStart="180dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintWidth_percent="0.2"-->
+<!--        tools:text="14"-->
+<!--        />-->
 
 
 

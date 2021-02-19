@@ -80,6 +80,7 @@
 				android:id="@+id/frag_weight"
 				android:name="no.nordicsemi.android.sdr.WeightPanel"
 				android:layout_width="match_parent"
+				android:layout_marginStart="20dp"
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toBottomOf="@id/frag_debug" />
 

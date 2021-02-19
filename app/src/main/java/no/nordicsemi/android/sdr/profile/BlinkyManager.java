@@ -69,8 +69,8 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 	protected boolean shouldAutoConnect() {
 		// If you want to connect to the device using autoConnect flag = true, return true here.
 		// Read the documentation of this method.
-		return super.shouldAutoConnect();
-
+//		return super.shouldAutoConnect();
+		return true;
 	}
 
 	/**

@@ -25,6 +25,8 @@ public class PrefWeightFrag extends PreferenceFragment implements SharedPreferen
     public static final String KEY_MAX_WEIGHT_VALUE = "max_weight_value";
     public static final String KEY_DISCRETE_VALUE = "discrete_value";
     public static final String KEY_COR_TURN_ON = "cor_turn_on_value";
+    public static final String KEY_WEIGHT_TONN = "weight_tonn";
+
 
     Preference maxWeightPref;
     Preference discretePref;
