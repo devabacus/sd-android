@@ -10,28 +10,28 @@ public class CorButton {
     @PrimaryKey
     private long id;
 
-    private String butNum;
+    private String butName;
     private String corDir;
     private int corValue;
     private int compValue;
 //    private Boolean initialized;
 
 
-    public CorButton(long id, String butNum, String corDir, int corValue, int compValue) {
+    public CorButton(long id, String butName, String corDir, int corValue, int compValue) {
         this.id = id;
-        this.butNum = butNum;
+        this.butName = butName;
         this.corDir = corDir;
         this.corValue = corValue;
         this.compValue = compValue;
 
     }
 
-    public String getButNum() {
-        return butNum;
+    public String getButName() {
+        return butName;
     }
 
-    public void setButNum(String butNum) {
-        this.butNum = butNum;
+    public void setButName(String butName) {
+        this.butName = butName;
     }
 
     public String getCorDir() {
@@ -66,11 +66,4 @@ public class CorButton {
         this.id = id;
     }
 
-//    public Boolean getInitialized() {
-//        return initialized;
-//    }
-//
-//    public void setInitialized(Boolean initialized) {
-//        this.initialized = initialized;
-//    }
 }

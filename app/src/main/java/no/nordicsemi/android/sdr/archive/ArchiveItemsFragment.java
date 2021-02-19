@@ -58,7 +58,6 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
                 });
             }
         });
-
         return v;
     }
 
@@ -80,15 +79,15 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         return true;
     }
 
-    void alertDialog(int num){
+    void alertDialog(int num) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Удаление взвешивания № " + num)
                 .setMessage("Вы уверены?")
                 .setPositiveButton("Да", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                            archiveViewModel.deleteArchiveItemsByNum(num);
-                            Toast.makeText(getContext(), "Запись удалена", Toast.LENGTH_SHORT).show();
+                        archiveViewModel.deleteArchiveItemsByNum(num);
+                        Toast.makeText(getContext(), "Запись удалена", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Нет", new DialogInterface.OnClickListener() {

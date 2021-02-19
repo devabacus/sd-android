@@ -128,32 +128,43 @@ public class Archive extends AppCompatActivity {
         return _list;
     }
 
+    public boolean allFieldProvided(SharedPreferences sp){
+        String server = sp.getString(KEY_FTP_SERVER, "");
+        String login = sp.getString(KEY_FTP_LOGIN, "");
+        String pass = sp.getString(KEY_FTP_PASSWORD, "");
+        return !server.isEmpty() && !login.isEmpty() && !pass.isEmpty();
+    }
 
 
     public void export_archive(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        List<ArchiveData> listForExport = listOfArchive;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
-        String fileName = sdf.format(startDate) + "-" + sdf.format(endDate);
-        File file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
-        int i = 1;
-        while(file.exists()){
-            if(fileName.contains("_")){
-                fileName = fileName.split("_")[0];
+        if(allFieldProvided(sp)){
+            List<ArchiveData> listForExport = listOfArchive;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
+            String fileName = sdf.format(startDate) + "-" + sdf.format(endDate);
+            File file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
+            int i = 1;
+            while(file.exists()){
+                if(fileName.contains("_")){
+                    fileName = fileName.split("_")[0];
+                }
+                fileName += "_" + i;
+                file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
+                i++;
             }
-            fileName += "_" + i;
-            file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
-            i++;
+            FileExport fileExport = new FileExport(file);
+            if(!sp.getBoolean(KEY_EXPORT_DETAIL, true)){
+                listForExport = getNotDetailedList(listForExport);
+            }
+            String pathToFile = fileExport.writeToFile(listForExport);
+            Log.d(TAG, "export_archive: path = " + pathToFile);
+//            Toast.makeText(this, "Экспорт завершен", Toast.LENGTH_SHORT).show();
+            FtpRoutines ftpRoutines = new FtpRoutines();
+            ftpRoutines.sendFileToServer(this, pathToFile, fileName + ".xml");
+        } else {
+            Toast.makeText(this, "Заполните данные в настройках экспорта", Toast.LENGTH_SHORT).show();
         }
-        FileExport fileExport = new FileExport(file);
-        if(!sp.getBoolean(KEY_EXPORT_DETAIL, true)){
-            listForExport = getNotDetailedList(listForExport);
-        }
-        String pathToFile = fileExport.writeToFile(listForExport);
-        Log.d(TAG, "export_archive: path = " + pathToFile);
-        Toast.makeText(this, "Экспорт завершен", Toast.LENGTH_SHORT).show();
-        FtpRoutines ftpRoutines = new FtpRoutines();
-        ftpRoutines.sendFileToServer(this, pathToFile, fileName + ".xml");
+
     }
 
     void alertDialog(){

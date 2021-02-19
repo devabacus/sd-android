@@ -1,5 +1,8 @@
 package no.nordicsemi.android.sdr.archive;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 
 public class FileGenerate {
@@ -7,16 +10,17 @@ public class FileGenerate {
 
     public String itemToXml(ArchiveData archiveData) {
         StringBuilder sb = new StringBuilder();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", new Locale("ru"));
+        String dateTime = format.format(archiveData.getTimePoint());
         sb.append("<item>");
-
-//        sb.append("<date>");
-//        sb.append(archiveData.getTimePoint());
-//        sb.append("</date>");
 
         sb.append("<numOfWeight>");
         sb.append(archiveData.getNumOfWeight());
         sb.append("</numOfWeight>");
 
+        sb.append("<date>");
+        sb.append(dateTime);
+        sb.append("</date>");
 
         sb.append("<unixTime>");
         sb.append(archiveData.getTimePoint().getTime());

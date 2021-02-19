@@ -49,6 +49,7 @@ public class Butset extends Fragment implements View.OnClickListener {
     String butName;
     String dirCor = "+";
     int corValue = 0;
+    int tempCorValue = 0;
     int compValue = 0;
     RadioGroup rgCorDir;
     CheckBox cbComp;
@@ -96,20 +97,20 @@ public class Butset extends Fragment implements View.OnClickListener {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         final View v = inflater.inflate(R.layout.fragment_butset, container, false);
-        setLayout = (ConstraintLayout) v.findViewById(R.id.butSetLayout);
-        btnClose = (Button)v.findViewById(R.id.btnClose);
-        btnSave = (Button)v.findViewById(R.id.btnSave);
-        etButName = (EditText)v.findViewById(R.id.etButNum);
-        etCorValue = (EditText)v.findViewById(R.id.etCorValue);
-        btnInc = (Button)v.findViewById(R.id.btnInc);
-        btnDec = (Button)v.findViewById(R.id.btnDec);
-        seekBar = (SeekBar)v.findViewById(R.id.seekBar);
-        rgCorDir = (RadioGroup)v.findViewById(R.id.rgCorDir);
-        cbComp = (CheckBox)v.findViewById(R.id.cbCompPerc);
-        frameComp = (FrameLayout)v.findViewById(R.id.frameFragComp);
-        rbPlus = (RadioButton)v.findViewById(R.id.rbPlus);
-        rbMinus = (RadioButton)v.findViewById(R.id.rbMinus);
-        rbPercent = (RadioButton)v.findViewById(R.id.rbPercent);
+        setLayout = v.findViewById(R.id.butSetLayout);
+        btnClose = v.findViewById(R.id.btnClose);
+        btnSave = v.findViewById(R.id.btnSave);
+        etButName = v.findViewById(R.id.etButNum);
+        etCorValue = v.findViewById(R.id.etCorValue);
+        btnInc = v.findViewById(R.id.btnInc);
+        btnDec = v.findViewById(R.id.btnDec);
+        seekBar = v.findViewById(R.id.seekBar);
+        rgCorDir = v.findViewById(R.id.rgCorDir);
+        cbComp = v.findViewById(R.id.cbCompPerc);
+        frameComp = v.findViewById(R.id.frameFragComp);
+        rbPlus = v.findViewById(R.id.rbPlus);
+        rbMinus = v.findViewById(R.id.rbMinus);
+        rbPercent = v.findViewById(R.id.rbPercent);
 
         btnDec.setOnClickListener(this);
         btnInc.setOnClickListener(this);
@@ -179,7 +180,8 @@ public class Butset extends Fragment implements View.OnClickListener {
 //                    }
 //                }
                 if(curCorButton!=null){
-                    curCorButton.setCorValue(corValue);
+                    //todo надо разобраться, закомментил
+//                    curCorButton.setCorValue(corValue);
                     buttonsViewModel.setmCurCorButton(curCorButton);
                 }
             }
@@ -215,7 +217,7 @@ public class Butset extends Fragment implements View.OnClickListener {
                     //CorButton newcurCorButton = buttonsViewModel.getCorButtonById(curCorButId);
                     // CorButtonById = appDatabase.buttonsDao().getItemById(curCorButId);
                     //Вставляем название кнопки(вытащинного из базы(view model)) в текстовый бокс
-                    etButName.setText(curCorButton.getButNum());
+                    etButName.setText(curCorButton.getButName());
                     if(firstOpenSet){
                         dirCor = curCorButton.getCorDir();
                         firstOpenSet = false;

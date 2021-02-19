@@ -40,7 +40,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButViewHol
 
         CorButton corButton = corButtonList.get(position);
 
-        holder.mButText.setText(corButton.getButNum());
+        holder.mButText.setText(corButton.getButName());
         holder.itemView.setTag(corButton);
         holder.itemView.setOnClickListener(onClickListener);
         holder.itemView.setOnLongClickListener(onLongClickListener);

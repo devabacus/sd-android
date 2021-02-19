@@ -8,18 +8,6 @@
         android:title="Максимальный вес, кг">
     </EditTextPreference>
 
-    <no.nordicsemi.android.sdr.preferences.DatePreference
-        android:key="keyname"
-        android:title="Title of the preference"
-        android:defaultValue="2014-08-01"
-        android:summary="Summary"/>
-
-    <no.nordicsemi.android.sdr.preferences.TimePreference
-        android:key="timeExport"
-        android:title="time"
-        android:defaultValue="23:55"
-        android:summary="Summary"/>
-
     <EditTextPreference
         android:key="discrete_value"
         android:inputType="numberDecimal"

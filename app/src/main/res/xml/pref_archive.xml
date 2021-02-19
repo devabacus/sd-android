@@ -30,6 +30,14 @@
 
     </EditTextPreference>
 
+    <EditTextPreference
+        android:key="archive_driver_weight_max"
+        android:defaultValue="1"
+        android:inputType="numberDecimal"
+        android:title="Макс вес водителя + пассажиров, кг">
+
+    </EditTextPreference>
+
     <SwitchPreference
         android:key="debug_archive"
         android:title="Отладка"
@@ -52,13 +60,6 @@
         android:defaultValue="false"
         />
 
-    <EditTextPreference
-        android:key="archive_driver_weight_max"
-        android:defaultValue="1"
-        android:inputType="numberDecimal"
-        android:title="Макс вес водителя + пассажиров, кг">
-
-    </EditTextPreference>
 
 
     <!--<SwitchPreference-->

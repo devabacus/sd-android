@@ -42,7 +42,6 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
 
         holder.tvWeight.setBackgroundColor(Color.TRANSPARENT);
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
-        format.format(new Date());
         ArchiveData archiveData = archiveDataList.get(position);
         holder.tvDateTime.setText(String.valueOf(format.format(archiveData.getTimePoint())));
         // if weight with marker - stable max
@@ -51,12 +50,17 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
             // else if weight with marker - max value
         } else if (archiveData.getTypeOfWeight() == 2) {
             holder.tvWeight.setBackgroundColor(Color.parseColor("#E68A8A"));
+        } else if (archiveData.getTypeOfWeight() == 3) {
+            holder.tvWeight.setBackgroundColor(Color.parseColor("#fcba03"));
         }
         holder.tvWeight.setText(String.valueOf(archiveData.getMainWeight()));
 
         if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
             if(archiveData.getTareValue() != 0) {
-                holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
+                StringBuilder sbTare = new StringBuilder();
+                sbTare.append(archiveData.getTareValue());
+                if(archiveData.getIsPercent()) sbTare.append("%");
+                holder.tvTare.setText(sbTare);
                 holder.tvTrueWeight.setText(String.valueOf(archiveData.getTrueWeight()));
             }
         }

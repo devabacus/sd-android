@@ -23,10 +23,11 @@ public class ArchiveData {
     private final int tareValue;
     private final int typeOfWeight;
     private final int suspectState;
+    private final boolean isPercent;
 
 
 
-    public ArchiveData(int numOfWeight, Date timePoint, float mainWeight, float trueWeight, int adcWeight, int adcArchiveValue, int tareValue, int stabTime,  int typeOfWeight, int suspectState) {
+    public ArchiveData(int numOfWeight, Date timePoint, float mainWeight, float trueWeight, int adcWeight, int adcArchiveValue, int tareValue, boolean isPercent, int stabTime,  int typeOfWeight, int suspectState) {
         this.numOfWeight = numOfWeight;
         this.timePoint = timePoint;
         this.mainWeight = mainWeight;
@@ -34,6 +35,7 @@ public class ArchiveData {
         this.adcWeight = adcWeight;
         this.adcArchiveValue = adcArchiveValue;
         this.tareValue = tareValue;
+        this.isPercent = isPercent;
         this.stabTime = stabTime;
         this.typeOfWeight = typeOfWeight;
         this.suspectState = suspectState;
@@ -61,6 +63,9 @@ public class ArchiveData {
 
     public int getTareValue() {
         return tareValue;
+    }
+    public boolean getIsPercent() {
+        return isPercent;
     }
 
     public int getStabTime() {

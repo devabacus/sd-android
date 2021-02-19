@@ -82,13 +82,16 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
         timeExport = sp.getString(KEY_EXPORT_TIME, "");
         boolean auto = sp.getBoolean(KEY_EXPORT_AUTO, false);
 
-        timeExport = addZeroToTime(timeExport);
+        if(!timeExport.isEmpty()) timeExport = addZeroToTime(timeExport);
 
         export_time.setEnabled(auto);
         ftp_server.setSummary(server);
         ftp_login.setSummary(login);
         ftp_path.setSummary(path);
         export_time.setSummary(timeExport);
+        if(allFieldProvided()){
+            export_auto.setEnabled(true);
+        }
     }
 
     String addZeroToTime(String time) {
@@ -121,12 +124,19 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
         return calendar.getTimeInMillis();
     }
 
+    public boolean allFieldProvided(){
+        String server = sp.getString(KEY_FTP_SERVER, "");
+        String login = sp.getString(KEY_FTP_LOGIN, "");
+        String pass = sp.getString(KEY_FTP_PASSWORD, "");
+        return !server.isEmpty() && !login.isEmpty() && !pass.isEmpty();
+    }
+
     void alarmSet() {
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(PrefExport.this.getActivity(), AlarmTask.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
-        alarmManager.setRepeating(AlarmManager.RTC, getTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        Toast.makeText(getActivity(), "Автоэкспорт каждый день в " + timeExport, Toast.LENGTH_LONG).show();
+            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(PrefExport.this.getActivity(), AlarmTask.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
+            alarmManager.setRepeating(AlarmManager.RTC, getTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            Toast.makeText(getActivity(), "Автоэкспорт каждый день в " + timeExport, Toast.LENGTH_LONG).show();
     }
 
 
@@ -135,23 +145,32 @@ public class PrefExport extends PreferenceFragment implements SharedPreferences.
 
         Preference curPref = findPreference(key);
 
-        if (key.equals(KEY_FTP_SERVER)) {
-            ftp_server.setSummary(sharedPreferences.getString(key, ""));
-            ;
-        } else if (key.equals(KEY_FTP_LOGIN)) {
-            ftp_login.setSummary(sharedPreferences.getString(key, ""));
-            ;
-        } else if (key.equals(KEY_FTP_PATH)) {
-            ftp_path.setSummary(sharedPreferences.getString(key, ""));
-            ;
-        } else if (key.equals(KEY_EXPORT_TIME)) {
-            timeExport = sharedPreferences.getString(key, "");
-            timeExport = addZeroToTime(timeExport);
-            export_time.setSummary(timeExport);
-            alarmSet();
-        } else if (key.equals(KEY_EXPORT_AUTO)) {
-            export_time.setEnabled(sharedPreferences.getBoolean(key, false));
-            alarmSet();
+        switch (key) {
+            case KEY_FTP_SERVER:
+                ftp_server.setSummary(sharedPreferences.getString(key, ""));
+                break;
+            case KEY_FTP_LOGIN:
+                ftp_login.setSummary(sharedPreferences.getString(key, ""));
+                break;
+            case KEY_FTP_PATH:
+                ftp_path.setSummary(sharedPreferences.getString(key, ""));
+                break;
+            case KEY_EXPORT_TIME:
+                timeExport = sharedPreferences.getString(key, "");
+                timeExport = addZeroToTime(timeExport);
+                export_time.setSummary(timeExport);
+                if (!timeExport.isEmpty()) alarmSet();
+                break;
+            case KEY_EXPORT_AUTO:
+                if(sharedPreferences.getBoolean(key, false)){
+                    export_time.setEnabled(sharedPreferences.getBoolean(key, false));
+                    if (!timeExport.isEmpty()) alarmSet();
+                }
+                break;
         }
+        if(allFieldProvided()){
+            export_auto.setEnabled(true);
+        }
+
     }
 }

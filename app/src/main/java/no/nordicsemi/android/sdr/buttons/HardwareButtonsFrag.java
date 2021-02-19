@@ -36,7 +36,6 @@ import no.nordicsemi.android.sdr.Cmd;
 import no.nordicsemi.android.sdr.MainActivity;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.StateFragment;
-import no.nordicsemi.android.sdr.WeightPanel;
 import no.nordicsemi.android.sdr.archive.ArchiveSaving;
 import no.nordicsemi.android.sdr.database.CorButton;
 import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
@@ -278,7 +277,7 @@ public class HardwareButtonsFrag extends Fragment {
 
                     countDownTimer.start();
                     timeForCorrectStart = true;
-                    tvButName.setText(String.valueOf(curCorButton.getButNum()));
+                    tvButName.setText(String.valueOf(curCorButton.getButName()));
                     corSet = true;
                     tvButNum.setText(String.valueOf(finalNum+1));
                 });

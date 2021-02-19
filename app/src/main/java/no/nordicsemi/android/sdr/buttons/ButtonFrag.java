@@ -227,7 +227,7 @@ public class ButtonFrag extends Fragment implements View.OnClickListener, View.O
     public void onClick(View v) {
         CorButton corButton = (CorButton) v.getTag();
         buttonsViewModel.setmCurCorButton(corButton);
-        tvState.setText(corButton.getButNum());
+        tvState.setText(corButton.getButName());
         makeMsg(corButton);
         Log.d(TAG, "onClick: msg = " + makeMsg(corButton).toString());
         //if(!setOpened)

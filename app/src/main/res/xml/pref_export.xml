@@ -38,12 +38,14 @@
         android:key="export_detail"
         android:title="Архив с детализацией"
         android:defaultValue="false"
+
         />
 
     <SwitchPreference
         android:key="export_auto"
         android:title="Автоматический экспорт"
         android:defaultValue="false"
+        android:enabled="false"
         />
 
     <no.nordicsemi.android.sdr.preferences.TimePreference

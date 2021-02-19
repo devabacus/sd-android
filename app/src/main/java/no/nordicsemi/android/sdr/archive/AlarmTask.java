@@ -31,6 +31,7 @@ public class AlarmTask extends BroadcastReceiver {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
         String fileName = sdf.format(new Date());
         final File file = new File(context.getExternalFilesDir("archive_exports"), fileName + ".xml");
+        Log.d("test", "файл path = " + file.getPath());
 //        try {
 //            FileWriter writer = new FileWriter(file, true);
 //            writer.append("</archive>");
@@ -39,6 +40,6 @@ public class AlarmTask extends BroadcastReceiver {
 //        }
         FtpRoutines ftpRoutines = new FtpRoutines();
         ftpRoutines.sendFileToServer(context, file.getPath(), fileName + ".xml");
-        Toast.makeText(context, "Экспорт завершен", Toast.LENGTH_LONG).show();
+
     }
 }

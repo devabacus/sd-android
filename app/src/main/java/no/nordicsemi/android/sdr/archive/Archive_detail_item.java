@@ -14,12 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
+import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 
 
 /**
@@ -29,16 +32,34 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
 
     ConstraintLayout archiveDetailLayout;
     ArchiveViewModel archiveViewModel;
-    Button btnCloseDetail;
+    ImageButton btnCloseDetail;
     RecyclerView recViewArchiveDetail;
     private ArchiveAdapterDetail archiveAdapterDetail;
-    TextView tvDetail, tvSuspect;
+    TextView tvDetail, tvSuspect, tvDriver;
     //int numOfWeightPicked1 = 0;
 
 
     public Archive_detail_item() {
         // Required empty public constructor
     }
+
+//    float driverWeightDetect(List<ArchiveData> archiveListData) {
+//        float mainWeight = 0;
+//        float driverWeight = 0;
+//
+//        for (int i = 0; i < archiveListData.size(); i++) {
+//
+//            int type = archiveListData.get(i).getTypeOfWeight();
+//            if (type == 1) {
+//                mainWeight = archiveListData.get(i).getMainWeight();
+//            }
+//            if (type == 3) {
+//                driverWeight = archiveListData.get(i).getMainWeight();
+//            }
+//        }
+//
+//        return driverWeight - mainWeight;
+//    }
 
 
     @SuppressLint("SetTextI18n")
@@ -47,31 +68,20 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_archive_detail_item, container, false);
-        archiveDetailLayout = (ConstraintLayout)v.findViewById(R.id.archive_detail_layout);
-        tvDetail = (TextView)v.findViewById(R.id.tv_detail);
-        tvSuspect = (TextView)v.findViewById(R.id.tv_suspect);
+        archiveDetailLayout = (ConstraintLayout) v.findViewById(R.id.archive_detail_layout);
+        tvDetail = v.findViewById(R.id.tv_detail);
+        tvSuspect = v.findViewById(R.id.tv_suspect);
+        tvDriver = v.findViewById(R.id.tv_driver);
 
-        btnCloseDetail = (Button)v.findViewById(R.id.btn_close_detail);
+        btnCloseDetail = v.findViewById(R.id.btn_close_detail);
         archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
-        recViewArchiveDetail = (RecyclerView)v.findViewById(R.id.rec_view_arch_detail);
+        recViewArchiveDetail = v.findViewById(R.id.rec_view_arch_detail);
         archiveAdapterDetail = new ArchiveAdapterDetail(new ArrayList<>());
         recViewArchiveDetail.setAdapter(archiveAdapterDetail);
         recViewArchiveDetail.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
         btnCloseDetail.setOnClickListener(this);
-//        archiveViewModel.getNumOfWeightPicked().observe(getActivity(), numOfWeightPicked->{
-//            numOfWeightPicked1 = numOfWeightPicked;
-//            Toast.makeText(getContext(), String.valueOf(numOfWeightPicked), Toast.LENGTH_SHORT).show();
-//        });
-
-        //if(numOfWeightPicked1 != 0){
-
-            //archiveViewModel.getArchiveList().observe(getActivity(), archiveDataList -> archiveAdapterDetail.addItems(archiveDataList));
-        //}
-
-
-
-        archiveViewModel.mIsDetailOpen().observe(getActivity(), isDetailOpened ->{
+        archiveViewModel.mIsDetailOpen().observe(getActivity(), isDetailOpened -> {
             assert isDetailOpened != null;
             if (isDetailOpened) {
                 archiveViewModel.getArchiveListbyNum(ArchiveItemsFragment.numOfWeightPicked).observe(getActivity(), archiveListByNum -> {
@@ -79,30 +89,42 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
                         archiveAdapterDetail.addItems(archiveListByNum);
                         int suspectState = 0;
                         StringBuilder sb = new StringBuilder();
-                        if(archiveListByNum.size() != 0){
+                        if (archiveListByNum.size() != 0) {
                             suspectState = archiveListByNum.get(0).getSuspectState();
                             tvSuspect.setText("");
-                            if(suspectState != 0){
+                            if (suspectState != 0) {
                                 tvSuspect.setVisibility(View.VISIBLE);
                             } else {
                                 tvSuspect.setVisibility(View.GONE);
                             }
-                        }
-                        if((suspectState & SuspectMasks.ONLY_MAX_WEIGHT) == SuspectMasks.ONLY_MAX_WEIGHT){
-                            sb.append("Нет стабильных значений");
-                        }
-                        if((suspectState & SuspectMasks.MAX_WEIGHT) == SuspectMasks.MAX_WEIGHT){
-                            if(sb.capacity() > 16) sb.append("\n");
-                               sb.append("Недопустимый максимальный");
-                        }
-//                        if((suspectState & SuspectMasks.DRIVER_DETECT) == SuspectMasks.DRIVER_DETECT){
-//                            if(sb.capacity() > 16) sb.append("\n");
-//                            sb.append("Обнаружен водитель");
-//                        }
-                        Log.d("test", "onCreateView: sb.capacity = " + sb.capacity());
-                        tvSuspect.setText(sb.toString());
-                    }
 
+//                            if(driverWeightDetect(archiveListByNum) != 0){
+//                                tvDriver.setVisibility(View.VISIBLE);
+//                                tvDriver.setText("Вес водителя = " + driverWeightDetect(archiveListByNum));
+//
+//                            } else {
+//                                tvDriver.setVisibility(View.GONE);
+//                                tvDriver.setText("");
+//                            }
+
+
+                            if ((suspectState & SuspectMasks.ONLY_MAX_WEIGHT) == SuspectMasks.ONLY_MAX_WEIGHT) {
+                                sb.append("Нет стабильных значений");
+                            }
+                            if ((suspectState & SuspectMasks.MAX_WEIGHT) == SuspectMasks.MAX_WEIGHT) {
+                                if (sb.capacity() > 16) sb.append("\n");
+                                sb.append("Недопустимый максимальный");
+                            }
+                            if ((suspectState & SuspectMasks.STAB_WHILE_UNLOAD) == SuspectMasks.STAB_WHILE_UNLOAD) {
+                                if (sb.capacity() > 16) sb.append("\n");
+                                sb.append("Стабильный вес при разгрузке");
+                            }
+
+                            Log.d("test", "onCreateView: sb.capacity = " + sb.capacity());
+                            tvSuspect.setText(sb.toString());
+                        }
+
+                    }
 
                 });
                 Log.d("detail", "numOfWeightPicked = " + ArchiveItemsFragment.numOfWeightPicked);
@@ -115,7 +137,6 @@ public class Archive_detail_item extends Fragment implements View.OnClickListene
                 tvSuspect.setText("");
             }
         });
-
 
 
         return v;

@@ -68,23 +68,26 @@
 
         <TextView
             android:id="@+id/tv_debug_adc"
-            tools:text="150"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_debug_true_weight"
-            android:layout_marginStart="10dp"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@id/tv_debug_true_weight"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.1"
-            android:layout_height="wrap_content" />
+            tools:text="150" />
 
         <TextView
             android:id="@+id/tv_debug_tare"
-            tools:text="-2500"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_debug_adc"
-            android:layout_marginStart="10sp"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp"
+            android:textAlignment="center"
+            android:gravity="center"
+            app:layout_constraintStart_toEndOf="@id/tv_debug_adc"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.1"
-            android:layout_height="wrap_content" />
+            tools:text="-2500" />
 
         <TextView
             android:id="@+id/tv_debug_stab_time"

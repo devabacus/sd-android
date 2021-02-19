@@ -77,7 +77,10 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ArchiveV
 
             if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
                 if(archiveData.getTareValue() != 0) {
-                    holder.tvTare.setText(String.valueOf(archiveData.getTareValue()));
+                    StringBuilder sbTare = new StringBuilder();
+                    sbTare.append(archiveData.getTareValue());
+                    if(archiveData.getIsPercent()) sbTare.append("%");
+                    holder.tvTare.setText(sbTare);
                     holder.tvTrueWeight.setText(String.valueOf(archiveData.getTrueWeight()));
                 }
             }

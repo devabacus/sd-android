@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,7 +21,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Timer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.Cmd;
@@ -37,7 +39,7 @@ import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.ParsedDataViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
 
-import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_DETAIL;
+import static java.lang.Math.abs;
 
 public class ArchiveSaving extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
@@ -81,10 +83,13 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     int adcWeight = 0;
     public static int tare = 0;
+    boolean isPersent = false;
+    boolean isPersentMax = false;
     int arch = 0;
     int archLast = 0;
     boolean weightTonn = false;
     boolean isCorActive = false;
+    int suspectState = 0;
 
     float weightMax = 0;
     int adcWeightMax = 0;
@@ -101,7 +106,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     Date dateTimeMax;
     Timer mTimer;
 
-//    File exportFile;
+    //    File exportFile;
     FileExport fileExport;
 
     Date[] dateTime;
@@ -109,13 +114,11 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     ArrayList<Float> weightValueArrL;
     ArrayList<Float> weightTrueArrL;
     ArrayList<Integer> tare_arrL;
+    ArrayList<Boolean> isPercent_arrL;
     ArrayList<Integer> stab_timeL;
     ArrayList<Integer> adcValue_arrL;
     ArrayList<Integer> adcWeight_arrL;
     ArrayList<Integer> typeOfWeight_arrL;
-
-
-
 
     void initArrays() {
         dateTime = new Date[20];
@@ -126,6 +129,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         adcWeight_arrL = new ArrayList<>();
         adcValue_arrL = new ArrayList<>();
         tare_arrL = new ArrayList<>();
+        isPercent_arrL = new ArrayList<>();
         stab_timeL = new ArrayList<>();
         typeOfWeight_arrL = new ArrayList<>();
     }
@@ -175,13 +179,27 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         });
     }
 
+
+    int parseTare(String butName) {
+        String regex = "((-){0,1}[0-9]+)(%)?";
+        Pattern r = Pattern.compile(regex);
+        Matcher m = r.matcher(butName);
+        if (m.find()) {
+            return Integer.parseInt(m.group(1));
+        }
+        return 0;
+    }
+
+
     void getBtnState() {
 
-        buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
+        buttonsViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ButtonsViewModel.class);
         buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
             assert corButton != null;
-            if (!corButton.getButNum().isEmpty()) {
-                tare = Integer.parseInt(corButton.getButNum());
+            if (!corButton.getButName().isEmpty()) {
+                tare = parseTare(corButton.getButName());
+                isPersent = corButton.getButName().contains("%");
+                Log.d(TAG, "getBtnState: isPercent = " + isPersent);
             }
         });
 
@@ -191,7 +209,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     }
 
     void weightObserve() {
-        parsedDataViewModel = ViewModelProviders.of(getActivity()).get(ParsedDataViewModel.class);
+        parsedDataViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ParsedDataViewModel.class);
         parsedDataViewModel.getWeightValue().observe(getActivity(), weight -> {
             weightValueFloat = weight;
             fillDataForArchive();
@@ -210,7 +228,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     public boolean minChange() {
         //if the difference between a current weight and the previous one more than acceptable difference
-        return Math.abs(weightValueFloat - weightSavedLast) > maxDeviation;
+        return abs(weightValueFloat - weightSavedLast) > maxDeviation;
     }
 
     public float driveWeightFind() {
@@ -218,9 +236,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 //        return (weightValueArrL.get(archMaxStab - 1) - weightValueArrL.get(archMaxStab));
     }
 
-
     public void archive_arr_fill(int i, int type) {
-
+        float trueWeight = 0;
         typeOfWeight_arrL.add(i, type);
         if (!isCorActive) {
             tare = 0;
@@ -232,49 +249,50 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             adcWeight_arrL.add(i, adcWeight);
             adcValue_arrL.add(i, StateFragment.adcValue);
             tare_arrL.add(i, tare);
-            weightTrueArrL.add(i, weightValueFloat + tare);
+            isPercent_arrL.add(i, isPersent);
+            weightTrueArrL.add(i, (isPersent && tare != 0) ? weightValueFloat * 100 /abs(tare): weightValueFloat - tare);
             stab_timeL.add(i, timeCounter);
         } else if (type == 2) {
             dateTimeArrL.add(i, dateTimeMax);
             weightValueArrL.add(i, weightMax);
             adcWeight_arrL.add(i, adcWeightMax);
             adcValue_arrL.add(i, adcValueMax);
-            weightTrueArrL.add(i, weightMax + tareMax);
+            weightTrueArrL.add(i, (isPersentMax && tareMax != 0)? weightMax  * 100 / abs(tareMax) : weightMax - tareMax);
             tare_arrL.add(i, tareMax);
+            isPercent_arrL.add(i, isPersentMax);
             stab_timeL.add(i, timeStabMax);
         }
     }
 
     void archive_log_show(int i) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
-        Log.d(TAG, "Array list" + format.format(dateTimeArrL.get(i)) + ", " + String.valueOf(arch) + ", " +
+        Log.d(TAG, "Array list" + format.format(dateTimeArrL.get(i)) + ", " + arch + ", " +
                 weightValueArrL.get(i) + ", " +
                 weightTrueArrL.get(i) + ", " +
                 adcWeight_arrL.get(i) + ", " +
                 adcValue_arrL.get(i) + ", " +
-                tare_arrL.get(i) + ", " +
+                tare_arrL.get(i) + (isPercent_arrL.get(i)?"%":"") + ", " +
                 stab_timeL.get(i) + ", " +
                 typeOfWeight_arrL.get(i) + "\n");
     }
 
-
     public void archive_arr_show(int i) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", new Locale("ru"));
-        tvDebugDate.setText(tvDebugDate.getText() + "\n" + String.valueOf(format.format(dateTimeArrL.get(i))));
-        tvDebugWeight.setText(tvDebugWeight.getText() + "\n" + String.valueOf(weightValueArrL.get(i)));
-        tvDebugTrueWeight.setText(tvDebugTrueWeight.getText() + "\n" + String.valueOf(weightTrueArrL.get(i)));
+        tvDebugDate.setText(tvDebugDate.getText() + "\n" + format.format(dateTimeArrL.get(i)));
+        tvDebugWeight.setText(tvDebugWeight.getText() + "\n" + weightValueArrL.get(i));
+        tvDebugTrueWeight.setText(tvDebugTrueWeight.getText() + "\n" + weightTrueArrL.get(i));
         if (adcValue_arrL.get(i) > 0) {
-            tvDebugAdc.setText(tvDebugAdc.getText() + "\n" + String.valueOf(adcValue_arrL.get(i)));
+            tvDebugAdc.setText(tvDebugAdc.getText() + "\n" + adcValue_arrL.get(i));
         } else {
-            tvDebugAdc.setVisibility(View.INVISIBLE);
+            tvDebugAdc.setVisibility(View.GONE);
         }
-        if(stab_timeL.size() > i){
-            tvDebugStabTime.setText(tvDebugStabTime.getText() + "\n" + "s" + String.valueOf(stab_timeL.get(i)));
+        if (stab_timeL.size() > i) {
+            tvDebugStabTime.setText(tvDebugStabTime.getText() + "\n" + (stab_timeL.get(i)>0?"s" + stab_timeL.get(i):""));
         }
-        tvDebugTare.setText(tvDebugTare.getText() + "\n" + String.valueOf(tare_arrL.get(i)));
-        tvDebugType.setText(tvDebugType.getText() + "\n" + String.valueOf(typeOfWeight_arrL.get(i)));
+        String isPercent = (isPercent_arrL.get(i)&&(tare_arrL.get(i) != 0))?"%":"";
+        tvDebugTare.setText(tvDebugTare.getText() + "\n" + tare_arrL.get(i) + isPercent);
+        tvDebugType.setText(tvDebugType.getText() + "\n" + typeOfWeight_arrL.get(i));
     }
-
 
     void observeButActive() {
         stateViewModel.getIsCorActive().observe(getActivity(), corActive -> {
@@ -293,7 +311,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                     // blinkyViewModel.sendTX("s13/2");
                     archiveViewModel.addArchiveItem(new ArchiveData(numOfWeight, new Date(),
                             weightValueArrL.get(0), weightTrueArrL.get(0), adcWeight_arrL.get(0),
-                            adcValue_arrL.get(0), tare, stab_timeL.get(0), 2, 0));
+                            adcValue_arrL.get(0), tare, isPercent_arrL.get(0), stab_timeL.get(0), 2, 0));
                     numOfWeight++;
                     // Toast.makeText(getContext(), "Сохранили", Toast.LENGTH_SHORT).show();
                     Handler handler = new Handler();
@@ -341,6 +359,10 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 if (weightSavedLast > weightSavedMax) {
                     weightSavedMax = weightSavedLast;
                     archMaxStab = arch;
+                } else if (weightValueArrL.get(archMaxStab) - weightValueArrL.get(arch) > archiveDriverMax) {
+                    //стабильное при разгрузке
+                    suspectState |= SuspectMasks.STAB_WHILE_UNLOAD;
+                    Log.d(TAG, "stabTimerIsFired: stab unload suspect = " + suspectState);
                 }
 
                 arch++;
@@ -368,7 +390,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         weightValueLast = weightValueFloat;
     }
 
-
     void addNewItemInArr() {
         if (minChange()) {
 //            Log.d(TAG, "arch = " + arch);
@@ -387,8 +408,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             dateTimeMax = new Date();
             weightMax = weightValueFloat;
             tareMax = tare;
+            isPersentMax = isPersent;
             adcValueMax = StateFragment.adcValue;
-            adcWeightMax = adcWeight;
             adcWeightMax = adcWeight;
             //Log.d(TAG, "onCreateView: weightMax = " + weightMax);
         }
@@ -411,19 +432,18 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     void saveArraysIntoDatabase() {
         numOfWeight++;
         cleanDebug();
-        int suspectState = 0;
         Log.d(TAG, "saveArraysIntoDatabase: arch = " + arch);
         // проверяем вышел ли водитель. Если да, то берем за основное взвешивание следующее после максимального
-        //todo надо разобраться с вычетанием водителя
-
-
-        if(weightValueArrL.size() > (archMaxStab + 2)){
+        if (weightValueArrL.size() > (archMaxStab + 2)) {
             if (driveWeightFind() <= (archiveDriverMax + maxDeviation)) {
-                if((weightValueArrL.get(archMaxStab + 2) - weightValueArrL.get(archMaxStab + 1)) <= (archiveDriverMax + maxDeviation)){
+                if ((weightValueArrL.get(archMaxStab + 2) - weightValueArrL.get(archMaxStab + 1)) <= (archiveDriverMax + maxDeviation)) {
                     typeOfWeight_arrL.set(archMaxStab + 1, 1);
-                        suspectState |= SuspectMasks.DRIVER_DETECT;
+//                        suspectState |= SuspectMasks.DRIVER_DETECT;
+                    typeOfWeight_arrL.set(archMaxStab, 3); //установили вес водителя
                     Log.d(TAG, "driver weight = " + driveWeightFind() + " suspect = " + suspectState);
                 }
+            } else {
+                typeOfWeight_arrL.set(archMaxStab, 1);
             }
         } else if (weightSavedMax != 0) {
 //                        Log.d(TAG, "weightSavedMax != 0");
@@ -433,16 +453,16 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 //        if(arch > (archMaxStab + 1) && ((suspectState & SuspectMasks.DRIVER_DETECT) == 1))
 
         //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
-        if (Math.abs(weightMax - weightSavedMax) > maxDeviation) {
+        if (abs(weightMax - weightSavedMax) > maxDeviation) {
 
-            if(arch == 0) {
+            if (arch == 0) {
                 archive_arr_fill(0, 2);
                 suspectState |= SuspectMasks.ONLY_MAX_WEIGHT;
                 //это условие поставил вторым потому что если arch ноль то dateTimeArrL.get(0) возвращаем ошибку индекса
             } else if ((dateTimeMax.getTime() < dateTimeArrL.get(0).getTime())) {
                 archive_arr_fill(0, 2);
                 suspectState |= SuspectMasks.MAX_WEIGHT;
-            } else if (arch > 0){
+            } else if (arch > 0) {
                 int k = 0;
                 //перебираем массив, чтобы вставить в нужное место максимальное взвешивание
                 for (int i = 0; i < dateTimeArrL.size(); i++) {
@@ -472,7 +492,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
                 ArchiveData archiveData = new ArchiveData(numOfWeight, dateTimeArrL.get(i),
                         weightValueArrL.get(i), weightTrueArrL.get(i), adcWeight_arrL.get(i),
-                        adcValue_arrL.get(i), tare_arrL.get(i), stab_timeL.get(i), typeOfWeight_arrL.get(i), suspectState);
+                        adcValue_arrL.get(i), tare_arrL.get(i), isPercent_arrL.get(i),stab_timeL.get(i), typeOfWeight_arrL.get(i), suspectState);
 
                 if (StateFragment.option_archive != 0) {
                     Log.d(TAG, "onCreateView: option_archive in archiveSaving = " + StateFragment.option_archive);
@@ -480,11 +500,11 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                     archiveViewModel.addArchiveItem(archiveData);
                     //Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
                 }
-               listOfArchiveData.add(archiveData);
+                listOfArchiveData.add(archiveData);
             }
         }
-        if(autoExport) {
-            if(!exportDetail){
+        if (autoExport) {
+            if (!exportDetail) {
                 listOfArchiveData = getNotDetailedList(listOfArchiveData);
             }
             fileExport.writeToFile(listOfArchiveData);
@@ -494,18 +514,17 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         resetArchiveVars();
     }
 
-    List<ArchiveData> getNotDetailedList(List<ArchiveData> list){
+    List<ArchiveData> getNotDetailedList(List<ArchiveData> list) {
         List<ArchiveData> _list = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             int suspect = list.get(i).getSuspectState();
             int typeOfWeight = list.get(i).getTypeOfWeight();
-            if( typeOfWeight == 1 || suspect == SuspectMasks.ONLY_MAX_WEIGHT) {
+            if (typeOfWeight == 1 || suspect == SuspectMasks.ONLY_MAX_WEIGHT) {
                 _list.add(list.get(i));
             }
         }
         return _list;
     }
-
 
     void resetArchiveVars() {
         arch = 0;
@@ -520,6 +539,9 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         archMaxStab = 0;
         weightSavedMax = 0;
         weightSavedLast = 0;
+        suspectState = 0;
+        isPersent = false;
+        isPersentMax = false;
     }
 
     @Override
@@ -535,7 +557,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             debugArchiveLayout.setVisibility(View.GONE);
         }
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
-        if(fileExport == null) {
+        if (fileExport == null) {
             File exportFile = new File(getActivity().getExternalFilesDir("archive_exports"), sdf.format(new Date()) + ".xml");
             fileExport = new FileExport(exportFile);
         }

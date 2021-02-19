@@ -1,8 +1,13 @@
 package no.nordicsemi.android.sdr.archive;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -14,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import xdroid.toaster.Toaster;
+
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_LOGIN;
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_PASSWORD;
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_PATH;
@@ -24,6 +31,7 @@ public class FtpRoutines {
     public static final String  TAG = "sd_android_ftp";
 
     FTPClient ftpClient;
+    Handler mHandler;
 
     public FtpRoutines(){
         if(ftpClient == null) ftpClient = new FTPClient();
@@ -37,20 +45,25 @@ public class FtpRoutines {
         String pass = sp.getString(KEY_FTP_PASSWORD,"");
         String remotePath = sp.getString(KEY_FTP_PATH,"");
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ftpClient.connect(server);
-                    boolean isAuth = ftpClient.login(login,pass);
-                    if(isAuth) Log.d(TAG, "auth: connection is SUCCESS");
+        new Thread(() -> {
+            try {
+                ftpClient.connect(server);
+                boolean isAuth = ftpClient.login(login,pass);
+                if(isAuth) {
+                    Log.d(TAG, "auth: connection is SUCCESS");
                     ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                     ftpClient.enterLocalPassiveMode();
-                    uploadFile(localPath, remoteFileName, remotePath);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    uploadFile(localPath, remoteFileName, remotePath, context);
+                    return;
+                } else {
+                    Toaster.toast("Ошибка подключения к серверу");
                 }
+
+            } catch (IOException e) {
+//                e.printStackTrace();
+                Log.d(TAG, "sendFileToServer: ошибка подключения");
             }
+            Log.d(TAG, "sendFileToServer: ");
         }).start();
     }
 
@@ -62,20 +75,28 @@ public class FtpRoutines {
         ftpClient.enterLocalPassiveMode();
     }
 
-    void uploadFile(String pathToFile, String fileName, String remotePath) throws IOException {
-        File file = new File(pathToFile);
-        readFileToLog(file);
-        FileInputStream in = new FileInputStream(file);
-        ftpClient.enterLocalPassiveMode();
-//        ftpClient.changeWorkingDirectory("/public_html/scale/icons");
-        ftpClient.changeWorkingDirectory(remotePath);
-        boolean result = ftpClient.storeFile(fileName, in);
-        Log.d(TAG, "result upload to server is " + (result ?"SUCCESS":"FAILED"));
-        in.close();
-        ftpClient.logout();
-        ftpClient.disconnect();
-    }
+    void uploadFile(String pathToFile, String fileName, String remotePath, Context context)  {
+        try {
+            File file = new File(pathToFile);
+            readFileToLog(file);
+            FileInputStream in = new FileInputStream(file);
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.changeWorkingDirectory(remotePath);
+            boolean result = ftpClient.storeFile(fileName, in);
+            if(result) {
+                Toaster.toast("Экспорт завершен");
+            } else {
+                Toaster.toast("Ошибка загрузки файла");
+            }
+            Log.d(TAG, "result upload to server is " + (result ?"SUCCESS":"FAILED"));
+            in.close();
+            ftpClient.logout();
+            ftpClient.disconnect();
 
+        } catch (IOException e) {
+            Toaster.toast("Ошибка загрузки файла"); ;
+        }
+    }
 
     void readFileToLog(File file){
         StringBuilder text = new StringBuilder();
