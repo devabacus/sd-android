@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +60,18 @@ public class DebugFrag extends Fragment {
                     tvRxMsg.setText("");
         });
 
-        viewModel.getUartData().observe(this, tvRxMsg::setText);
+//        viewModel.getUartData().observe(this,
+//
+//                tvRxMsg::setText);
 
+        viewModel.getUartData().observe(this, rxMsg ->{
+            String rxMsgNew = rxMsg;
+            if(rxMsg.contains("\n")){
+                Log.d("test", "onCreateView: contains");
+                rxMsgNew = rxMsg.substring(0, rxMsg.length() - 2);
+            }
+            tvRxMsg.setText(rxMsgNew);
+        });
 
         return v;
     }
