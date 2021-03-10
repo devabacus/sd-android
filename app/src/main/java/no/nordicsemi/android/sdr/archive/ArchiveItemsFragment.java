@@ -2,29 +2,31 @@ package no.nordicsemi.android.sdr.archive;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
-import no.nordicsemi.android.sdr.WeightPanel;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 import no.nordicsemi.android.sdr.buttons.ButtonFrag;
+
+import static no.nordicsemi.android.sdr.preferences.PrefArchive.KEY_MAX_WEIGHT_TOLERANCE;
+import static no.nordicsemi.android.sdr.preferences.PrefArchive.KEY_ONLY_MAX_DETECT;
 
 public class ArchiveItemsFragment extends Fragment implements View.OnLongClickListener, View.OnClickListener {
 
@@ -44,8 +46,13 @@ public class ArchiveItemsFragment extends Fragment implements View.OnLongClickLi
         archiveViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ArchiveViewModel.class);
 
         View v = inflater.inflate(R.layout.fragment_archive_items1, container, false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean showMaxWeight = sharedPreferences.getBoolean(KEY_ONLY_MAX_DETECT, false);
+        String toleranceMaxWeight = sharedPreferences.getString(KEY_MAX_WEIGHT_TOLERANCE, "0");
+        assert toleranceMaxWeight != null;
+        boolean isMarkMaxWeight = !toleranceMaxWeight.equals("0");
         recViewArchive = (RecyclerView) v.findViewById(R.id.rec_view_arch);
-        archiveAdapter = new ArchiveAdapter(new ArrayList<>(), this, this);
+        archiveAdapter = new ArchiveAdapter(new ArrayList<>(), this, this, showMaxWeight, isMarkMaxWeight);
         recViewArchive.setAdapter(archiveAdapter);
         recViewArchive.setLayoutManager(new GridLayoutManager(getContext(), 1));
 

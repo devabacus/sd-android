@@ -31,9 +31,8 @@
 package no.nordicsemi.android.sdr;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.arch.lifecycle.ViewModelProviders;
+
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,10 +41,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -58,11 +57,18 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Calendar;
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.adapter.ExtendedBluetoothDevice;
-import no.nordicsemi.android.sdr.archive.AlarmTask;
 import no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag;
 import no.nordicsemi.android.sdr.preferences.SetPrefActivity;
 import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
@@ -71,8 +77,6 @@ import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
 import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeBtnDec;
 import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeLongPressInc;
 import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumePressVibro;
-import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_AUTO;
-import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_TIME;
 
 
 @SuppressWarnings("ConstantConditions")
@@ -161,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 progressContainer.setVisibility(View.VISIBLE);
             }
         });
+
 
     }
 

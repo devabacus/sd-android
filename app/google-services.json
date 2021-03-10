@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "85289235433",
+    "project_id": "scale-driver-archive",
+    "storage_bucket": "scale-driver-archive.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85289235433:android:13c86766bdcdeea49e9178",
+        "android_client_info": {
+          "package_name": "no.nordicsemi.android.nrfblinky"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85289235433-55ussokiica9to1bj2j5spv1bdil2oaa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9vt9DdPTPgaEWUvHOXBZdvYd9R3Eu70g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85289235433-55ussokiica9to1bj2j5spv1bdil2oaa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

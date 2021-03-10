@@ -1,16 +1,14 @@
 package no.nordicsemi.android.sdr.archive;
 
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,7 +57,7 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
         } else if (archiveData.getTypeOfWeight() == 3) {
             holder.tvWeight.setBackgroundColor(Color.parseColor("#fcba03"));
         }
-        holder.tvWeight.setText(WeightPanel.fmt(archiveData.getMainWeight())+(weightInTonn?"т":"кг"));
+        holder.tvWeight.setText(WeightPanel.fmt(archiveData.getMainWeight()));
 
         if (ButtonFrag.curUser.equals("user1") || ButtonFrag.curUser.equals("admin1")) {
             if(archiveData.getTareValue() != 0) {
@@ -67,7 +65,11 @@ public class ArchiveAdapterDetail extends RecyclerView.Adapter<ArchiveAdapterDet
                 sbTare.append(archiveData.getTareValue());
                 if(archiveData.getIsPercent()) sbTare.append("%");
                 holder.tvTare.setText(sbTare);
-                holder.tvTrueWeight.setText(WeightPanel.fmt(archiveData.getTrueWeight())+(weightInTonn?"т":"кг"));
+                if(archiveData.getTypeOfWeight() < 2 ){
+
+                    holder.tvTrueWeight.setText(WeightPanel.fmt(archiveData.getTrueWeight()));
+                }
+
             }
         }
         int stabTime = archiveData.getStabTime();

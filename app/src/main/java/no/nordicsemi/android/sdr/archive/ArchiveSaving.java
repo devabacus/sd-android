@@ -1,13 +1,14 @@
 package no.nordicsemi.android.sdr.archive;
 
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,7 @@ import static java.lang.Math.abs;
 import static no.nordicsemi.android.sdr.preferences.PrefArchive.KEY_MAX_WEIGHT_TOLERANCE;
 
 public class ArchiveSaving extends Fragment implements View.OnClickListener, View.OnLongClickListener {
-
+// vars initialize
     BleViewModel bleViewModel;
 
     StateViewModel stateViewModel;
@@ -80,6 +81,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     float weightValueFloat = 0;
     float weightSavedLast = 0;
     float weightSavedMax = 0;
+    float weightMaxCalculated = 0;
 
     int archMaxStab = 0;
 
@@ -103,6 +105,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     boolean exportDetail = false;
     float max_tolerance;
     boolean stabWhileUnload;
+
+    FirestoreSave firestoreSave;
 
     long startStabWeight = 0;
     long endStabWeight = 0;
@@ -199,7 +203,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     void getBtnState() {
 
-        buttonsViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ButtonsViewModel.class);
+//        buttonsViewModel = ViewModelProviders.of(getActivity()).get(ButtonsViewModel.class);
+        buttonsViewModel = new ViewModelProvider(getActivity()).get(ButtonsViewModel.class);
         buttonsViewModel.getmCurCorButton().observe(getActivity(), corButton -> {
             assert corButton != null;
             if (!corButton.getButName().isEmpty()) {
@@ -263,7 +268,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             weightValueArrL.add(i, weightMax);
             adcWeight_arrL.add(i, adcWeightMax);
             adcValue_arrL.add(i, adcValueMax);
-            weightTrueArrL.add(i, (isPersentMax && tareMax != 0) ? weightMax * 100 / abs(tareMax) : weightMax - tareMax);
+            weightTrueArrL.add(i, (float) 0);  // (isPersentMax && tareMax != 0) ? weightMax * 100 / abs(tareMax) : weightMax - tareMax)
             tare_arrL.add(i, tareMax);
             isPercent_arrL.add(i, isPersentMax);
             stab_timeL.add(i, timeStabMax);
@@ -364,6 +369,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 weightSavedLast = weightValueFloat;
                 if (weightSavedLast > weightSavedMax) {
                     weightSavedMax = weightSavedLast;
+                    weightMaxCalculated = (isPersent && tare != 0) ? weightValueFloat * 100 / abs(tare) : weightValueFloat - tare;
                     archMaxStab = arch;
                 } else if (weightValueArrL.get(archMaxStab) - weightValueArrL.get(arch) > archiveDriverMax) {
                     //стабильное при разгрузке
@@ -418,6 +424,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             dateTimeMax = new Date();
             weightMax = weightValueFloat;
             tareMax = tare;
+//            tareMax = 0;
             isPersentMax = isPersent;
             adcValueMax = StateFragment.adcValue;
             adcWeightMax = adcWeight;
@@ -464,7 +471,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
         //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
 
-        if (weightMax - weightSavedMax > maxDeviation) {
+        if (weightMax - weightMaxCalculated > maxDeviation) {
 
             if (arch == 0) {
                 archive_arr_fill(0, 2);
@@ -509,9 +516,10 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                         adcValue_arrL.get(i), tare_arrL.get(i), isPercent_arrL.get(i), stab_timeL.get(i), typeOfWeight_arrL.get(i), suspectState);
 
                 if (StateFragment.option_archive != 0) {
-                    Log.d(TAG, "onCreateView: option_archive in archiveSaving = " + StateFragment.option_archive);
                     // сохраняем в базу данных
                     archiveViewModel.addArchiveItem(archiveData);
+                    //todo create settings for saving in cloud database
+                    firestoreSave.saveToDatabase(archiveData);
                     //Toast.makeText(getContext(), "saved", Toast.LENGTH_SHORT).show();
                 }
                 listOfArchiveData.add(archiveData);
@@ -522,6 +530,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 listOfArchiveData = getNotDetailedList(listOfArchiveData);
             }
             fileExport.writeToFile(listOfArchiveData);
+
+
         }
 
         initArrays();
@@ -553,6 +563,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         archMaxStab = 0;
         weightSavedMax = 0;
         weightSavedLast = 0;
+        weightMaxCalculated = 0;
         suspectState = 0;
         isPersent = false;
         isPersentMax = false;
@@ -587,7 +598,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         btnArhive.setOnClickListener(this);
         btnTest.setOnClickListener(this);
 //        btnTestHttp.setOnClickListener(this);
-
+        firestoreSave = new FirestoreSave();
         getViewModels();
         weightObserve();
 

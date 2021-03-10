@@ -1,12 +1,12 @@
 package no.nordicsemi.android.sdr;
 
 
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,6 @@ import no.nordicsemi.android.sdr.preferences.PrefArchive;
 import no.nordicsemi.android.sdr.preferences.SettingsFragment;
 
 import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeButton;
-import static no.nordicsemi.android.sdr.preferences.PrefArchive.KEY_OPTION_ARCHIVE;
 import static no.nordicsemi.android.sdr.preferences.PrefUserFrag.KEY_PASS_INPUT;
 
 /**

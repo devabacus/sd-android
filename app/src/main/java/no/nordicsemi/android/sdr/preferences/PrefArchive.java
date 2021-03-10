@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
 
@@ -33,6 +35,7 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     public static final String KEY_ADC_WEIGHT = "adc_weight";
     public static final String KEY_CORR_ARCHIVE = "cor_archive_save";
     public static final String KEY_MAX_WEIGHT_TOLERANCE = "archive_suspect_max_weight";
+    public static final String KEY_ONLY_MAX_DETECT = "archive_suspect_only_max";
     public static final String KEY_STAB_WHILE_UNLOAD = "archive_suspect_stab_while_unload";
 
 
@@ -104,18 +107,33 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
 
         if (key.equals(KEY_DISCRETE_MAX)) {
             curPref = discreteMaxPref;
+            if(Objects.requireNonNull(sharedPreferences.getString(key, "0")).isEmpty()){
+                sharedPreferences.edit().putString(key, "0").apply();
+            }
             curPref.setSummary(sharedPreferences.getString(key, "0"));
         } else if (key.equals(KEY_TIME_STAB)) {
             curPref = timeStabPref;
             curPref.setSummary(sharedPreferences.getString(key, "0"));
+            if(Objects.requireNonNull(sharedPreferences.getString(key, "0")).isEmpty()){
+                sharedPreferences.edit().putString(key, "0").apply();
+            }
         } else if (key.equals(KEY_MIN_WEIGHT)) {
             curPref = minWeightPref;
             curPref.setSummary(sharedPreferences.getString(key, "0"));
+            if(Objects.requireNonNull(sharedPreferences.getString(key, "0")).isEmpty()){
+                sharedPreferences.edit().putString(key, "0").apply();
+            }
         } else if (key.equals(KEY_ARCHIVE_DRIVER_WEIGHT_MAX)) {
             curPref = driverMaxPref;
             curPref.setSummary(sharedPreferences.getString(key, "0"));
+            if(Objects.requireNonNull(sharedPreferences.getString(key, "0")).isEmpty()){
+                sharedPreferences.edit().putString(key, "0").apply();
+            }
         } else if (key.equals(KEY_MAX_WEIGHT_TOLERANCE)) {
             maxWeightTolerance.setSummary(sharedPreferences.getString(key, "0"));
+            if(Objects.requireNonNull(sharedPreferences.getString(key, "0")).isEmpty()){
+                sharedPreferences.edit().putString(key, "0").apply();
+            }
         }
 
     }

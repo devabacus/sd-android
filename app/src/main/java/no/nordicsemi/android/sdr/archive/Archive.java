@@ -1,22 +1,19 @@
 package no.nordicsemi.android.sdr.archive;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.LongDef;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -28,14 +25,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.function.Function;
 
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 
-import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_AUTO;
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_DETAIL;
-import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_TIME;
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_LOGIN;
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_PASSWORD;
 import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_SERVER;

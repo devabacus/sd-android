@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
 
-    <view class="android.support.v7.widget.RecyclerView"
+    <view class="androidx.recyclerview.widget.RecyclerView"
         android:id="@+id/rec_view_arch"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.95"

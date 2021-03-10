@@ -1,7 +1,7 @@
 package no.nordicsemi.android.sdr.database_archive;
 
-import android.arch.persistence.room.TypeConverter;
-import android.arch.persistence.room.TypeConverters;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
 import java.util.Date;
 

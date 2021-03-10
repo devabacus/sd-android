@@ -28,7 +28,7 @@
   ~ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   ~ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
@@ -37,20 +37,20 @@
 	tools:context="no.nordicsemi.android.sdr.MainActivity"
 	tools:ignore="ContentDescription">
 
-	<android.support.design.widget.AppBarLayout
+	<com.google.android.material.appbar.AppBarLayout
 		android:id="@+id/appbar_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:theme="@style/AppTheme.AppBarOverlay">
 
-		<android.support.v7.widget.Toolbar
+		<androidx.appcompat.widget.Toolbar
 			android:id="@+id/toolbar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:background="@color/colorPrimary"
 			app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-	</android.support.design.widget.AppBarLayout>
+	</com.google.android.material.appbar.AppBarLayout>
 
 
 	<ScrollView
@@ -62,7 +62,7 @@
 		android:layout_alignParentStart="true"
 		android:visibility="visible">
 
-		<android.support.constraint.ConstraintLayout
+		<androidx.constraintlayout.widget.ConstraintLayout
 			android:id="@+id/conslayout"
 			android:layout_width="match_parent"
 
@@ -140,7 +140,7 @@
 
 
 
-		</android.support.constraint.ConstraintLayout>
+		</androidx.constraintlayout.widget.ConstraintLayout>
 
 	</ScrollView>
 
@@ -183,4 +183,4 @@
 	</LinearLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

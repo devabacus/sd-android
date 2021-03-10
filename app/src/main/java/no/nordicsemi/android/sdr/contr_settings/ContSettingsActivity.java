@@ -1,6 +1,6 @@
 package no.nordicsemi.android.sdr.contr_settings;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import no.nordicsemi.android.blinky.R;

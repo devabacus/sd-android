@@ -29,7 +29,7 @@
   ~ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -59,7 +59,7 @@
 		android:visibility="visible"
 		app:layout_constraintTop_toTopOf="parent" />
 
-	<android.support.constraint.ConstraintLayout
+	<androidx.constraintlayout.widget.ConstraintLayout
 		android:id="@+id/const_auth"
 		app:layout_constraintTop_toBottomOf="@id/scaledriver_img"
 		android:layout_marginTop="10dp"
@@ -99,7 +99,7 @@
 			android:layout_marginTop="10dp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
-	</android.support.constraint.ConstraintLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
@@ -116,4 +116,4 @@
 		/>
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

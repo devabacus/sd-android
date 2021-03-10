@@ -1,12 +1,12 @@
 package no.nordicsemi.android.sdr.database_archive;
 
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {ArchiveData.class}, version = 4)
+@Database(entities = {ArchiveData.class}, version = 4, exportSchema = false)
 public abstract class ArchiveDatabase extends RoomDatabase {
     private static ArchiveDatabase INSTANCE;
 

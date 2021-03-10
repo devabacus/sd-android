@@ -1,4 +1,4 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/const_background"
     android:visibility="gone"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:focusable="true" />
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/const_backg_auth"
         app:layout_constraintTop_toBottomOf="@id/tv_background_time"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,7 @@
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <TextView
@@ -78,4 +78,4 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
