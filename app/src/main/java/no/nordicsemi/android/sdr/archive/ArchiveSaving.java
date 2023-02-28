@@ -470,7 +470,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 //        if(arch > (archMaxStab + 1) && ((suspectState & SuspectMasks.DRIVER_DETECT) == 1))
 
         //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
-
         if (weightMax - weightMaxCalculated > maxDeviation) {
 
             if (arch == 0) {
@@ -500,7 +499,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         } else {
             arch--;
         }
-
         //write all of the array items into the database
         List<ArchiveData> listOfArchiveData = new ArrayList<>();
         for (int i = 0; i < arch + 1; i++) {
@@ -530,8 +528,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 listOfArchiveData = getNotDetailedList(listOfArchiveData);
             }
             fileExport.writeToFile(listOfArchiveData);
-
-
         }
 
         initArrays();

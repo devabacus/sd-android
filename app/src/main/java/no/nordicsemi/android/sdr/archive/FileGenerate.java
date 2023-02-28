@@ -50,10 +50,8 @@ public class FileGenerate {
         sb.append(archiveData.getSuspectState());
         sb.append("</suspectValue>");
 
-
         sb.append("</item>");
 
         return sb.toString();
     }
-
 }

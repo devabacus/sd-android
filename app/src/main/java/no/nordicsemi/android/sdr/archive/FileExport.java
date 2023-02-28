@@ -46,6 +46,7 @@ public class FileExport {
                 sb.append("<?xml version=\"1.0\"?>");
                 sb.append("<archive>");
             } else {
+                Log.d(TAG, "before readfromfile: file path " + file.getPath());
                 String previousData = readFromFile(file);
                 sb.append(previousData);
             }
@@ -60,7 +61,7 @@ public class FileExport {
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
-//        Log.d(TAG, "writeToFile: file path " + file.getPath());
+        Log.d(TAG, "writeToFile: file path " + file.getPath());
         return file.getPath();
     }
 }
