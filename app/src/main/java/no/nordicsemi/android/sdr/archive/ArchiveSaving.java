@@ -128,6 +128,16 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     ArrayList<Integer> adcWeight_arrL;
     ArrayList<Integer> typeOfWeight_arrL;
 
+
+    int indexFull = 0;
+//    Date[] dateTimeFull;
+    ArrayList<String> dateTimeFull;
+
+    ArrayList<String> weightsFull;
+    ArrayList<String> tareFull;
+
+
+
     void initArrays() {
         dateTime = new Date[20];
         dateTimeMax = new Date();
@@ -140,6 +150,13 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         isPercent_arrL = new ArrayList<>();
         stab_timeL = new ArrayList<>();
         typeOfWeight_arrL = new ArrayList<>();
+//      vars for getting csv file containing full detail of weighing
+        dateTimeFull = new ArrayList<>();
+        weightsFull = new ArrayList<>();
+        tareFull = new ArrayList<>();
+
+
+
     }
 
     void getViewModels() {
@@ -406,6 +423,23 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         weightValueLast = weightValueFloat;
     }
 
+    void saveFullDetailWeighing(Date date, float newWeight){
+
+        Log.d("weight", "saveFullDetailWeighing: " + date.getTime() + ","  + newWeight +  "," + tare);
+        dateTimeFull.add(indexFull, String.valueOf(date.getTime()));
+        tareFull.add(indexFull, String.valueOf(tare));
+        weightsFull.add(indexFull, String.valueOf(newWeight));
+        indexFull++;
+
+    }
+
+    void clearFullWeightSavingVars(){
+        indexFull = 0;
+        dateTimeFull.clear();
+        weightsFull.clear();
+        tareFull.clear();
+    }
+
     void addNewItemInArr() {
         if (minChange()) {
 //            Log.d(TAG, "arch = " + arch);
@@ -419,6 +453,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             }
             timeCounter = 0;
         }
+        saveFullDetailWeighing(new Date(), weightValueFloat);
+
         // update weight max value (it's located in first member of array)
         if (weightValueFloat > weightMax) {
             dateTimeMax = new Date();
@@ -563,6 +599,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         suspectState = 0;
         isPersent = false;
         isPersentMax = false;
+
+        clearFullWeightSavingVars();
     }
 
     @Override
