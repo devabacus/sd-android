@@ -30,26 +30,26 @@
 
 package no.nordicsemi.android.sdr;
 
+import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeBtnDec;
+import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeLongPressInc;
+import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumePressVibro;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
-
-import androidx.lifecycle.ViewModelProviders;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.provider.DocumentsContract;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -62,19 +62,22 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.adapter.ExtendedBluetoothDevice;
@@ -82,10 +85,6 @@ import no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag;
 import no.nordicsemi.android.sdr.preferences.SetPrefActivity;
 import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.HardButsViewModel;
-
-import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeBtnDec;
-import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumeLongPressInc;
-import static no.nordicsemi.android.sdr.buttons.HardwareButtonsFrag.volumePressVibro;
 
 
 @SuppressWarnings("ConstantConditions")
@@ -104,8 +103,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView;
     Boolean longPress = false;
     SharedPreferences sp;
-    private static final int CREATE_FILE = 101;
 
+    public static final int STORAGE_PERMISSION_CODE = 100;
+    File file;
 
     @SuppressLint("CutPasteId")
     @Override
@@ -179,50 +179,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData) {
-        super.onActivityResult(requestCode, resultCode, resultData);
-        if (requestCode == CREATE_FILE
-                && resultCode == Activity.RESULT_OK) {
-            // The result data contains a URI for the document or directory that
-            // the user selected.
-            Uri uri = null;
-            if (resultData != null) {
-                uri = resultData.getData();
-                Log.d("mytag", "onActivityResult: " + uri.getPath());
-                // Perform operations on the document using its URI.
-                writeInFile(uri, "ivan durak, kak dela sdfasd;flkjasd;flkj?");
-            }
-        }
-    }
 
-    private void createFile(Uri pickerInitialUri) {
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TITLE, "weight_data.txt");
-        // Optionally, specify a URI for the directory that should be opened in
-        // the system file picker when your app creates the document.
-        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
-
-
-        startActivityForResult(intent, CREATE_FILE);
-    }
-
-    private void writeInFile(@NonNull Uri uri, @NonNull String text) {
-        OutputStream outputStream;
-        try {
-            outputStream = getContentResolver().openOutputStream(uri);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
-            bw.write(text);
-            bw.flush();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -263,6 +220,98 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    private void createFolder() {
+        String folderName = "weight_new";
+
+        File folder = new File(Environment.getExternalStorageDirectory() + "/" + folderName);
+
+        boolean folderCreated = folder.mkdir();
+
+        if (folderCreated) {
+            createFile(folder.getPath());
+            Toast.makeText(this, "Folder crated... \n" + folder.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "createFolder: file.getPath()" + folder.getPath());
+            Log.d(TAG, "createFolder: file.getAbsolutePath()" + folder.getAbsolutePath());
+        } else {
+            Toast.makeText(this, "Folder not created...", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    private void createFile(String path){
+        String fileName = "/myFile.txt";
+        FileWriter writer;
+
+        if (file == null) {
+            file = new File(path, fileName);
+        }
+        boolean isFileNew = !file.exists();
+        try {
+            writer = new FileWriter(file,isFileNew);
+            writer.append("hello ivan durak");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Log.d(TAG, "requestPermission: try");
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", this.getOpPackageName(), null);
+                intent.setData(uri);
+                storageActivityResultLauncher.launch(intent);
+
+            } catch (Exception e) {
+                Log.d(TAG, "requestPermission: catch", e);
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                storageActivityResultLauncher.launch(intent);
+            }
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+        }
+
+    }
+
+    private ActivityResultLauncher<Intent> storageActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                Log.d(TAG, "onActivityResult: ");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (Environment.isExternalStorageManager()) {
+                        //Manage External Storage Permission is granted
+                        Log.d(TAG, "onActivityResult: Manage External Storage Permission is granted");
+                        createFolder();
+                    } else {
+                        Log.d(TAG, "onActivityResult: Manage External Storage Permission is denied");
+                        Toast.makeText(MainActivity.this, "Manage External Storage Permission is denied", Toast.LENGTH_SHORT).show();
+
+
+                    }
+                }
+            }
+    );
+
+
+    public boolean checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int write = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            return write == PackageManager.PERMISSION_GRANTED && read == PackageManager.PERMISSION_GRANTED;
+        }
+    }
+
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
@@ -330,7 +379,14 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.save_file:
-                createFile(null);
+                if (checkPermission()) {
+                    Log.d(TAG, "onCreate: Permission already granted...");
+                    createFolder();
+                } else {
+                    Log.d(TAG, "onCreate: Permission was not granted... request...");
+                    requestPermission();
+
+                }
         }
         return false;
     }

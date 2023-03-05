@@ -31,8 +31,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="no.nordicsemi.android.blinky">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Request legacy Bluetooth permissions on older devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+
+    <!-- Needed only if your app looks for Bluetooth devices.
+         If your app doesn't use Bluetooth scan results to derive physical
+         location information, you can strongly assert that your app
+         doesn't derive physical location. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
+    <!-- Needed only if your app makes the device discoverable to Bluetooth
+         devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+
+    <!-- Needed only if your app communicates with already-paired Bluetooth
+         devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Needed only if your app uses Bluetooth scan results to derive physical location. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -53,40 +73,40 @@
         tools:ignore="GoogleAppIndexingWarning"
         >
         <activity
-            android:name="no.nordicsemi.android.sdr.SplashScreenActivity"
+            android:name="no.nordicsemi.android.sdr.SplashScreenActivity" android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" android:exported="true"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" android:exported="true"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="no.nordicsemi.android.sdr.ScannerActivity"
+            android:name="no.nordicsemi.android.sdr.ScannerActivity" android:exported="true"
             android:icon="@drawable/ic_blinky_feature"
             android:label="@string/feature_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" android:exported="true"/>
 
-                <category android:name="no.nordicsemi.android.nrftoolbox.LAUNCHER" />
+                <category android:name="no.nordicsemi.android.nrftoolbox.LAUNCHER" android:exported="true"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="no.nordicsemi.android.sdr.MainActivity"
+            android:name="no.nordicsemi.android.sdr.MainActivity" android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="no.nordicsemi.android.sdr.preferences.SetPrefActivity"
+            android:name="no.nordicsemi.android.sdr.preferences.SetPrefActivity" android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Pref" />
         <activity
-            android:name="no.nordicsemi.android.sdr.contr_settings.ContSettingsActivity"
+            android:name="no.nordicsemi.android.sdr.contr_settings.ContSettingsActivity" android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name="no.nordicsemi.android.sdr.archive.Archive"
+            android:name="no.nordicsemi.android.sdr.archive.Archive" android:exported="true"
             android:screenOrientation="portrait" />
 
         <receiver
