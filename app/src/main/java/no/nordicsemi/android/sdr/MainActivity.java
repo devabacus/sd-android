@@ -33,9 +33,12 @@ package no.nordicsemi.android.sdr;
 import android.annotation.SuppressLint;
 
 import androidx.lifecycle.ViewModelProviders;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +48,8 @@ import android.os.Vibrator;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -64,6 +69,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView;
     Boolean longPress = false;
     SharedPreferences sp;
+    private static final int CREATE_FILE = 101;
 
 
     @SuppressLint("CutPasteId")
@@ -166,6 +176,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (requestCode == CREATE_FILE
+                && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                Log.d("mytag", "onActivityResult: " + uri.getPath());
+                // Perform operations on the document using its URI.
+                writeInFile(uri, "ivan durak, kak dela sdfasd;flkjasd;flkj?");
+            }
+        }
+    }
+
+    private void createFile(Uri pickerInitialUri) {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TITLE, "weight_data.txt");
+        // Optionally, specify a URI for the directory that should be opened in
+        // the system file picker when your app creates the document.
+        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
+
+
+        startActivityForResult(intent, CREATE_FILE);
+    }
+
+    private void writeInFile(@NonNull Uri uri, @NonNull String text) {
+        OutputStream outputStream;
+        try {
+            outputStream = getContentResolver().openOutputStream(uri);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
+            bw.write(text);
+            bw.flush();
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -272,7 +327,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, SetPrefActivity.class);
                 startActivityForResult(intent, 0);
+
                 break;
+            case R.id.save_file:
+                createFile(null);
         }
         return false;
     }

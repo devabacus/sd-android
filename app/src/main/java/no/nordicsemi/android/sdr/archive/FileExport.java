@@ -1,5 +1,6 @@
 package no.nordicsemi.android.sdr.archive;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -35,7 +36,14 @@ public class FileExport {
         return "";
     }
 
+
+
+
     public String writeToFile(List<ArchiveData> listOfData) {
+
+//        File file = new File(Environment.getExternalStorageDirectory(), "myfile.txt");
+//        FileOutputStream(file).write("ASDFGHJKL".toByteArray());
+
 
         try {
             FileGenerate fileGenerate = new FileGenerate();

@@ -7,4 +7,10 @@
         app:showAsAction="always"
         />
 
+    <item android:id="@+id/save_file"
+        android:title="@string/settings"
+        android:icon="@android:drawable/ic_menu_save"
+        app:showAsAction="always"
+        />
+
 </menu>
