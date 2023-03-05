@@ -431,6 +431,26 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
 
     void createFullDetailFile(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("[").append(numOfWeight).append("]").append(", [").append(new Date()).append("]\n");
+        for (int i = 0; i < dateTimeFull.size(); i++) {
+            sb.append(dateTimeFull.get(i)).append("/");
+            sb.append(weightsFull.get(i)).append("/");
+            sb.append(tareFull.get(i)).append("\n");
+        }
+        try {
+            File file = create_file("detailed.txt");
+            Log.d(TAG, "createFullDetailFile: " + file.getPath());
+            FileWriter writer = new FileWriter(file, true);
+            writer.append(sb);
+            writer.close();
+            Log.d(TAG, "createFullDetailFile: success");
+
+        } catch (IOException e){
+            e.printStackTrace();
+            Log.d(TAG, "createFullDetailFile: " + e);
+        }
+
 
     }
 
@@ -441,13 +461,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         tareFull.add(indexFull, String.valueOf(tare));
         weightsFull.add(indexFull, String.valueOf(newWeight));
         indexFull++;
-        StringBuilder sb = new StringBuilder();
-        sb.append("[").append(numOfWeight).append("]").append(", [").append(date).append("]\n");
-        for (int i = 0; i < dateTimeFull.size(); i++) {
-            sb.append(dateTimeFull.get(i));
-            sb.append(weightsFull.get(i));
-            sb.append(tareFull.get(i)).append("\n");
-        }
 
     }
 
@@ -581,6 +594,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
         //Writing into file
         main_file = new FileExport(create_file("main.xml"));
+        createFullDetailFile();
 
         if (autoExport) {
             if (!exportDetail) {
@@ -627,6 +641,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     }
 
     public File create_file(String fileName){
+        Log.d(TAG, "create_file: " + fileName);
         String fullPath = create_full_path_folders();
         File file = new File(fullPath, fileName);
         Log.d(TAG, "create_file: " + file.getAbsolutePath());
@@ -643,8 +658,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
         create_folder(mainFolder);
         create_folder(mainFolder + '/' + currentDate);
-        String _fullPath = create_folder(fullPath);
-        return _fullPath;
+        return create_folder(fullPath);
     }
 
     public String create_folder(String path){

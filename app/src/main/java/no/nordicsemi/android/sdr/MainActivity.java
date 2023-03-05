@@ -343,13 +343,13 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.save_file:
-                if (checkPermission()) {
-                    Log.d(TAG, "onCreate: Permission already granted...");
-                } else {
-                    Log.d(TAG, "onCreate: Permission was not granted... request...");
-                    requestPermission();
-
-                }
+//                if (checkPermission()) {
+//                    Log.d(TAG, "onCreate: Permission already granted...");
+//                } else {
+//                    Log.d(TAG, "onCreate: Permission was not granted... request...");
+//                    requestPermission();
+//
+//                }
         }
         return false;
     }
