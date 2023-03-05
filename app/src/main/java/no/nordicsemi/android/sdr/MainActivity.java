@@ -223,58 +223,58 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            try {
-                Log.d(TAG, "requestPermission: try");
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                Uri uri = Uri.fromParts("package", this.getOpPackageName(), null);
-                intent.setData(uri);
-                storageActivityResultLauncher.launch(intent);
+//    private void requestPermission() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            try {
+//                Log.d(TAG, "requestPermission: try");
+//                Intent intent = new Intent();
+//                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+//                Uri uri = Uri.fromParts("package", this.getOpPackageName(), null);
+//                intent.setData(uri);
+//                storageActivityResultLauncher.launch(intent);
+//
+//            } catch (Exception e) {
+//                Log.d(TAG, "requestPermission: catch", e);
+//                Intent intent = new Intent();
+//                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+//                storageActivityResultLauncher.launch(intent);
+//            }
+//        } else {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                    Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+//        }
+//
+//    }
 
-            } catch (Exception e) {
-                Log.d(TAG, "requestPermission: catch", e);
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                storageActivityResultLauncher.launch(intent);
-            }
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-        }
+//    private ActivityResultLauncher<Intent> storageActivityResultLauncher = registerForActivityResult(
+//            new ActivityResultContracts.StartActivityForResult(),
+//            result -> {
+//                Log.d(TAG, "onActivityResult: ");
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                    if (Environment.isExternalStorageManager()) {
+//                        //Manage External Storage Permission is granted
+//                        Log.d(TAG, "onActivityResult: Manage External Storage Permission is granted");
+////                        createFolder();
+//                    } else {
+//                        Log.d(TAG, "onActivityResult: Manage External Storage Permission is denied");
+//                        Toast.makeText(MainActivity.this, "Manage External Storage Permission is denied", Toast.LENGTH_SHORT).show();
+//
+//
+//                    }
+//                }
+//            }
+//    );
 
-    }
-
-    private ActivityResultLauncher<Intent> storageActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                Log.d(TAG, "onActivityResult: ");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    if (Environment.isExternalStorageManager()) {
-                        //Manage External Storage Permission is granted
-                        Log.d(TAG, "onActivityResult: Manage External Storage Permission is granted");
-//                        createFolder();
-                    } else {
-                        Log.d(TAG, "onActivityResult: Manage External Storage Permission is denied");
-                        Toast.makeText(MainActivity.this, "Manage External Storage Permission is denied", Toast.LENGTH_SHORT).show();
-
-
-                    }
-                }
-            }
-    );
-
-    public boolean checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager();
-        } else {
-            int write = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            int read = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-
-            return write == PackageManager.PERMISSION_GRANTED && read == PackageManager.PERMISSION_GRANTED;
-        }
-    }
+//    public boolean checkPermission() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            return Environment.isExternalStorageManager();
+//        } else {
+//            int write = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//            int read = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+//
+//            return write == PackageManager.PERMISSION_GRANTED && read == PackageManager.PERMISSION_GRANTED;
+//        }
+//    }
 
 
     @Override
