@@ -1,6 +1,5 @@
 package no.nordicsemi.android.sdr.archive;
 
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -22,6 +21,8 @@ public class FileExport {
         }
     }
 
+
+
     public String readFromFile(File file) {
         try {
             FileReader reader = new FileReader(file);
@@ -35,9 +36,6 @@ public class FileExport {
         }
         return "";
     }
-
-
-
 
     public String writeToFile(List<ArchiveData> listOfData) {
 

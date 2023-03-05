@@ -1,21 +1,27 @@
 package no.nordicsemi.android.sdr.archive;
 
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_DETAIL;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_LOGIN;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_PASSWORD;
+import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_SERVER;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -29,11 +35,6 @@ import java.util.Objects;
 import no.nordicsemi.android.blinky.R;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 
-import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_EXPORT_DETAIL;
-import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_LOGIN;
-import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_PASSWORD;
-import static no.nordicsemi.android.sdr.preferences.PrefExport.KEY_FTP_SERVER;
-
 public class Archive extends AppCompatActivity {
 
     private static final String TAG = "test";
@@ -44,6 +45,7 @@ public class Archive extends AppCompatActivity {
     ArchiveViewModel archiveViewModel;
     public static List<ArchiveData> listOfArchive;
 
+    File file;
 
     void findViews() {
         btnStart = findViewById(R.id.btn_date_start);
@@ -136,7 +138,12 @@ public class Archive extends AppCompatActivity {
             List<ArchiveData> listForExport = listOfArchive;
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
             String fileName = sdf.format(startDate) + "-" + sdf.format(endDate);
-            File file = new File(getExternalFilesDir("archive_exports"), fileName + ".xml");
+
+            String folderName = "weight_archive";
+            File folder = new File(Environment.getExternalStorageDirectory() + "/" + folderName);
+            boolean folderCreated = folder.mkdir();
+            Log.d(TAG, "export_archive: " + folder.getPath());
+            File file = new File(folder.getPath(), fileName + ".xml");
             int i = 1;
             while(file.exists()){
                 if(fileName.contains("_")){

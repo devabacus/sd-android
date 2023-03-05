@@ -221,42 +221,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void createFolder() {
-        String folderName = "weight_new";
 
-        File folder = new File(Environment.getExternalStorageDirectory() + "/" + folderName);
-
-        boolean folderCreated = folder.mkdir();
-
-        if (folderCreated) {
-            createFile(folder.getPath());
-            Toast.makeText(this, "Folder crated... \n" + folder.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "createFolder: file.getPath()" + folder.getPath());
-            Log.d(TAG, "createFolder: file.getAbsolutePath()" + folder.getAbsolutePath());
-        } else {
-            Toast.makeText(this, "Folder not created...", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-
-    private void createFile(String path){
-        String fileName = "/myFile.txt";
-        FileWriter writer;
-
-        if (file == null) {
-            file = new File(path, fileName);
-        }
-        boolean isFileNew = !file.exists();
-        try {
-            writer = new FileWriter(file,isFileNew);
-            writer.append("hello ivan durak");
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -289,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                     if (Environment.isExternalStorageManager()) {
                         //Manage External Storage Permission is granted
                         Log.d(TAG, "onActivityResult: Manage External Storage Permission is granted");
-                        createFolder();
+//                        createFolder();
                     } else {
                         Log.d(TAG, "onActivityResult: Manage External Storage Permission is denied");
                         Toast.makeText(MainActivity.this, "Manage External Storage Permission is denied", Toast.LENGTH_SHORT).show();
@@ -299,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
     );
-
 
     public boolean checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -381,7 +345,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.save_file:
                 if (checkPermission()) {
                     Log.d(TAG, "onCreate: Permission already granted...");
-                    createFolder();
                 } else {
                     Log.d(TAG, "onCreate: Permission was not granted... request...");
                     requestPermission();

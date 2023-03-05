@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,6 +18,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,7 +117,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     Timer mTimer;
 
     //    File exportFile;
-    FileExport fileExport;
+    FileExport main_file;
     SharedPreferences sp;
 
     Date[] dateTime;
@@ -136,6 +139,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     ArrayList<String> weightsFull;
     ArrayList<String> tareFull;
 
+
+    File file;
 
 
     void initArrays() {
@@ -423,6 +428,12 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         weightValueLast = weightValueFloat;
     }
 
+
+
+    void createFullDetailFile(){
+
+    }
+
     void saveFullDetailWeighing(Date date, float newWeight){
 
         Log.d("weight", "saveFullDetailWeighing: " + date.getTime() + ","  + newWeight +  "," + tare);
@@ -430,6 +441,13 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         tareFull.add(indexFull, String.valueOf(tare));
         weightsFull.add(indexFull, String.valueOf(newWeight));
         indexFull++;
+        StringBuilder sb = new StringBuilder();
+        sb.append("[").append(numOfWeight).append("]").append(", [").append(date).append("]\n");
+        for (int i = 0; i < dateTimeFull.size(); i++) {
+            sb.append(dateTimeFull.get(i));
+            sb.append(weightsFull.get(i));
+            sb.append(tareFull.get(i)).append("\n");
+        }
 
     }
 
@@ -502,9 +520,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 //                        Log.d(TAG, "weightSavedMax != 0");
             typeOfWeight_arrL.set(archMaxStab, 1);
         }
-
-//        if(arch > (archMaxStab + 1) && ((suspectState & SuspectMasks.DRIVER_DETECT) == 1))
-
         //чтобы запись с максимальным весом и стабильным не дублировались в архиве если разница между ними в пределах погрешности
         if (weightMax - weightMaxCalculated > maxDeviation) {
 
@@ -536,7 +551,9 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
             arch--;
         }
         //write all of the array items into the database
+
         List<ArchiveData> listOfArchiveData = new ArrayList<>();
+        //Writing into database
         for (int i = 0; i < arch + 1; i++) {
             archive_arr_show(i);
 
@@ -558,12 +575,18 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
                 }
                 listOfArchiveData.add(archiveData);
             }
+
         }
+
+
+        //Writing into file
+        main_file = new FileExport(create_file("main.xml"));
+
         if (autoExport) {
             if (!exportDetail) {
                 listOfArchiveData = getNotDetailedList(listOfArchiveData);
             }
-            fileExport.writeToFile(listOfArchiveData);
+            main_file.writeToFile(listOfArchiveData);
         }
 
         initArrays();
@@ -603,6 +626,35 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         clearFullWeightSavingVars();
     }
 
+    public File create_file(String fileName){
+        String fullPath = create_full_path_folders();
+        File file = new File(fullPath, fileName);
+        Log.d(TAG, "create_file: " + file.getAbsolutePath());
+
+        return file;
+    }
+
+    public String create_full_path_folders(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
+        String mainFolder = "weight_archive";
+        String currentDate = sdf.format(new Date());
+        String numOfWeightFolder = String.valueOf(numOfWeight);
+        String fullPath = mainFolder + '/' + currentDate + '/' + numOfWeightFolder;
+
+        create_folder(mainFolder);
+        create_folder(mainFolder + '/' + currentDate);
+        String _fullPath = create_folder(fullPath);
+        return _fullPath;
+    }
+
+    public String create_folder(String path){
+        File folder = new File(Environment.getExternalStorageDirectory() + "/" + path);
+        folder.mkdir();
+        return folder.getPath();
+    }
+
+
+
     @Override
     public void onResume() {
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -614,11 +666,6 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         } else {
             //Toast.makeText(getContext(), "отладка выкл", Toast.LENGTH_SHORT).show();
             debugArchiveLayout.setVisibility(View.GONE);
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy", new Locale("ru"));
-        if (fileExport == null) {
-            File exportFile = new File(getActivity().getExternalFilesDir("archive_exports"), sdf.format(new Date()) + ".xml");
-            fileExport = new FileExport(exportFile);
         }
 
         super.onResume();
