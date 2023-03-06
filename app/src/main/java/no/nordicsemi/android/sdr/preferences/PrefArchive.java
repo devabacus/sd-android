@@ -1,22 +1,23 @@
 package no.nordicsemi.android.sdr.preferences;
 
 
+import static no.nordicsemi.android.sdr.preferences.PrefUserFrag.KEY_CUR_USER;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import java.util.Objects;
 
 import no.nordicsemi.android.blinky.R;
-
-import static no.nordicsemi.android.sdr.preferences.PrefUserFrag.KEY_CUR_USER;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +30,8 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     public static final String KEY_TIME_STAB = "time_stab";
     public static final String KEY_DEBUG = "debug_archive";
     public static final String KEY_ARCHIVE_SAVE = "archive_save";
+    public static final String KEY_ARCHIVE_SAVE_FILE = "archive_save_to_file";
+    public static final String KEY_ARCHIVE_SAVE_FILE_DETAIL = "archive_save_to_file_detail";
     public static final String KEY_ARCHIVE_SAVE_ADC = "archive_save_adc";
     public static final String KEY_ARCHIVE_DRIVER_WEIGHT_MAX = "archive_driver_weight_max";
     public static final String KEY_OPTION_ARCHIVE = "option_archive";
@@ -44,6 +47,8 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
     Preference minWeightPref;
     Preference driverMaxPref;
     Preference archiveSavePref;
+    Preference archiveSaveFile;
+    Preference archiveSaveFileDetail;
     Preference archiveCorSave;
     Preference maxWeightTolerance;
 
@@ -75,6 +80,8 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
         minWeightPref = findPreference(KEY_MIN_WEIGHT);
         driverMaxPref = findPreference(KEY_ARCHIVE_DRIVER_WEIGHT_MAX);
         archiveSavePref = findPreference(KEY_ARCHIVE_SAVE);
+        archiveSaveFile = findPreference(KEY_ARCHIVE_SAVE_FILE);
+        archiveSaveFileDetail = findPreference(KEY_ARCHIVE_SAVE_FILE_DETAIL);
         archiveCorSave = findPreference(KEY_CORR_ARCHIVE);
         maxWeightTolerance = findPreference(KEY_MAX_WEIGHT_TOLERANCE);
         String maxDiscrete = sharedPreferences.getString(KEY_DISCRETE_MAX,"1");
@@ -86,10 +93,14 @@ public class PrefArchive extends PreferenceFragment implements SharedPreferences
 
         if (curUser.equals("admin") || curUser.equals("admin1")) {
             archiveSavePref.setEnabled(true);
+            archiveSaveFile.setEnabled(true);
+            archiveSaveFileDetail.setEnabled(true);
             archiveCorSave.setEnabled(true);
         } else {
             archiveSavePref.setEnabled(false);
             archiveCorSave.setEnabled(false);
+            archiveSaveFile.setEnabled(false);
+            archiveSaveFileDetail.setEnabled(false);
         }
 
         discreteMaxPref.setSummary(maxDiscrete);

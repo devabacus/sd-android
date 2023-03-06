@@ -8,6 +8,16 @@
 
     <SwitchPreference
         android:defaultValue="false"
+        android:key="archive_save_to_file"
+        android:title="Сохранять в файл" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="archive_save_to_file_detail"
+        android:title="Сохранять файл детализации" />
+
+    <SwitchPreference
+        android:defaultValue="false"
         android:key="debug_archive"
         android:title="Отладка" />
 

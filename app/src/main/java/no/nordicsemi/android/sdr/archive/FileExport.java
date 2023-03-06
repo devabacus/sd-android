@@ -22,7 +22,6 @@ public class FileExport {
     }
 
 
-
     public String readFromFile(File file) {
         try {
             FileReader reader = new FileReader(file);

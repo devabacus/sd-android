@@ -1,21 +1,25 @@
 package no.nordicsemi.android.sdr.archive;
 
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
+import static java.lang.Math.abs;
+import static no.nordicsemi.android.sdr.preferences.PrefArchive.KEY_MAX_WEIGHT_TOLERANCE;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -37,15 +41,12 @@ import no.nordicsemi.android.sdr.WeightPanel;
 import no.nordicsemi.android.sdr.buttons.ButtonsViewModel;
 import no.nordicsemi.android.sdr.database_archive.ArchiveData;
 import no.nordicsemi.android.sdr.preferences.PrefArchive;
+import no.nordicsemi.android.sdr.preferences.PrefExport;
 import no.nordicsemi.android.sdr.preferences.PrefWeightFrag;
 import no.nordicsemi.android.sdr.preferences.SettingsFragment;
-import no.nordicsemi.android.sdr.preferences.PrefExport;
 import no.nordicsemi.android.sdr.viewmodels.BleViewModel;
 import no.nordicsemi.android.sdr.viewmodels.ParsedDataViewModel;
 import no.nordicsemi.android.sdr.viewmodels.StateViewModel;
-
-import static java.lang.Math.abs;
-import static no.nordicsemi.android.sdr.preferences.PrefArchive.KEY_MAX_WEIGHT_TOLERANCE;
 
 public class ArchiveSaving extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 // vars initialize
@@ -73,6 +74,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     boolean incWeight = false;
     boolean decWeight = false;
     public static Boolean archive;
+    public static Boolean archiveSaveFile;
+    public static Boolean archiveSaveFileDetail;
     public static Boolean debug_archive;
     Boolean archiveADC;
     Boolean corArchiveSave;
@@ -186,6 +189,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     void sharedPrefGetData() {
         show_weight = sp.getBoolean(SettingsFragment.KEY_WEIGHT_SHOW, false);
         archive = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE, false);
+        archiveSaveFile = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE_FILE, false);
+        archiveSaveFileDetail = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE_FILE_DETAIL, false);
         debug_archive = sp.getBoolean(PrefArchive.KEY_DEBUG, false);
         archiveADC = sp.getBoolean(PrefArchive.KEY_ARCHIVE_SAVE_ADC, false);
         corArchiveSave = sp.getBoolean(PrefArchive.KEY_CORR_ARCHIVE, false);
@@ -242,7 +247,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     }
 
     void weightObserve() {
-        parsedDataViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ParsedDataViewModel.class);
+        parsedDataViewModel = ViewModelProviders.of(requireActivity()).get(ParsedDataViewModel.class);
         parsedDataViewModel.getWeightValue().observe(getActivity(), weight -> {
             weightValueFloat = weight;
             fillDataForArchive();
@@ -592,15 +597,24 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
         }
 
 
-        //Writing into file
-        main_file = new FileExport(create_file("main.xml"));
-        createFullDetailFile();
+
+
+
+        if(archiveSaveFileDetail){
+            createFullDetailFile();
+        }
+
+        if(archiveSaveFile){
+            //Writing into file
+            main_file = new FileExport(create_file("main.xml"));
+            main_file.writeToFile(listOfArchiveData);
+        }
 
         if (autoExport) {
             if (!exportDetail) {
                 listOfArchiveData = getNotDetailedList(listOfArchiveData);
             }
-            main_file.writeToFile(listOfArchiveData);
+
         }
 
         initArrays();
@@ -641,12 +655,8 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     }
 
     public File create_file(String fileName){
-        Log.d(TAG, "create_file: " + fileName);
         String fullPath = create_full_path_folders();
-        File file = new File(fullPath, fileName);
-        Log.d(TAG, "create_file: " + file.getAbsolutePath());
-
-        return file;
+        return new File(fullPath, fileName);
     }
 
     public String create_full_path_folders(){
