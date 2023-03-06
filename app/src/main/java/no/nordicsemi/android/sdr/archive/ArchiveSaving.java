@@ -137,7 +137,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
 
     int indexFull = 0;
 //    Date[] dateTimeFull;
-    ArrayList<String> dateTimeFull;
+    ArrayList<Double> dateTimeFull;
 
     ArrayList<String> weightsFull;
     ArrayList<String> tareFull;
@@ -438,9 +438,14 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     void createFullDetailFile(){
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(numOfWeight).append("]").append(", [").append(new Date()).append("]\n");
+
         for (int i = 0; i < dateTimeFull.size(); i++) {
-            sb.append(dateTimeFull.get(i)).append("/");
-            sb.append(weightsFull.get(i)).append("/");
+            if(i>0){
+                sb.append((dateTimeFull.get(i)-dateTimeFull.get(0))/1000).append("   /   ");
+            } else {
+                sb.append(dateTimeFull.get(i)).append("   /   ");
+            }
+            sb.append(weightsFull.get(i)).append("   /   ");
             sb.append(tareFull.get(i)).append("\n");
         }
         try {
@@ -462,7 +467,7 @@ public class ArchiveSaving extends Fragment implements View.OnClickListener, Vie
     void saveFullDetailWeighing(Date date, float newWeight){
 
         Log.d("weight", "saveFullDetailWeighing: " + date.getTime() + ","  + newWeight +  "," + tare);
-        dateTimeFull.add(indexFull, String.valueOf(date.getTime()));
+        dateTimeFull.add(indexFull, (double) date.getTime());
         tareFull.add(indexFull, String.valueOf(tare));
         weightsFull.add(indexFull, String.valueOf(newWeight));
         indexFull++;
